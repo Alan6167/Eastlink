@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eastlink 合作供应商平台 · Demo</title>
+  <meta name="description" content="Eastlink 合作供应商平台交互原型：Brief 拆解、需求包多维度供应商匹配、内审与客户确认、设计稿协同。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230666FF'/%3E%3Crect x='7' y='13' width='7' height='7' rx='1.6' fill='%234FB3F6'/%3E%3Crect x='18' y='13' width='7' height='7' rx='1.6' fill='%232FCE8B'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+
+    <aside class="side">
+      <div class="logo-row">
+        <div class="logo-mark"><i class="sq sky"></i><i class="sq green"></i></div>
+        <div class="logo-text">
+          <strong>Eastlink</strong>
+          <span>合作供应商平台</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="navBox">
+        <button class="nav-btn active" data-view="dashboard"><span>01</span>总览</button>
+        <button class="nav-btn" data-view="projects"><span>02</span>项目管理</button>
+        <button class="nav-btn" data-view="matching"><span>03</span>匹配工作台</button>
+        <button class="nav-btn" data-view="clients"><span>04</span>客户管理</button>
+        <button class="nav-btn" data-view="suppliers"><span>05</span>供应商管理</button>
+        <button class="nav-btn" data-view="thinking"><span>06</span>平台思路</button>
+      </nav>
+
+      <div class="role-box">
+        <label for="roleSelect">当前视角（模拟登录）</label>
+        <select id="roleSelect">
+          <option value="sales">业务员 · 项目 Owner</option>
+          <option value="management">管理层</option>
+          <option value="client">客户 · HEMA</option>
+          <option value="supplier">供应商 · 台州洁厨</option>
+        </select>
+        <p id="roleHint">负责 Brief 拆解、供应商匹配、内审与对客提交。</p>
+      </div>
+
+      <div class="side-foot">Demo V0.1 · Mock 数据</div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <div>
+          <p class="label" id="pageLabel">Overview</p>
+          <h1 id="pageTitle">总览</h1>
+        </div>
+        <div class="role-banner" id="roleBanner"></div>
+      </header>
+
+      <section id="view-dashboard" class="view active"></section>
+
+      <section id="view-projects" class="view"></section>
+
+      <section id="view-matching" class="view"></section>
+
+      <section id="view-clients" class="view"></section>
+
+      <section id="view-suppliers" class="view"></section>
+
+      <section id="view-thinking" class="view">
+        <div class="think-hero panel">
+          <p class="label">Platform Thinking</p>
+          <h2>Eastlink 是什么：客户给一个 Brief，平台把它变成一组"选对了的供应商"和"确认过的设计"</h2>
+          <p class="muted">客户提交 Brief → 业务侧拆解成需求包 → 从供应商池按维度匹配 → 内审 → 客户确认 → 设计稿协同定稿。所有需要人做判断的动作统一进右侧审核中心；所有资源沉淀在客户、供应商、项目三份主数据里。</p>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head"><div><p class="label">Main Flow</p><h3>业务主线：流转的最小单位是"需求包"</h3></div></div>
+          <div class="flow-line">
+            <div class="f done">Brief 接收</div><i></i>
+            <div class="f done">拆解中</div><i></i>
+            <div class="f now">匹配中</div><i></i>
+            <div class="f">待客户确认</div><i></i>
+            <div class="f">供应商已确认</div><i></i>
+            <div class="f">设计协同</div><i></i>
+            <div class="f">设计定稿</div>
+          </div>
+          <div class="flow-note">
+            <div><b>需求包状态机</b><span>待匹配 → 内审中 → 待客户确认 → 已确认；内审可退回，客户可要求换选（记录原因后回到待匹配）。</span></div>
+            <div><b>为什么按需求包流转</b><span>一个 Brief 往往多个品类，需要不同供应商分头满足；客户审的是"每个需求包的推荐名单"，不是抽象的整个项目。</span></div>
+            <div><b>设计稿</b><span>挂在需求包下、带版本：内审 → 客户确认 → 定稿；修改意见记录原文，新版本重新走流程。</span></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><div><p class="label">Data Objects</p><h3>核心对象关系</h3></div></div>
+          <div class="obj-map">
+            <div class="obj">客户<span>Client</span></div><i>→</i>
+            <div class="obj">Brief<span>原始 + 结构化</span></div><i>→</i>
+            <div class="obj">项目<span>Project</span></div><i>→</i>
+            <div class="obj hot">需求包<span>Requirement</span></div><i>→</i>
+            <div class="obj">匹配<span>Match</span></div><i>→</i>
+            <div class="obj">审核<span>Review</span></div>
+          </div>
+          <div class="obj-sub">
+            <div class="obj pool">供应商池<span>来源：客户提供 / 自主开发 · 六种准入状态</span></div>
+            <p>供应商池是一级资源库，为「匹配」供给候选；客户提供的供应商对该客户全量可见（含未准入），平台帮客户把他的供应商盘子管出质量。</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><div><p class="label">Matching Model</p><h3>匹配模型：先硬过滤，再 9 维度加权打分</h3></div></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>维度</th><th>默认权重</th><th>数据来源</th><th>计算口径</th></tr></thead>
+              <tbody>
+                <tr><td><b>品类专精</b></td><td>20</td><td>主营 / 兼营品类</td><td>主营 100，兼营 82</td></tr>
+                <tr><td><b>工艺覆盖</b></td><td>15</td><td>工艺能力标签</td><td>需求工艺覆盖率 ×100</td></tr>
+                <tr><td><b>认证覆盖</b></td><td>15</td><td>资质证书</td><td>需求认证覆盖率，缺项列入风险提示</td></tr>
+                <tr><td><b>质量表现</b></td><td>12</td><td>质量通过率</td><td>直接取值</td></tr>
+                <tr><td><b>交付可靠</b></td><td>10</td><td>准时率 + 平均交期</td><td>准时率 60% + 交期达标 40%</td></tr>
+                <tr><td><b>价格竞争力</b></td><td>10</td><td>报价竞争力指数</td><td>直接取值</td></tr>
+                <tr><td><b>产能匹配</b></td><td>8</td><td>月产能 vs 需求量</td><td>富余 1.5 倍满分，不足按比例扣</td></tr>
+                <tr><td><b>客户经验</b></td><td>5</td><td>服务过的客户</td><td>服务过该客户 100 / 有出口经验 65 / 无 40</td></tr>
+                <tr><td><b>风险等级</b></td><td>5</td><td>风险评级</td><td>低 100 / 中 60 / 高 25</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flow-note">
+            <div><b>硬性过滤</b><span>准入状态必须"已准入 / 合作中"；品类必须覆盖。被排除者在漏斗里透明可见（谁、为什么）。</span></div>
+            <div><b>权重可调</b><span>匹配工作台里拖滑杆实时重排——演示"匹配是按维度算出来的，权重变了排序就变"。默认权重待业务员校准。</span></div>
+            <div><b>输出</b><span>总分 + 维度得分条 + 自动推荐理由 + 风险提示（缺认证 / 产能缺口 / 交期超限）。最终由人勾选，系统记录依据。</span></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><div><p class="label">Roles</p><h3>角色权限矩阵</h3></div></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th></th><th>业务员</th><th>管理层</th><th>客户</th><th>供应商</th></tr></thead>
+              <tbody>
+                <tr><td><b>总览</b></td><td>全量 + 待办</td><td>全量 + 风险</td><td>仅自己项目与待确认</td><td>仅自己的合作</td></tr>
+                <tr><td><b>项目管理</b></td><td>可操作</td><td>只读</td><td>仅自己项目，只读</td><td>不可见</td></tr>
+                <tr><td><b>匹配工作台</b></td><td>核心操作</td><td>不开放</td><td class="dim">不可见</td><td class="dim">不可见</td></tr>
+                <tr><td><b>供应商管理</b></td><td>全池</td><td>全池只读</td><td>"我提供的"全量 + "合作中的"，无内部评分</td><td>仅自己档案</td></tr>
+                <tr><td><b>客户管理</b></td><td>可操作</td><td>只读</td><td class="dim">不可见</td><td class="dim">不可见</td></tr>
+                <tr><td><b>审核中心</b></td><td>内审动作</td><td>查看</td><td>批准 / 换选 / 设计定稿</td><td>合作通知</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted tight">原则：客户看不到供应商池全貌、内部打分与落选者；供应商看不到竞争对手。内部角色是否再拆"业务员 / 采购"两条线，见下方确认清单第 ⑤ 条。</p>
+        </section>
+
+        <section class="panel checklist">
+          <div class="panel-head"><div><p class="label">To Confirm With Sales</p><h3>待业务员确认清单（拿着本 Demo 对照访谈）</h3></div></div>
+          <div class="check-grid">
+            <div><b>① Brief 承接与拆解</b><span>实际 Brief 长什么样（正式文件还是微信几句话）？拆解谁在做、按什么习惯拆？有没有一个需求包拆给两家分单的情况？</span></div>
+            <div><b>② 匹配维度校准</b><span>选供应商最看重的前三个因素？有没有一票否决项（指定认证、必须验厂）？客户提供的供应商是"必须优先"还是"仅供参考"？维度数据现在记在哪？</span></div>
+            <div><b>③ 内审与客户确认</b><span>内审谁来审——业务员还是主管？客户实际怎么确认供应商（邮件/会议/全权委托）？换选一般给什么理由？</span></div>
+            <div><b>④ 设计稿协同</b><span>设计稿谁出（自有设计/供应商/客户自带）？先定供应商再出稿，还是先出稿再定供应商？客户改稿一般几轮、意见从什么渠道回来？</span></div>
+            <div><b>⑤ 内部角色分工</b><span>谁接 Brief、谁拆解、谁选供应商、谁对客户？要不要拆成业务员 / 采购两条线？一个业务员同时跟几个项目？</span></div>
+            <div><b>⑥ 现状痛点</b><span>整个流程最耗时、最容易出错的是哪一步？现在靠什么在管（Excel/微信/邮件）？最想被系统替代的是哪部分？</span></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><div><p class="label">Roadmap</p><h3>分期规划</h3></div></div>
+          <div class="phase-grid">
+            <div class="now"><b>P1 · 本 Demo 范围</b><span>三份主数据 + Brief 拆解 + 需求包匹配（多维度打分）+ 内审/客户确认流 + 设计稿协同 + 角色权限。</span></div>
+            <div><b>P2 · 系统化协同</b><span>真实后端与账号体系、客户在线门户、供应商门户（接任务/报价）、打样与订单跟进、绩效数据沉淀。</span></div>
+            <div><b>P3 · 智能化</b><span>匹配模型基于历史成交自学习、AI 拆解 Brief、AI 推荐供应商与风险预警。</span></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <aside class="review">
+      <div class="review-head">
+        <div>
+          <p class="label">Review Center</p>
+          <h2>审核中心</h2>
+        </div>
+        <span class="review-count" id="reviewCount">0</span>
+      </div>
+      <div class="review-tabs">
+        <button class="active" data-rtab="pending">待处理</button>
+        <button data-rtab="done">已完成</button>
+      </div>
+      <div class="review-list" id="reviewList"></div>
+    </aside>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
