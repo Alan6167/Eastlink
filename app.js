@@ -381,6 +381,7 @@ const state = {
   reasonFor: null,          // { t: 'pkg-internal-return'|'pkg-swap'|'design-return'|'design-changes', id }
   clientSel: "CLI-001",
   supSel: "SUP-001",
+  mapSel: null,
   supFilters: { status: "all", cat: "all", risk: "all", source: "all", q: "" }
 };
 
@@ -1328,7 +1329,7 @@ function renderView() {
     matching: renderMatching,
     clients: renderClients,
     suppliers: renderSuppliers,
-    thinking: () => {}
+    thinking: () => { renderMap(); setupMapInteractions(); }
   }[state.view])();
   renderReview();
 }
@@ -1455,6 +1456,218 @@ function applyReason(text) {
   }
   state.reasonFor = null;
   renderView();
+}
+
+/* ---------- 平台全景导图 ---------- */
+
+const MAP_INIT = [
+  { id: "r-client", x: 46,  y: 34,  w: 158, h: 46, band: "role", label: "客户", sub: "发起 Brief · 最终确认",
+    desc: "提交 Brief（正式文件 / 邮件 / 微信 / 口头都行）；按需求包批准推荐名单或填原因要求换选；逐版确认设计稿。只能看到内审通过的内容与自己体系的供应商。",
+    hi: ["m-brief", "m-confirm", "m-design", "d-client", "d-pool"] },
+  { id: "r-sales", x: 320, y: 34,  w: 196, h: 46, band: "role", label: "业务员 · 项目 Owner", sub: "拆解 · 匹配 · 内审",
+    desc: "承接 Brief 并结构化拆解为需求包；在匹配工作台按维度筛选、勾选推荐名单并记录依据；内审把关后对客提交。内部是否再拆「业务员 / 采购」两条线，待业务访谈确认。",
+    hi: ["m-brief", "m-parse", "m-pkg", "m-match", "m-review"] },
+  { id: "r-mgr", x: 632, y: 34,  w: 150, h: 46, band: "role", label: "管理层", sub: "全局只读 · 风险关注",
+    desc: "查看所有项目健康度、审核积压、供应商风险与换选记录；不直接操作流程。",
+    hi: [] },
+  { id: "r-sup", x: 902, y: 34,  w: 170, h: 46, band: "role", label: "供应商", sub: "承接确认的合作",
+    desc: "P1 仅能看到自己的档案与已确认的需求包；P2 开供应商门户：在线接任务、报价、上传打样与设计文件。永远看不到竞争对手与报价对比。",
+    hi: ["m-design", "d-pool"] },
+
+  { id: "m-brief",   x: 22,   y: 250, w: 112, h: 58, band: "main", label: "Brief 接收", sub: "文件/邮件/微信/口头",
+    desc: "任何形式的 Brief 都先进系统登记并生成版本（V1、V2…）。「新建项目」向导支持现场录入并直接拆包。", hi: ["r-client", "d-client"] },
+  { id: "m-parse",   x: 169,  y: 250, w: 112, h: 58, band: "main", label: "结构化拆解", sub: "字段 + 需求包",
+    desc: "把原始 Brief 拆成结构化字段（主题 / 市场 / 价格带 / 节点），并按品类拆出需求包。实际拆解习惯待业务员访谈校准。", hi: ["r-sales", "m-pkg"] },
+  { id: "m-pkg",     x: 316,  y: 250, w: 112, h: 58, band: "hot",  label: "需求包", sub: "流转最小单位",
+    desc: "一个 Brief 拆 N 个需求包，各自独立走完匹配和审核，客户逐包确认；项目状态由需求包汇总得出。这是整个平台的关键设计。", hi: ["m-parse", "m-match"] },
+  { id: "m-match",   x: 463,  y: 250, w: 112, h: 58, band: "main", label: "多维度匹配", sub: "硬过滤 + 9 维打分",
+    desc: "先硬过滤（准入状态、品类），再按 9 个维度加权打分排序；权重可调、漏斗全程透明；最终由人勾选，系统记录依据。", hi: ["d-pool", "m-pkg", "r-sales"] },
+  { id: "m-review",  x: 610,  y: 250, w: 112, h: 58, band: "main", label: "内审", sub: "业务员把关",
+    desc: "推荐名单与设计稿先内审再对客，可退回重匹配；所有需要判断的动作统一进右侧审核中心。", hi: ["r-sales", "d-log"] },
+  { id: "m-confirm", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "客户确认", sub: "逐包批准 / 换选",
+    desc: "客户批准推荐名单，或填写原因要求换选（需求包回到待匹配）；原因原文记录进流转历史。", hi: ["r-client", "d-log"] },
+  { id: "m-design",  x: 904,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "版本 + 修改意见",
+    desc: "设计稿挂在需求包下、带版本：内审 → 客户确认 → 定稿；修改意见记录原文，新版本重新走流程。", hi: ["r-client", "r-sup", "d-log"] },
+  { id: "m-final",   x: 1051, y: 250, w: 112, h: 58, band: "main", label: "定稿", sub: "P2：打样 / 订单",
+    desc: "全部需求包供应商确认 + 设计定稿后项目闭环；P2 向打样、订单跟进、供应商绩效沉淀延伸。", hi: ["d-prj"] },
+
+  { id: "d-client", x: 60,  y: 480, w: 178, h: 54, band: "asset", label: "客户档案", sub: "偏好 · 审核习惯",
+    desc: "品牌标准偏好、确认习惯、历史项目与该客户提供的供应商，为拆解和匹配提供背景输入。", hi: ["m-brief", "r-client"] },
+  { id: "d-pool",   x: 356, y: 480, w: 232, h: 54, band: "asset", label: "供应商池", sub: "客户提供 / 自主开发 · 六状态",
+    desc: "全量供应商资源库：来源标签 + 六种准入状态 + 能力标签（品类 / 工艺 / 认证 / 产能 / 绩效）。是匹配打分的数据地基；客户提供的供应商对该客户全量可见（含未准入）。", hi: ["m-match", "r-client", "r-sup"] },
+  { id: "d-prj",    x: 700, y: 480, w: 170, h: 54, band: "asset", label: "项目库", sub: "历史沉淀 · 复用",
+    desc: "完结项目沉淀为可复用资产：需求包结构、成交供应商、设计稿与确认记录；P3 供匹配模型自学习。", hi: ["m-final"] },
+  { id: "d-log",    x: 940, y: 480, w: 190, h: 54, band: "asset", label: "审核与流转记录", sub: "每一步留痕",
+    desc: "提交、内审、退回、换选、修改意见全部记录原因与时间线——对客户透明、对内可复盘的依据链。", hi: ["m-review", "m-confirm", "m-design"] }
+];
+
+const MAP_EDGES = [
+  { from: "m-brief",   to: "m-parse",   label: "结构化",     type: "main" },
+  { from: "m-parse",   to: "m-pkg",     label: "拆包",       type: "main" },
+  { from: "m-pkg",     to: "m-match",   label: "逐包匹配",   type: "main" },
+  { from: "m-match",   to: "m-review",  label: "推荐名单",   type: "main" },
+  { from: "m-review",  to: "m-confirm", label: "提交客户",   type: "main" },
+  { from: "m-confirm", to: "m-design",  label: "确定合作",   type: "main" },
+  { from: "m-design",  to: "m-final",   label: "客户定稿",   type: "main" },
+  { from: "m-review",  to: "m-match",   label: "内审退回",   type: "back", dip: 42 },
+  { from: "m-confirm", to: "m-match",   label: "要求换选",   type: "back", dip: 74 },
+  { from: "d-pool",    to: "m-match",   label: "供给候选",   type: "asset" },
+  { from: "m-final",   to: "d-prj",     label: "沉淀复用",   type: "asset", vert: true },
+  { from: "r-client",  to: "m-brief",   label: "提交 Brief", type: "role" },
+  { from: "r-client",  to: "m-confirm", label: "批准 / 换选", type: "role", vert: true },
+  { from: "r-client",  to: "m-design",  label: "确认设计稿", type: "role", sel: true, vert: true },
+  { from: "r-sales",   to: "m-parse",   label: "拆解",       type: "role", sel: true },
+  { from: "r-sales",   to: "m-match",   label: "勾选名单",   type: "role", sel: true },
+  { from: "r-sales",   to: "m-review",  label: "内审",       type: "role", sel: true, vert: true },
+  { from: "r-sup",     to: "m-design",  label: "P2：上传打样/设计", type: "role", sel: true },
+  { from: "d-client",  to: "m-brief",   label: "背景输入",   type: "asset", sel: true },
+  { from: "m-review",  to: "d-log",     label: "记录依据",   type: "asset", sel: true, vert: true },
+  { from: "m-confirm", to: "d-log",     label: "确认留痕",   type: "asset", sel: true, vert: true },
+  { from: "m-design",  to: "d-log",     label: "意见留痕",   type: "asset", sel: true }
+];
+
+let mapNodes = MAP_INIT.map(n => ({ ...n }));
+const mnode = id => mapNodes.find(n => n.id === id);
+
+function cubicAt(t, p) {
+  const u = 1 - t;
+  return {
+    x: u*u*u*p.x1 + 3*u*u*t*p.c1x + 3*u*t*t*p.c2x + t*t*t*p.x2,
+    y: u*u*u*p.y1 + 3*u*u*t*p.c1y + 3*u*t*t*p.c2y + t*t*t*p.y2
+  };
+}
+
+function edgeGeom(e) {
+  const a = mnode(e.from), b = mnode(e.to);
+  const acx = a.x + a.w / 2, acy = a.y + a.h / 2;
+  const bcx = b.x + b.w / 2, bcy = b.y + b.h / 2;
+  const dx = bcx - acx, dy = bcy - acy;
+  let p;
+  if (e.type === "back") {
+    const y1 = a.y + a.h, y2 = b.y + b.h;
+    const dip = Math.max(y1, y2) + (e.dip || 46);
+    p = { x1: acx, y1, c1x: acx, c1y: dip, c2x: bcx, c2y: dip, x2: bcx, y2 };
+  } else if (!e.vert && Math.abs(dx) >= Math.abs(dy)) {
+    const x1 = dx > 0 ? a.x + a.w : a.x, x2 = dx > 0 ? b.x : b.x + b.w;
+    const off = Math.min(56, Math.abs(x2 - x1) / 2 + 8);
+    p = { x1, y1: acy, c1x: x1 + (dx > 0 ? off : -off), c1y: acy, c2x: x2 - (dx > 0 ? off : -off), c2y: bcy, x2, y2: bcy };
+  } else {
+    const y1 = dy > 0 ? a.y + a.h : a.y, y2 = dy > 0 ? b.y : b.y + b.h;
+    const off = Math.min(e.vert ? 96 : 56, Math.abs(y2 - y1) / 2 + 8);
+    p = { x1: acx, y1, c1x: acx, c1y: y1 + (dy > 0 ? off : -off), c2x: bcx, c2y: y2 - (dy > 0 ? off : -off), x2: bcx, y2 };
+  }
+  return { d: `M ${p.x1} ${p.y1} C ${p.c1x} ${p.c1y}, ${p.c2x} ${p.c2y}, ${p.x2} ${p.y2}`, mid: cubicAt(0.5, p) };
+}
+
+function mapEdgesHtml() {
+  const sel = state.mapSel;
+  return MAP_EDGES.map(e => {
+    const touches = sel && (e.from === sel || e.to === sel);
+    if (e.sel && !touches) return "";
+    const g = edgeGeom(e);
+    const cls = `edge ${e.type} ${sel ? (touches ? "hot" : "dim") : ""}`;
+    const marker = { main: "arrow-main", back: "arrow-back", asset: "arrow-asset", role: "arrow-role" }[e.type];
+    return `<g class="${cls}">
+      <path d="${g.d}" marker-end="url(#${marker})"></path>
+      <text x="${g.mid.x}" y="${g.mid.y - 5}" text-anchor="middle">${e.label}</text>
+    </g>`;
+  }).join("");
+}
+
+function mapNodesHtml() {
+  const sel = state.mapSel;
+  const selNode = sel ? mnode(sel) : null;
+  return mapNodes.map(n => {
+    const cls = [
+      "map-node",
+      { role: "mn-role", main: "mn-main", hot: "mn-hot", asset: "mn-asset" }[n.band],
+      sel === n.id ? "sel" : "",
+      selNode && selNode.hi.includes(n.id) ? "rel" : "",
+      sel && sel !== n.id && !selNode.hi.includes(n.id) ? "dim" : ""
+    ].join(" ");
+    return `<g class="${cls}" data-node="${n.id}" transform="translate(${n.x},${n.y})">
+      <rect width="${n.w}" height="${n.h}" rx="11"></rect>
+      <text class="mn-label" x="${n.w / 2}" y="${n.h / 2 - 2}" text-anchor="middle">${n.label}</text>
+      <text class="mn-sub" x="${n.w / 2}" y="${n.h / 2 + 13}" text-anchor="middle">${n.sub}</text>
+    </g>`;
+  }).join("");
+}
+
+function renderMap() {
+  const svg = $("platformMap");
+  if (!svg) return;
+  svg.innerHTML = `
+    <defs>
+      ${[["arrow-main", "#0666FF"], ["arrow-back", "#B45309"], ["arrow-asset", "#0C7A4B"], ["arrow-role", "#0B5E93"]]
+        .map(([id, c]) => `<marker id="${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="${c}"></path></marker>`).join("")}
+    </defs>
+    <g class="map-band">
+      <rect x="10" y="18" width="1160" height="78" rx="12"></rect><text x="24" y="34">角色 ROLES</text>
+      <rect x="10" y="232" width="1160" height="94" rx="12"></rect><text x="24" y="248">业务主线 MAIN FLOW</text>
+      <rect x="10" y="462" width="1160" height="90" rx="12"></rect><text x="24" y="478">数据资产 DATA</text>
+    </g>
+    <g id="mapEdgeLayer">${mapEdgesHtml()}</g>
+    <g id="mapNodeLayer">${mapNodesHtml()}</g>`;
+  renderMapDetail();
+}
+
+function renderMapDetail() {
+  const box = $("mapDetail");
+  if (!box) return;
+  const n = state.mapSel ? mnode(state.mapSel) : null;
+  if (!n) {
+    box.innerHTML = `点击任意节点查看说明与关联关系；<b>节点可以拖动</b>，讲解时当白板自由摆布局，「重置布局」一键还原。虚线含义见右上角图例。`;
+    return;
+  }
+  box.innerHTML = `<b>${n.label}</b> · <span class="muted">${n.sub}</span>
+    <p style="margin-top:6px">${n.desc}</p>
+    ${n.hi.length ? `<div class="chip-row">${n.hi.map(id => `<span class="chip blue">${mnode(id).label}</span>`).join("")}</div>` : ""}`;
+}
+
+function setupMapInteractions() {
+  const svg = $("platformMap");
+  if (!svg || svg.dataset.bound) return;
+  svg.dataset.bound = "1";
+  let drag = null;
+
+  svg.addEventListener("pointerdown", e => {
+    const g = e.target.closest("[data-node]");
+    if (!g) return;
+    const n = mnode(g.dataset.node);
+    const pt = svgPoint(svg, e);
+    drag = { n, dx: pt.x - n.x, dy: pt.y - n.y, sx: e.clientX, sy: e.clientY, moved: false };
+    svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener("pointermove", e => {
+    if (!drag) return;
+    if (Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) > 4) drag.moved = true;
+    if (!drag.moved) return;
+    const pt = svgPoint(svg, e);
+    drag.n.x = Math.max(4, Math.min(1180 - drag.n.w - 4, pt.x - drag.dx));
+    drag.n.y = Math.max(4, Math.min(620 - drag.n.h - 4, pt.y - drag.dy));
+    const g = svg.querySelector(`[data-node="${drag.n.id}"]`);
+    if (g) g.setAttribute("transform", `translate(${drag.n.x},${drag.n.y})`);
+    const layer = svg.querySelector("#mapEdgeLayer");
+    if (layer) layer.innerHTML = mapEdgesHtml();
+  });
+  const end = e => {
+    if (!drag) return;
+    if (!drag.moved) {
+      state.mapSel = state.mapSel === drag.n.id ? null : drag.n.id;
+      renderMap();
+    }
+    drag = null;
+  };
+  svg.addEventListener("pointerup", end);
+  svg.addEventListener("pointercancel", () => { drag = null; });
+  svg.addEventListener("pointerdown", e => {
+    if (!e.target.closest("[data-node]") && state.mapSel) { state.mapSel = null; renderMap(); }
+  });
+}
+
+function svgPoint(svg, e) {
+  const r = svg.getBoundingClientRect();
+  return { x: (e.clientX - r.left) / r.width * 1180, y: (e.clientY - r.top) / r.height * 620 };
 }
 
 /* ----- 新建 Brief 向导 ----- */
@@ -1631,6 +1844,12 @@ document.addEventListener("click", e => {
   else if (a === "brief-add-pkg") $("nb-pkgs").insertAdjacentHTML("beforeend", pkgRowHtml());
   else if (a === "brief-rm-pkg") btn.closest(".nb-pkg").remove();
   else if (a === "brief-create") briefCreate();
+  else if (a === "map-reset") {
+    mapNodes = MAP_INIT.map(n => ({ ...n }));
+    state.mapSel = null;
+    renderMap();
+    toast("导图布局已重置");
+  }
 });
 
 document.addEventListener("input", e => {

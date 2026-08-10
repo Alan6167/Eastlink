@@ -88,19 +88,20 @@
         </section>
 
         <section class="panel">
-          <div class="panel-head"><div><p class="label">Data Objects</p><h3>核心对象关系</h3></div></div>
-          <div class="obj-map">
-            <div class="obj">客户<span>Client</span></div><i>→</i>
-            <div class="obj">Brief<span>原始 + 结构化</span></div><i>→</i>
-            <div class="obj">项目<span>Project</span></div><i>→</i>
-            <div class="obj hot">需求包<span>Requirement</span></div><i>→</i>
-            <div class="obj">匹配<span>Match</span></div><i>→</i>
-            <div class="obj">审核<span>Review</span></div>
+          <div class="panel-head">
+            <div><p class="label">Platform Map</p><h3>平台全景导图（点击节点看说明 · 拖动节点当画板）</h3></div>
+            <div class="map-legend">
+              <span><i class="lg-main"></i>业务主线</span>
+              <span><i class="lg-back"></i>退回 / 换选</span>
+              <span><i class="lg-asset"></i>数据支撑</span>
+              <span><i class="lg-role"></i>角色动作</span>
+              <button class="ghost mini" data-action="map-reset">重置布局</button>
+            </div>
           </div>
-          <div class="obj-sub">
-            <div class="obj pool">供应商池<span>来源：客户提供 / 自主开发 · 六种准入状态</span></div>
-            <p>供应商池是一级资源库，为「匹配」供给候选；客户提供的供应商对该客户全量可见（含未准入），平台帮客户把他的供应商盘子管出质量。</p>
+          <div class="map-wrap">
+            <svg id="platformMap" viewBox="0 0 1180 620" role="img" aria-label="Eastlink 平台全景导图：上层为四个角色，中层为从 Brief 接收到设计定稿的业务主线，下层为客户档案、供应商池、项目库与流转记录四类数据资产，连线标注了流转、退回与数据供给关系"></svg>
           </div>
+          <div class="map-detail" id="mapDetail"></div>
         </section>
 
         <section class="panel">
