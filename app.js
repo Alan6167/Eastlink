@@ -776,7 +776,7 @@ function renderProjects() {
   el.innerHTML = `
     <section class="panel">
       <div class="panel-head"><div><p class="label">Portfolio</p><h3>项目列表</h3></div>
-        ${state.role === "sales" ? `<button class="primary mini" data-action="noop">+ 新建项目（接 Brief）</button>` : ""}</div>
+        ${state.role === "sales" ? `<button class="primary mini" data-action="brief-new">+ 新建项目 · 接收 Brief</button>` : ""}</div>
       <div class="table-wrap"><table class="data-table">
         <thead><tr><th>项目</th><th>客户</th><th>阶段</th><th>需求包</th><th>负责人</th><th>上市</th><th></th></tr></thead>
         <tbody>
@@ -1457,9 +1457,137 @@ function applyReason(text) {
   renderView();
 }
 
+/* ----- 新建 Brief 向导 ----- */
+
+const NB_PROCS = ["印刷", "模切", "装订", "烫金", "缝纫", "丝印", "压花", "注塑", "模压", "电镀", "组装"];
+const NB_CERTS = ["FSC", "EN71", "REACH", "BSCI", "GRS", "SEDEX", "ISO9001", "LFGB", "FDA", "Disney FAMA"];
+
+function pkgRowHtml() {
+  return `<div class="nb-pkg">
+    <button class="ghost mini rm" data-action="brief-rm-pkg">删除</button>
+    <div class="form-grid">
+      <label class="field">需求包名称 *<input class="nbp-name" placeholder="如：野餐餐具需求包"></label>
+      <label class="field">品类 *<select class="nbp-cat"><option value="">选择品类</option>${["文具", "包袋", "水具", "礼品", "家居"].map(c => `<option>${c}</option>`).join("")}</select></label>
+      <label class="field">SKU 数<input class="nbp-sku" type="number" min="1" placeholder="如：12"></label>
+      <label class="field">月需求量（件）<input class="nbp-qty" type="number" min="1000" step="1000" placeholder="如：50000"></label>
+      <label class="field">目标价格带<input class="nbp-price" placeholder="如：€2.0 – 4.0"></label>
+      <label class="field">交期上限（天）<input class="nbp-lead" type="number" placeholder="45"></label>
+    </div>
+    <div class="field">工艺要求（点选）<div class="chip-row">${NB_PROCS.map(x => `<span class="chip chip-toggle nbp-proc">${x}</span>`).join("")}</div></div>
+    <div class="field">认证要求（点选）<div class="chip-row">${NB_CERTS.map(x => `<span class="chip chip-toggle nbp-cert">${x}</span>`).join("")}</div></div>
+  </div>`;
+}
+
+function openBriefModal() {
+  $("briefModalInner").innerHTML = `
+    <div class="modal-head">
+      <div><p class="label">New Brief</p><h3>新建项目 · 接收 Brief</h3></div>
+      <button class="ghost mini" data-action="brief-close">✕ 关闭</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <p class="label" style="margin-bottom:8px">① Brief 接收</p>
+        <div class="form-grid">
+          <label class="field">客户
+            <select id="nb-client">
+              ${clients.map(c => `<option value="${c.id}">${c.name} · ${c.level}</option>`).join("")}
+              <option value="__new">新客户（先建项目，后补建档）</option>
+            </select></label>
+          <label class="field">项目名称 *<input id="nb-name" placeholder="如：HEMA 2028 夏季户外系列"></label>
+          <label class="field">Brief 形式
+            <select id="nb-source">
+              <option>正式文件（PDF / PPT）</option><option>邮件正文</option>
+              <option>微信聊天记录</option><option>口头描述 + 参考图</option>
+            </select></label>
+          <label class="field">原始 Brief 文件名（Mock 不真实上传）<input id="nb-file" placeholder="如：Brief_V1.pdf"></label>
+          <label class="field">项目主题<input id="nb-theme" placeholder="如：Summer Outdoor"></label>
+          <label class="field">目标市场<input id="nb-market" placeholder="如：欧洲门店"></label>
+          <label class="field">整体价格带<input id="nb-price" placeholder="如：€2.0 – 9.0"></label>
+          <label class="field">上市时间<input id="nb-launch" placeholder="如：2027-06"></label>
+        </div>
+      </div>
+      <div>
+        <p class="label" style="margin-bottom:8px">② 结构化拆解为需求包（可先不拆，项目停在"拆解中"）</p>
+        <div id="nb-pkgs">${pkgRowHtml()}</div>
+        <button class="ghost mini" data-action="brief-add-pkg">+ 再加一个需求包</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span class="muted">创建后：填了需求包 → 直接进入「匹配中」；没填 → 停在「拆解中」，之后再补。</span>
+      <button class="ghost" data-action="brief-close">取消</button>
+      <button class="primary" data-action="brief-create">创建项目</button>
+    </div>`;
+  $("briefModal").classList.add("open");
+}
+
+function briefCreate() {
+  const name = $("nb-name").value.trim();
+  if (!name) { toast("请填写项目名称"); return; }
+  const rows = [...document.querySelectorAll("#nb-pkgs .nb-pkg")];
+  const pkgRows = [];
+  for (const r of rows) {
+    const pname = r.querySelector(".nbp-name").value.trim();
+    const cat = r.querySelector(".nbp-cat").value;
+    if (!pname && !cat) continue;
+    if (!pname || !cat) { toast("需求包需要填写名称并选择品类"); return; }
+    pkgRows.push({
+      name: pname, cat,
+      sku: Number(r.querySelector(".nbp-sku").value) || 12,
+      qty: Number(r.querySelector(".nbp-qty").value) || 30000,
+      price: r.querySelector(".nbp-price").value.trim() || "待确认",
+      lead: Number(r.querySelector(".nbp-lead").value) || 45,
+      procs: [...r.querySelectorAll(".nbp-proc.sel")].map(x => x.textContent),
+      certs: [...r.querySelectorAll(".nbp-cert.sel")].map(x => x.textContent)
+    });
+  }
+  const cliVal = $("nb-client").value;
+  const source = $("nb-source").value;
+  const launch = $("nb-launch").value.trim() || "待定";
+  const prjId = "PRJ-" + (2600 + projects.length + 1);
+  const d = new Date();
+  const today = `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+  projects.push({
+    id: prjId, name, client: cliVal === "__new" ? null : cliVal, owner: "业务员 A",
+    launch, briefVer: "V1",
+    briefFile: $("nb-file").value.trim() || (source === "正式文件（PDF / PPT）" ? "Brief_V1.pdf" : "（非正式 Brief · 待整理归档）"),
+    brief: {
+      "项目主题": $("nb-theme").value.trim() || "待补充",
+      "目标市场": $("nb-market").value.trim() || "待确认",
+      "SKU 结构": pkgRows.length ? pkgRows.map(p => `${p.cat} ${p.sku}`).join(" · ") : "待拆解",
+      "整体价格带": $("nb-price").value.trim() || "待确认",
+      "上市时间": launch,
+      "关键节点": "待排期",
+      "Brief 形式": source,
+      "Eastlink Owner": "业务员 A"
+    },
+    timeline: [{ t: today, txt: `Brief 接收（${source}），项目创建` }]
+  });
+
+  pkgRows.forEach(p => {
+    packages.push({
+      id: `REQ-${String(packages.length + 1).padStart(2, "0")}`,
+      prj: prjId, name: p.name, cat: p.cat, sku: p.sku, monthly: p.qty,
+      qtyLabel: `${(p.qty / 10000).toFixed(p.qty % 10000 ? 1 : 0)} 万件/月`,
+      priceBand: p.price, procs: p.procs, certs: p.certs, leadLimit: p.lead,
+      status: "matching", shortlist: [], confirmed: [], returnNote: null
+    });
+  });
+  if (pkgRows.length) prj(prjId).timeline.push({ t: today, txt: `Brief 结构化拆解完成，拆出 ${pkgRows.length} 个需求包` });
+  feed.unshift({ t: nowLabel(), txt: `新项目「${name}」已创建${pkgRows.length ? `，拆出 ${pkgRows.length} 个需求包，进入供应商匹配` : "，Brief 拆解中"}` });
+
+  $("briefModal").classList.remove("open");
+  state.prjOpen = prjId;
+  setView("projects");
+  toast(pkgRows.length ? "项目已创建，需求包进入待匹配，可到匹配工作台处理" : "项目已创建，当前处于拆解中");
+}
+
 /* ----- 事件委托 ----- */
 
 document.addEventListener("click", e => {
+  if (e.target.id === "briefModal") { $("briefModal").classList.remove("open"); return; }
+  const chip = e.target.closest(".chip-toggle");
+  if (chip) { chip.classList.toggle("sel"); return; }
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
   const a = btn.dataset.action;
@@ -1498,7 +1626,11 @@ document.addEventListener("click", e => {
   else if (a === "reason-cancel") { state.reasonFor = null; renderView(); }
   else if (a === "client-sel") { state.clientSel = btn.dataset.client; renderClients(); }
   else if (a === "sup-sel") { state.supSel = btn.dataset.sup; renderSupplierCards(); }
-  else if (a === "noop") toast("Demo 演示范围外 —— 正式版在此新建项目并上传 Brief");
+  else if (a === "brief-new") openBriefModal();
+  else if (a === "brief-close") $("briefModal").classList.remove("open");
+  else if (a === "brief-add-pkg") $("nb-pkgs").insertAdjacentHTML("beforeend", pkgRowHtml());
+  else if (a === "brief-rm-pkg") btn.closest(".nb-pkg").remove();
+  else if (a === "brief-create") briefCreate();
 });
 
 document.addEventListener("input", e => {
@@ -1530,7 +1662,10 @@ document.addEventListener("change", e => {
   }
 });
 
-document.querySelectorAll(".nav-btn").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+document.querySelectorAll(".nav-btn").forEach(b => b.addEventListener("click", () => {
+  if (b.dataset.view === "projects") state.prjOpen = null;
+  setView(b.dataset.view);
+}));
 document.querySelectorAll("[data-rtab]").forEach(b => b.addEventListener("click", () => { state.rtab = b.dataset.rtab; renderReview(); }));
 
 /* ---------------- 启动 ---------------- */
