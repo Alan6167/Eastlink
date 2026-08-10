@@ -62,25 +62,25 @@ const DIMS = [
 const clients = [
   {
     id: "CLI-001", name: "HEMA", region: "荷兰 · 零售连锁", level: "战略客户",
-    since: "2020", annual: "¥4,200 万", contact: "Mark de Vries · 采购总监",
+    since: "2020", annual: "¥4,200 万", contact: "采购总监（客户方）",
     prefs: "FSC 强制 · REACH 全线 · 环保材料优先",
     habit: "逐需求包确认推荐名单 + 设计稿逐版确认"
   },
   {
     id: "CLI-002", name: "Tesco", region: "英国 · 商超", level: "核心客户",
-    since: "2021", annual: "¥2,600 万", contact: "Sarah Hughes · Category Manager",
+    since: "2021", annual: "¥2,600 万", contact: "Category Manager（客户方）",
     prefs: "LFGB / FDA 食品接触 · 价格敏感",
     habit: "整单确认为主，重点包抽查"
   },
   {
     id: "CLI-003", name: "MINISO", region: "中国 · IP 零售", level: "成长客户",
-    since: "2023", annual: "¥1,100 万", contact: "刘一帆 · 商品经理",
+    since: "2023", annual: "¥1,100 万", contact: "商品经理（客户方）",
     prefs: "IP 授权合规 · 上新速度优先",
     habit: "推荐名单确认 + IP 方二次审核"
   },
   {
     id: "CLI-004", name: "Flying Tiger", region: "丹麦 · 生活方式", level: "新客户",
-    since: "2025", annual: "¥380 万", contact: "Mette Larsen · Buyer",
+    since: "2025", annual: "¥380 万", contact: "Buyer（客户方）",
     prefs: "设计驱动 · 小单快反",
     habit: "合作初期，确认方式待建立"
   }
@@ -91,79 +91,79 @@ const clients = [
 
 const suppliers = [
   {
-    id: "SUP-001", name: "宁波联诚文具", status: "active", source: { type: "own" },
+    id: "SUP-001", name: "供应商 A", status: "active", source: { type: "own" },
     type: "工厂", region: "宁波", cats: ["文具", "礼品"], procs: ["印刷", "模切", "装订"],
     capacity: 150000, price: 88, quality: 94, onTime: 95, lead: 32, sample: 6,
     certs: ["FSC", "BSCI", "ISO9001", "EN71", "REACH"], served: ["HEMA", "Tesco"],
-    years: 5, annual: "¥820 万", risk: "低", contact: "张梅 · 138****1188",
+    years: 5, annual: "¥820 万", risk: "低", contact: "销售对接人 · 138****1188",
     suggest: "主推分配，文具品类首选"
   },
   {
-    id: "SUP-002", name: "义乌博雅印务", status: "qualified", source: { type: "own" },
+    id: "SUP-002", name: "供应商 B", status: "qualified", source: { type: "own" },
     type: "工厂", region: "义乌", cats: ["文具"], procs: ["印刷", "烫金", "模切"],
     capacity: 90000, price: 92, quality: 90, onTime: 88, lead: 38, sample: 8,
     certs: ["FSC", "EN71"], served: ["Flying Tiger"],
-    years: 2, annual: "¥310 万", risk: "低", contact: "李涛 · 139****2233",
+    years: 2, annual: "¥310 万", risk: "低", contact: "销售对接人 · 139****2233",
     suggest: "报价强，注意 REACH 认证缺口"
   },
   {
-    id: "SUP-003", name: "杭州途安箱包", status: "active", source: { type: "client", client: "CLI-001" },
+    id: "SUP-003", name: "供应商 C", status: "active", source: { type: "client", client: "CLI-001" },
     type: "工厂", region: "杭州", cats: ["包袋"], procs: ["缝纫", "印刷", "压花"],
     capacity: 70000, price: 85, quality: 93, onTime: 94, lead: 40, sample: 7,
     certs: ["BSCI", "GRS", "REACH"], served: ["HEMA", "Zara Home"],
-    years: 4, annual: "¥560 万", risk: "低", contact: "王青 · 137****5566",
+    years: 4, annual: "¥560 万", risk: "低", contact: "销售对接人 · 137****5566",
     suggest: "HEMA 体系供应商，包袋优先评估"
   },
   {
-    id: "SUP-004", name: "广州威格袋业", status: "qualified", source: { type: "own" },
+    id: "SUP-004", name: "供应商 D", status: "qualified", source: { type: "own" },
     type: "工厂", region: "广州", cats: ["包袋", "礼品"], procs: ["缝纫", "丝印"],
     capacity: 55000, price: 90, quality: 88, onTime: 90, lead: 42, sample: 9,
     certs: ["BSCI", "SEDEX"], served: ["MINISO"],
-    years: 3, annual: "¥380 万", risk: "中", contact: "陈坚 · 136****7788",
+    years: 3, annual: "¥380 万", risk: "中", contact: "销售对接人 · 136****7788",
     suggest: "可分配，价格竞争力好，关注风险"
   },
   {
-    id: "SUP-005", name: "台州洁厨日用", status: "active", source: { type: "own" },
+    id: "SUP-005", name: "供应商 E", status: "active", source: { type: "own" },
     type: "工厂", region: "台州", cats: ["水具", "家居"], procs: ["注塑", "丝印", "电镀"],
     capacity: 60000, price: 82, quality: 91, onTime: 92, lead: 45, sample: 8,
     certs: ["LFGB", "FDA", "ISO9001", "BSCI"], served: ["Tesco", "HEMA"],
-    years: 4, annual: "¥640 万", risk: "低", contact: "吴楠 · 135****3311",
+    years: 4, annual: "¥640 万", risk: "低", contact: "销售对接人 · 135****3311",
     suggest: "水具/食品接触类首选"
   },
   {
-    id: "SUP-006", name: "永康鼎盛杯业", status: "onboarding", source: { type: "client", client: "CLI-001" },
+    id: "SUP-006", name: "供应商 F", status: "onboarding", source: { type: "client", client: "CLI-001" },
     type: "工厂", region: "永康", cats: ["水具"], procs: ["注塑", "真空成型", "丝印"],
     capacity: 80000, price: 87, quality: 85, onTime: 80, lead: 48, sample: 10,
     certs: ["LFGB"], served: [],
-    years: 0, annual: "—", risk: "中", contact: "周敏 · 133****9090",
+    years: 0, annual: "—", risk: "中", contact: "销售对接人 · 133****9090",
     suggest: "客户提供 · 准入资料补充中，验厂待排期"
   },
   {
-    id: "SUP-007", name: "深圳礼恒创意", status: "active", source: { type: "client", client: "CLI-003" },
+    id: "SUP-007", name: "供应商 G", status: "active", source: { type: "client", client: "CLI-003" },
     type: "贸易商", region: "深圳", cats: ["礼品", "文具"], procs: ["印刷", "注塑", "组装"],
     capacity: 100000, price: 80, quality: 89, onTime: 91, lead: 35, sample: 7,
     certs: ["BSCI", "EN71", "REACH", "Disney FAMA"], served: ["MINISO", "泡泡玛特"],
-    years: 3, annual: "¥450 万", risk: "低", contact: "郑好 · 132****4455",
+    years: 3, annual: "¥450 万", risk: "低", contact: "销售对接人 · 132****4455",
     suggest: "MINISO 体系，IP 类项目优先"
   },
   {
-    id: "SUP-008", name: "苏州绿源家品", status: "qualified", source: { type: "own" },
+    id: "SUP-008", name: "供应商 H", status: "qualified", source: { type: "own" },
     type: "工厂", region: "苏州", cats: ["家居", "水具"], procs: ["注塑", "模压"],
     capacity: 45000, price: 78, quality: 92, onTime: 89, lead: 48, sample: 9,
     certs: ["LFGB", "FSC"], served: ["HEMA"],
-    years: 2, annual: "¥270 万", risk: "低", contact: "顾芳 · 131****6677",
+    years: 2, annual: "¥270 万", risk: "低", contact: "销售对接人 · 131****6677",
     suggest: "家居类稳定，产能偏小"
   },
   {
-    id: "SUP-009", name: "温州启航文具", status: "suspended", source: { type: "own" },
+    id: "SUP-009", name: "供应商 I", status: "suspended", source: { type: "own" },
     type: "工厂", region: "温州", cats: ["文具"], procs: ["印刷", "装订"],
     capacity: 70000, price: 83, quality: 78, onTime: 76, lead: 44, sample: 11,
     certs: ["BSCI（过期）"], served: ["HEMA（历史）"],
-    years: 3, annual: "¥190 万", risk: "高", contact: "周建 · 130****2200",
+    years: 3, annual: "¥190 万", risk: "高", contact: "销售对接人 · 130****2200",
     suggest: "CAP 整改未关闭，暂停新项目分配"
   },
   {
-    id: "SUP-010", name: "东莞新程五金", status: "eliminated", source: { type: "own" },
+    id: "SUP-010", name: "供应商 J", status: "eliminated", source: { type: "own" },
     type: "工厂", region: "东莞", cats: ["家居"], procs: ["冲压", "电镀"],
     capacity: 50000, price: 70, quality: 58, onTime: 61, lead: 55, sample: 14,
     certs: [], served: ["历史客户"],
@@ -171,15 +171,15 @@ const suppliers = [
     suggest: "重大质量事故，不建议再启用"
   },
   {
-    id: "SUP-011", name: "金华跃达工贸", status: "potential", source: { type: "own" },
+    id: "SUP-011", name: "供应商 K", status: "potential", source: { type: "own" },
     type: "工贸一体", region: "金华", cats: ["包袋"], procs: ["缝纫"],
     capacity: 40000, price: null, quality: null, onTime: null, lead: null, sample: null,
     certs: [], served: [],
-    years: 0, annual: "—", risk: "中", contact: "楼霞 · 189****1212",
+    years: 0, annual: "—", risk: "中", contact: "销售对接人 · 189****1212",
     suggest: "展会接触，信息收集中，可启动准入评估"
   },
   {
-    id: "SUP-012", name: "宁波东航实业", status: "active", source: { type: "own" },
+    id: "SUP-012", name: "供应商 L", status: "active", source: { type: "own" },
     type: "自有工厂", region: "宁波", cats: ["文具", "包袋"], procs: ["印刷", "缝纫", "模切"],
     capacity: 120000, price: 76, quality: 96, onTime: 96, lead: 28, sample: 5,
     certs: ["FSC", "BSCI", "ISO9001", "REACH", "EN71"], served: ["HEMA", "Tesco", "MINISO"],
@@ -192,13 +192,13 @@ const suppliers = [
 
 const projects = [
   {
-    id: "PRJ-2601", name: "HEMA 2027 开学季系列", client: "CLI-001", owner: "王琳",
+    id: "PRJ-2601", name: "HEMA 2027 开学季系列", client: "CLI-001", owner: "业务员 A",
     launch: "2027-06", briefVer: "V2", briefFile: "HEMA_BTS_2027_Brief_V2.pdf",
     brief: {
       "项目主题": "Back to School 2027", "目标市场": "欧洲门店 + 线上",
       "SKU 结构": "文具 40 · 包袋 22 · 水具 10", "整体价格带": "€1.5 – 8.0",
       "上市时间": "2027-06", "关键节点": "设计稿 2026-11 · 大货下单 2027-02",
-      "客户决策人": "Mark de Vries", "Eastlink Owner": "王琳"
+      "客户决策人": "客户采购总监", "Eastlink Owner": "业务员 A"
     },
     timeline: [
       { t: "07-21", txt: "客户提交 Brief V1（邮件 + PDF）" },
@@ -208,13 +208,13 @@ const projects = [
     ]
   },
   {
-    id: "PRJ-2602", name: "HEMA 2026 秋冬家居系列", client: "CLI-001", owner: "王琳",
+    id: "PRJ-2602", name: "HEMA 2026 秋冬家居系列", client: "CLI-001", owner: "业务员 A",
     launch: "2026-10", briefVer: "V1", briefFile: "HEMA_AW26_Home_Brief.pdf",
     brief: {
       "项目主题": "Autumn Warm Home", "目标市场": "欧洲门店",
       "SKU 结构": "布艺收纳 12 · 保温杯具 8", "整体价格带": "€3.0 – 12.0",
       "上市时间": "2026-10", "关键节点": "设计定稿 2026-08 · 大货下单 2026-09",
-      "客户决策人": "Mark de Vries", "Eastlink Owner": "王琳"
+      "客户决策人": "客户采购总监", "Eastlink Owner": "业务员 A"
     },
     timeline: [
       { t: "06-12", txt: "供应商推荐名单客户确认通过" },
@@ -223,13 +223,13 @@ const projects = [
     ]
   },
   {
-    id: "PRJ-2603", name: "Tesco 厨房收纳系列", client: "CLI-002", owner: "赵成",
+    id: "PRJ-2603", name: "Tesco 厨房收纳系列", client: "CLI-002", owner: "业务员 B",
     launch: "2026-12", briefVer: "V1", briefFile: "Tesco_Kitchen_Brief.pdf",
     brief: {
       "项目主题": "Kitchen Storage Refresh", "目标市场": "英国门店",
       "SKU 结构": "收纳盒 16 · 餐厨配件 9", "整体价格带": "£2.0 – 9.0",
       "上市时间": "2026-12", "关键节点": "已完成设计定稿",
-      "客户决策人": "Sarah Hughes", "Eastlink Owner": "赵成"
+      "客户决策人": "客户 Category Manager", "Eastlink Owner": "业务员 B"
     },
     timeline: [
       { t: "05-20", txt: "供应商确认，进入设计协同" },
@@ -237,39 +237,39 @@ const projects = [
     ]
   },
   {
-    id: "PRJ-2604", name: "MINISO 圣诞 IP 礼品", client: "CLI-003", owner: "王琳",
+    id: "PRJ-2604", name: "MINISO 圣诞 IP 礼品", client: "CLI-003", owner: "业务员 A",
     launch: "2026-11", briefVer: "V1", briefFile: "MINISO_Xmas_IP_Brief.pptx",
     brief: {
       "项目主题": "圣诞 IP 联名礼品", "目标市场": "中国 + 东南亚",
       "SKU 结构": "IP 礼品 18", "整体价格带": "¥15 – 69",
       "上市时间": "2026-11", "关键节点": "IP 方审核 2026-09",
-      "客户决策人": "刘一帆", "Eastlink Owner": "王琳"
+      "客户决策人": "客户商品经理", "Eastlink Owner": "业务员 A"
     },
     timeline: [
       { t: "07-18", txt: "推荐名单内审通过，提交 MINISO 确认" }
     ]
   },
   {
-    id: "PRJ-2605", name: "Flying Tiger 春季文创", client: "CLI-004", owner: "赵成",
+    id: "PRJ-2605", name: "Flying Tiger 春季文创", client: "CLI-004", owner: "业务员 B",
     launch: "2027-03", briefVer: "V1", briefFile: "FT_Spring_Brief_Sketch.jpg",
     brief: {
       "项目主题": "Spring Playful Stationery", "目标市场": "北欧门店",
       "SKU 结构": "拆解中", "整体价格带": "待确认",
       "上市时间": "2027-03", "关键节点": "拆解完成后排期",
-      "客户决策人": "Mette Larsen", "Eastlink Owner": "赵成"
+      "客户决策人": "客户 Buyer", "Eastlink Owner": "业务员 B"
     },
     timeline: [
       { t: "08-02", txt: "客户微信发来手绘参考图 + 品类方向，Brief 结构化进行中" }
     ]
   },
   {
-    id: "PRJ-2606", name: "IP 品牌（华南）合作询单", client: null, owner: "王琳",
+    id: "PRJ-2606", name: "IP 品牌（华南）合作询单", client: null, owner: "业务员 A",
     launch: "待定", briefVer: "V0", briefFile: "微信聊天记录整理.docx",
     brief: {
       "项目主题": "IP 衍生品合作意向", "目标市场": "待确认",
       "SKU 结构": "待拆解", "整体价格带": "待确认",
       "上市时间": "待定", "关键节点": "客户建档 + Brief 补全",
-      "客户决策人": "待确认", "Eastlink Owner": "王琳"
+      "客户决策人": "待确认", "Eastlink Owner": "业务员 A"
     },
     timeline: [
       { t: "08-06", txt: "收到合作询单，待客户建档" }
@@ -330,24 +330,24 @@ const packages = [
 
 const designs = [
   {
-    id: "D-01", pkg: "REQ-H1", ver: 1, designer: "陈晨", date: "07-28",
+    id: "D-01", pkg: "REQ-H1", ver: 1, designer: "设计师 A", date: "07-28",
     status: "changes", palette: ["#8FA8C8", "#E7EDF5"],
     note: "客户修改意见：整体色调偏冷，希望更贴近 HEMA 红白视觉体系；LOGO 占比放大 20%。"
   },
   {
-    id: "D-02", pkg: "REQ-H1", ver: 2, designer: "陈晨", date: "08-05",
+    id: "D-02", pkg: "REQ-H1", ver: 2, designer: "设计师 A", date: "08-05",
     status: "internal_review", palette: ["#E64A45", "#F7F3EE"], note: null
   },
   {
-    id: "D-03", pkg: "REQ-H2", ver: 1, designer: "苏雨", date: "08-03",
+    id: "D-03", pkg: "REQ-H2", ver: 1, designer: "设计师 B", date: "08-03",
     status: "client_review", palette: ["#2F6BD8", "#F2F6FB"], note: null
   },
   {
-    id: "D-04", pkg: "REQ-T1", ver: 2, designer: "苏雨", date: "07-12",
+    id: "D-04", pkg: "REQ-T1", ver: 2, designer: "设计师 B", date: "07-12",
     status: "approved", palette: ["#4C9A6E", "#F2F7F0"], note: null
   },
   {
-    id: "D-05", pkg: "REQ-T2", ver: 1, designer: "陈晨", date: "07-10",
+    id: "D-05", pkg: "REQ-T2", ver: 1, designer: "设计师 A", date: "07-10",
     status: "approved", palette: ["#C88B3C", "#FBF5EC"], note: null
   }
 ];
@@ -358,12 +358,12 @@ const feed = [
   { t: "今天 09:40", txt: "HEMA 补充水具认证要求，REQ-03 需求包已更新" },
   { t: "今天 09:12", txt: "设计稿 D-02（布艺收纳 V2）提交内审" },
   { t: "昨天 17:26", txt: "MINISO 圣诞 IP 需求包推荐名单已提交客户确认" },
-  { t: "昨天 14:03", txt: "永康鼎盛杯业（HEMA 提供）进入准入流程，验厂待排期" },
+  { t: "昨天 14:03", txt: "供应商 F（HEMA 提供）进入准入流程，验厂待排期" },
   { t: "08-04 11:20", txt: "HEMA 2027 开学季进入供应商匹配阶段" }
 ];
 
 const history = [
-  { t: "07-18", txt: "REQ-M1 推荐名单内审通过（王琳），已提交 MINISO" },
+  { t: "07-18", txt: "REQ-M1 推荐名单内审通过（业务员 A），已提交 MINISO" },
   { t: "07-15", txt: "Tesco 厨房收纳全部设计稿客户定稿" },
   { t: "06-12", txt: "HEMA 秋冬家居 2 个需求包推荐名单客户确认通过" }
 ];
@@ -386,7 +386,7 @@ const state = {
 
 const ROLES = {
   sales: {
-    banner: "业务员视角 · 王琳（项目 Owner）",
+    banner: "业务员视角 · 项目 Owner",
     cls: "",
     hint: "负责 Brief 拆解、供应商匹配、内审与对客提交。",
     nav: ["dashboard", "projects", "matching", "clients", "suppliers", "thinking"]
@@ -405,7 +405,7 @@ const ROLES = {
     clientId: "CLI-001"
   },
   supplier: {
-    banner: "供应商视角 · 台州洁厨日用（模拟供应商登录）",
+    banner: "供应商视角 · 供应商 E（模拟供应商登录）",
     cls: "supplier",
     hint: "仅可见自己的档案与确认的合作，看不到其他供应商与报价对比。",
     nav: ["dashboard"],
@@ -1368,7 +1368,7 @@ function pkgPass(pkgId) {
   p.status = "client_review";
   const c = client(prj(p.prj).client);
   log(`${p.name} 内审通过，推荐名单已提交 ${c ? c.name : "客户"} 确认`, p.prj);
-  done(`${p.name} 推荐名单内审通过（王琳）`);
+  done(`${p.name} 推荐名单内审通过（业务员 A）`);
   toast(`内审通过 → 已提交 ${c ? c.name : "客户"}。切换到客户视角可模拟客户审核`);
   renderView();
 }
