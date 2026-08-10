@@ -605,6 +605,18 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .map-detail b { color: var(--ink); font-size: 13.5px; }
 .map-detail .chip-row { margin-top: 8px; }
 
+.map-savestate { color: var(--faint); font-size: 11px; }
+.map-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; margin-top: 8px; }
+.map-form textarea {
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+  min-height: 56px; resize: vertical; font-weight: 400; width: 100%;
+}
+#platformMap.linking { cursor: crosshair; }
+.edge .hit { stroke: transparent; stroke-width: 14; fill: none; cursor: pointer; }
+.edge.esel path:not(.hit) { stroke-width: 3; }
+.edge.esel text { fill: var(--ink); }
+@media (max-width: 760px) { .map-form { grid-template-columns: 1fr; } }
+
 /* ============ 新建 Brief 模态框 ============ */
 .modal-mask {
   position: fixed; inset: 0; z-index: 60;

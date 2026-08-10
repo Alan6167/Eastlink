@@ -89,13 +89,18 @@
 
         <section class="panel">
           <div class="panel-head">
-            <div><p class="label">Platform Map</p><h3>平台全景导图（点击节点看说明 · 拖动节点当画板）</h3></div>
+            <div><p class="label">Platform Map</p><h3>平台全景导图（可编辑画板 · 点选 / 拖动 / 双击编辑）</h3></div>
             <div class="map-legend">
               <span><i class="lg-main"></i>业务主线</span>
               <span><i class="lg-back"></i>退回 / 换选</span>
               <span><i class="lg-asset"></i>数据支撑</span>
               <span><i class="lg-role"></i>角色动作</span>
-              <button class="ghost mini" data-action="map-reset">重置布局</button>
+              <span class="map-savestate" id="mapSaveState">改动自动保存在本机</span>
+              <button class="ghost mini" data-action="map-add-node">+ 节点</button>
+              <button class="ghost mini" data-action="map-export">导出</button>
+              <button class="ghost mini" data-action="map-import">导入</button>
+              <button class="ghost mini" data-action="map-reset">重置</button>
+              <input type="file" id="mapImportFile" accept="application/json,.json" hidden>
             </div>
           </div>
           <div class="map-wrap">

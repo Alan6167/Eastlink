@@ -1526,8 +1526,51 @@ const MAP_EDGES = [
   { from: "m-design",  to: "d-log",     label: "意见留痕",   type: "asset", sel: true }
 ];
 
-let mapNodes = MAP_INIT.map(n => ({ ...n }));
+const MAP_STORE_KEY = "eastlink_map_v1";
+let mapNodes = [], mapEdges = [], mapSeq = 100;
 const mnode = id => mapNodes.find(n => n.id === id);
+const medge = eid => mapEdges.find(e => e.eid === eid);
+
+function mapDefaults() {
+  mapNodes = MAP_INIT.map(n => ({ ...n, hi: [...n.hi] }));
+  mapEdges = MAP_EDGES.map((e, i) => ({ ...e, eid: "e" + (i + 1) }));
+  mapSeq = 100;
+}
+
+function mapSave() {
+  try {
+    localStorage.setItem(MAP_STORE_KEY, JSON.stringify({ v: 1, nodes: mapNodes, edges: mapEdges, seq: mapSeq }));
+    const el = $("mapSaveState");
+    if (el) el.textContent = "已保存到本机 " + nowLabel().replace("今天 ", "");
+  } catch (e) { /* 隐私模式等场景下静默降级 */ }
+}
+
+function mapLoad() {
+  mapDefaults();
+  try {
+    const raw = localStorage.getItem(MAP_STORE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d && Array.isArray(d.nodes) && Array.isArray(d.edges) &&
+        d.nodes.every(n => n.id && typeof n.x === "number" && typeof n.y === "number")) {
+      mapNodes = d.nodes;
+      mapEdges = d.edges;
+      mapSeq = d.seq || 100;
+    }
+  } catch (e) { /* 数据损坏则回退默认 */ }
+}
+mapLoad();
+
+function mapNeighbors(id) {
+  const s = new Set();
+  const n = mnode(id);
+  (n?.hi || []).forEach(x => { if (mnode(x)) s.add(x); });
+  mapEdges.forEach(e => {
+    if (e.from === id && mnode(e.to)) s.add(e.to);
+    if (e.to === id && mnode(e.from)) s.add(e.from);
+  });
+  return s;
+}
 
 function cubicAt(t, p) {
   const u = 1 - t;
@@ -1561,34 +1604,40 @@ function edgeGeom(e) {
 
 function mapEdgesHtml() {
   const sel = state.mapSel;
-  return MAP_EDGES.map(e => {
+  return mapEdges.map(e => {
+    if (!mnode(e.from) || !mnode(e.to)) return "";
     const touches = sel && (e.from === sel || e.to === sel);
-    if (e.sel && !touches) return "";
+    if (e.sel && !touches && !e.custom) return "";
+    const isSel = state.mapEdgeSel === e.eid;
+    const dim = (sel && !touches) || (state.mapEdgeSel && !isSel);
+    const cls = `edge ${e.type} ${isSel ? "esel" : ""} ${touches ? "hot" : ""} ${dim ? "dim" : ""}`;
     const g = edgeGeom(e);
-    const cls = `edge ${e.type} ${sel ? (touches ? "hot" : "dim") : ""}`;
-    const marker = { main: "arrow-main", back: "arrow-back", asset: "arrow-asset", role: "arrow-role" }[e.type];
-    return `<g class="${cls}">
+    const marker = { main: "arrow-main", back: "arrow-back", asset: "arrow-asset", role: "arrow-role" }[e.type] || "arrow-role";
+    return `<g class="${cls}" data-eid="${e.eid}">
+      <path class="hit" d="${g.d}"></path>
       <path d="${g.d}" marker-end="url(#${marker})"></path>
-      <text x="${g.mid.x}" y="${g.mid.y - 5}" text-anchor="middle">${e.label}</text>
+      <text x="${g.mid.x}" y="${g.mid.y - 5}" text-anchor="middle">${esc(e.label)}</text>
     </g>`;
   }).join("");
 }
 
 function mapNodesHtml() {
   const sel = state.mapSel;
-  const selNode = sel ? mnode(sel) : null;
+  const rel = sel ? mapNeighbors(sel) : null;
+  const edgeSel = state.mapEdgeSel ? medge(state.mapEdgeSel) : null;
   return mapNodes.map(n => {
+    const isEnd = edgeSel && (edgeSel.from === n.id || edgeSel.to === n.id);
     const cls = [
       "map-node",
-      { role: "mn-role", main: "mn-main", hot: "mn-hot", asset: "mn-asset" }[n.band],
+      { role: "mn-role", main: "mn-main", hot: "mn-hot", asset: "mn-asset" }[n.band] || "mn-main",
       sel === n.id ? "sel" : "",
-      selNode && selNode.hi.includes(n.id) ? "rel" : "",
-      sel && sel !== n.id && !selNode.hi.includes(n.id) ? "dim" : ""
+      (rel && rel.has(n.id)) || isEnd ? "rel" : "",
+      sel && sel !== n.id && !rel.has(n.id) ? "dim" : ""
     ].join(" ");
     return `<g class="${cls}" data-node="${n.id}" transform="translate(${n.x},${n.y})">
       <rect width="${n.w}" height="${n.h}" rx="11"></rect>
-      <text class="mn-label" x="${n.w / 2}" y="${n.h / 2 - 2}" text-anchor="middle">${n.label}</text>
-      <text class="mn-sub" x="${n.w / 2}" y="${n.h / 2 + 13}" text-anchor="middle">${n.sub}</text>
+      <text class="mn-label" x="${n.w / 2}" y="${n.h / 2 - 2}" text-anchor="middle">${esc(n.label)}</text>
+      <text class="mn-sub" x="${n.w / 2}" y="${n.h / 2 + 13}" text-anchor="middle">${esc(n.sub)}</text>
     </g>`;
   }).join("");
 }
@@ -1596,6 +1645,7 @@ function mapNodesHtml() {
 function renderMap() {
   const svg = $("platformMap");
   if (!svg) return;
+  svg.classList.toggle("linking", !!state.mapLink);
   svg.innerHTML = `
     <defs>
       ${[["arrow-main", "#0666FF"], ["arrow-back", "#B45309"], ["arrow-asset", "#0C7A4B"], ["arrow-role", "#0B5E93"]]
@@ -1611,17 +1661,81 @@ function renderMap() {
   renderMapDetail();
 }
 
+const MAP_TYPE_OPTIONS = sel => ["main:主线（蓝实线）", "back:退回（橙虚线）", "asset:数据（绿虚线）", "role:角色（蓝点线）"]
+  .map(x => { const [v, l] = x.split(":"); return `<option value="${v}" ${v === sel ? "selected" : ""}>${l}</option>`; }).join("");
+
 function renderMapDetail() {
   const box = $("mapDetail");
   if (!box) return;
-  const n = state.mapSel ? mnode(state.mapSel) : null;
-  if (!n) {
-    box.innerHTML = `点击任意节点查看说明与关联关系；<b>节点可以拖动</b>，讲解时当白板自由摆布局，「重置布局」一键还原。虚线含义见右上角图例。`;
+
+  if (state.mapLink) {
+    const from = mnode(state.mapLink.from);
+    box.innerHTML = `<b>连线模式</b> · 从「${esc(from.label)}」出发，<span class="muted">现在点击目标节点完成连线，点空白处取消</span>
+      <div class="map-form">
+        <label class="field">连线标签<input id="mlk-label" value="${esc(state.mapLink.label)}"></label>
+        <label class="field">线型<select id="mlk-type">${MAP_TYPE_OPTIONS(state.mapLink.type)}</select></label>
+      </div>
+      <div class="r-actions" style="margin-top:8px"><button class="ghost mini" data-action="map-link-cancel">取消连线</button></div>`;
     return;
   }
-  box.innerHTML = `<b>${n.label}</b> · <span class="muted">${n.sub}</span>
-    <p style="margin-top:6px">${n.desc}</p>
-    ${n.hi.length ? `<div class="chip-row">${n.hi.map(id => `<span class="chip blue">${mnode(id).label}</span>`).join("")}</div>` : ""}`;
+
+  if (state.mapEdgeSel) {
+    const e = medge(state.mapEdgeSel);
+    if (e) {
+      const a = mnode(e.from), b = mnode(e.to);
+      box.innerHTML = `<b>连线</b> · ${a ? esc(a.label) : "?"} → ${b ? esc(b.label) : "?"}
+        <div class="map-form">
+          <label class="field">标签<input id="med-label" value="${esc(e.label)}"></label>
+          <label class="field">线型<select id="med-type">${MAP_TYPE_OPTIONS(e.type)}</select></label>
+        </div>
+        <div class="r-actions" style="margin-top:8px">
+          <button class="primary mini" data-action="map-edge-save">保存</button>
+          <button class="ghost mini" data-action="map-edge-del">删除连线</button>
+        </div>`;
+      return;
+    }
+  }
+
+  const n = state.mapSel ? mnode(state.mapSel) : null;
+  if (!n) {
+    box.innerHTML = `这是一块<b>可编辑画板</b>：点击节点看说明，<b>双击节点直接编辑</b>文字，拖动自由布局；选中节点后可「连线到…」「删除」；点击连线可改标签或删除。改动<b>自动保存在本机浏览器</b>；用「导出」把画板发给同事，对方「导入」即可查看（多人实时协同为 P2 后端范围）。`;
+    return;
+  }
+
+  if (state.mapEdit) {
+    box.innerHTML = `<b>编辑节点</b>
+      <div class="map-form">
+        <label class="field">名称<input id="mne-label" value="${esc(n.label)}"></label>
+        <label class="field">副标题<input id="mne-sub" value="${esc(n.sub)}"></label>
+        <label class="field">类型<select id="mne-band">
+          <option value="role">角色（天蓝）</option><option value="main">主线（白）</option>
+          <option value="hot">重点（品牌蓝）</option><option value="asset">数据（绿）</option></select></label>
+        <label class="field" style="grid-column:1/-1">说明（点击节点时展示）<textarea id="mne-desc">${esc(n.desc)}</textarea></label>
+      </div>
+      <div class="r-actions" style="margin-top:8px">
+        <button class="primary mini" data-action="map-node-save">保存</button>
+        <button class="ghost mini" data-action="map-node-cancel">取消</button>
+      </div>`;
+    $("mne-band").value = n.band;
+    return;
+  }
+
+  const rel = [...mapNeighbors(n.id)];
+  box.innerHTML = `<b>${esc(n.label)}</b> · <span class="muted">${esc(n.sub)}</span>
+    <p style="margin-top:6px">${esc(n.desc) || "（暂无说明，点「编辑节点」补充）"}</p>
+    ${rel.length ? `<div class="chip-row">${rel.map(id => `<span class="chip blue">${esc(mnode(id).label)}</span>`).join("")}</div>` : ""}
+    <div class="r-actions" style="margin-top:10px">
+      <button class="ghost mini" data-action="map-node-edit">✎ 编辑节点</button>
+      <button class="ghost mini" data-action="map-link-start">→ 连线到…</button>
+      <button class="ghost mini" data-action="map-node-del">删除节点</button>
+    </div>`;
+}
+
+function mapClearSel() {
+  state.mapSel = null;
+  state.mapEdgeSel = null;
+  state.mapEdit = false;
+  state.mapLink = null;
 }
 
 function setupMapInteractions() {
@@ -1632,12 +1746,48 @@ function setupMapInteractions() {
 
   svg.addEventListener("pointerdown", e => {
     const g = e.target.closest("[data-node]");
-    if (!g) return;
-    const n = mnode(g.dataset.node);
-    const pt = svgPoint(svg, e);
-    drag = { n, dx: pt.x - n.x, dy: pt.y - n.y, sx: e.clientX, sy: e.clientY, moved: false };
-    svg.setPointerCapture(e.pointerId);
+
+    if (state.mapLink) {
+      if (g && g.dataset.node !== state.mapLink.from) {
+        mapEdges.push({
+          eid: "e" + (++mapSeq),
+          from: state.mapLink.from,
+          to: g.dataset.node,
+          label: ($("mlk-label") ? $("mlk-label").value.trim() : "") || "关联",
+          type: $("mlk-type") ? $("mlk-type").value : "asset",
+          custom: true
+        });
+        state.mapLink = null;
+        mapSave();
+        renderMap();
+        toast("连线已创建");
+      } else {
+        state.mapLink = null;
+        renderMap();
+      }
+      return;
+    }
+
+    if (g) {
+      const n = mnode(g.dataset.node);
+      const pt = svgPoint(svg, e);
+      drag = { n, dx: pt.x - n.x, dy: pt.y - n.y, sx: e.clientX, sy: e.clientY, moved: false };
+      svg.setPointerCapture(e.pointerId);
+      return;
+    }
+
+    const eg = e.target.closest("[data-eid]");
+    if (eg) {
+      state.mapSel = null;
+      state.mapEdit = false;
+      state.mapEdgeSel = state.mapEdgeSel === eg.dataset.eid ? null : eg.dataset.eid;
+      renderMap();
+      return;
+    }
+
+    if (state.mapSel || state.mapEdgeSel) { mapClearSel(); renderMap(); }
   });
+
   svg.addEventListener("pointermove", e => {
     if (!drag) return;
     if (Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) > 4) drag.moved = true;
@@ -1650,24 +1800,125 @@ function setupMapInteractions() {
     const layer = svg.querySelector("#mapEdgeLayer");
     if (layer) layer.innerHTML = mapEdgesHtml();
   });
-  const end = e => {
+
+  svg.addEventListener("pointerup", () => {
     if (!drag) return;
-    if (!drag.moved) {
+    if (drag.moved) {
+      mapSave();
+    } else {
+      state.mapEdgeSel = null;
+      state.mapEdit = false;
       state.mapSel = state.mapSel === drag.n.id ? null : drag.n.id;
       renderMap();
     }
     drag = null;
-  };
-  svg.addEventListener("pointerup", end);
+  });
   svg.addEventListener("pointercancel", () => { drag = null; });
-  svg.addEventListener("pointerdown", e => {
-    if (!e.target.closest("[data-node]") && state.mapSel) { state.mapSel = null; renderMap(); }
+
+  svg.addEventListener("dblclick", e => {
+    const g = e.target.closest("[data-node]");
+    if (!g) return;
+    state.mapSel = g.dataset.node;
+    state.mapEdgeSel = null;
+    state.mapEdit = true;
+    renderMap();
   });
 }
 
 function svgPoint(svg, e) {
   const r = svg.getBoundingClientRect();
   return { x: (e.clientX - r.left) / r.width * 1180, y: (e.clientY - r.top) / r.height * 620 };
+}
+
+/* ----- 画板编辑动作 ----- */
+
+function mapAddNode() {
+  const id = "c" + (++mapSeq);
+  mapNodes.push({
+    id, x: 470 + (mapSeq % 4) * 28, y: 128 + (mapSeq % 3) * 26, w: 150, h: 52,
+    band: "main", label: "新节点", sub: "双击修改", desc: "", hi: []
+  });
+  state.mapSel = id;
+  state.mapEdgeSel = null;
+  state.mapEdit = true;
+  mapSave();
+  renderMap();
+}
+
+function mapNodeSave() {
+  const n = mnode(state.mapSel);
+  if (!n) return;
+  n.label = $("mne-label").value.trim() || n.label;
+  n.sub = $("mne-sub").value.trim();
+  n.band = $("mne-band").value;
+  n.desc = $("mne-desc").value.trim();
+  n.w = Math.min(260, Math.max(120, n.label.length * 14 + 44));
+  state.mapEdit = false;
+  mapSave();
+  renderMap();
+  toast("节点已保存");
+}
+
+function mapNodeDel() {
+  const id = state.mapSel;
+  if (!id) return;
+  mapNodes = mapNodes.filter(n => n.id !== id);
+  mapEdges = mapEdges.filter(e => e.from !== id && e.to !== id);
+  mapClearSel();
+  mapSave();
+  renderMap();
+  toast("节点及其连线已删除（「重置」可还原默认画板）");
+}
+
+function mapEdgeSave() {
+  const e = medge(state.mapEdgeSel);
+  if (!e) return;
+  e.label = $("med-label").value.trim() || e.label;
+  e.type = $("med-type").value;
+  mapSave();
+  renderMap();
+  toast("连线已保存");
+}
+
+function mapEdgeDel() {
+  mapEdges = mapEdges.filter(e => e.eid !== state.mapEdgeSel);
+  state.mapEdgeSel = null;
+  mapSave();
+  renderMap();
+  toast("连线已删除");
+}
+
+function mapExport() {
+  const blob = new Blob([JSON.stringify({ v: 1, nodes: mapNodes, edges: mapEdges, seq: mapSeq }, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "eastlink-platform-map.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("画板已导出为 JSON，可发给同事导入查看");
+}
+
+function mapImport(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const d = JSON.parse(reader.result);
+      if (!d || !Array.isArray(d.nodes) || !Array.isArray(d.edges) ||
+          !d.nodes.every(n => n.id && typeof n.x === "number")) throw new Error("bad");
+      mapNodes = d.nodes;
+      mapEdges = d.edges;
+      mapSeq = Math.max(100, d.seq || 0,
+        ...mapNodes.map(n => Number(String(n.id).replace(/\D/g, "")) || 0),
+        ...mapEdges.map(e => Number(String(e.eid).replace(/\D/g, "")) || 0));
+      mapClearSel();
+      mapSave();
+      renderMap();
+      toast("画板已导入并保存");
+    } catch (err) {
+      toast("导入失败：不是有效的画板 JSON 文件");
+    }
+  };
+  reader.readAsText(file);
 }
 
 /* ----- 新建 Brief 向导 ----- */
@@ -1844,11 +2095,44 @@ document.addEventListener("click", e => {
   else if (a === "brief-add-pkg") $("nb-pkgs").insertAdjacentHTML("beforeend", pkgRowHtml());
   else if (a === "brief-rm-pkg") btn.closest(".nb-pkg").remove();
   else if (a === "brief-create") briefCreate();
-  else if (a === "map-reset") {
-    mapNodes = MAP_INIT.map(n => ({ ...n }));
-    state.mapSel = null;
+  else if (a === "map-add-node") mapAddNode();
+  else if (a === "map-node-edit") { state.mapEdit = true; renderMapDetail(); }
+  else if (a === "map-node-save") mapNodeSave();
+  else if (a === "map-node-cancel") { state.mapEdit = false; renderMapDetail(); }
+  else if (a === "map-node-del") mapNodeDel();
+  else if (a === "map-link-start") {
+    state.mapLink = { from: state.mapSel, label: "关联", type: "asset" };
+    state.mapEdit = false;
     renderMap();
-    toast("导图布局已重置");
+  }
+  else if (a === "map-link-cancel") { state.mapLink = null; renderMap(); }
+  else if (a === "map-edge-save") mapEdgeSave();
+  else if (a === "map-edge-del") mapEdgeDel();
+  else if (a === "map-export") mapExport();
+  else if (a === "map-import") $("mapImportFile").click();
+  else if (a === "map-reset") {
+    if (btn.dataset.arm) {
+      delete btn.dataset.arm;
+      mapDefaults();
+      try { localStorage.removeItem(MAP_STORE_KEY); } catch (e) {}
+      mapClearSel();
+      renderMap();
+      const el = $("mapSaveState");
+      if (el) el.textContent = "已还原默认画板";
+      btn.textContent = "重置";
+      toast("画板已还原为默认，并清除本机保存");
+    } else {
+      btn.dataset.arm = "1";
+      btn.textContent = "确认重置？";
+      setTimeout(() => { if (btn.dataset.arm) { delete btn.dataset.arm; btn.textContent = "重置"; } }, 2600);
+    }
+  }
+});
+
+document.addEventListener("change", e => {
+  if (e.target.id === "mapImportFile" && e.target.files && e.target.files[0]) {
+    mapImport(e.target.files[0]);
+    e.target.value = "";
   }
 });
 
