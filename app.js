@@ -26,7 +26,6 @@ const PKG_STATUS = {
   shortlist_review: { label: "打样名单内审", tag: "st-internal" },
   sampling:         { label: "打样中",       tag: "st-internal" },
   final_internal:   { label: "定商建议内审", tag: "st-internal" },
-  final_client:     { label: "待客户定商",   tag: "st-client" },
   confirmed:        { label: "已确认合作",   tag: "st-confirmed" }
 };
 
@@ -46,7 +45,7 @@ const DESIGN_STATUS = {
 
 const STAGES = [
   ["received", "Brief 接收"], ["structuring", "拆解中"], ["design", "设计中"],
-  ["sampling", "匹配与打样"], ["decide", "定商确认"], ["confirmed", "已确认合作"]
+  ["sampling", "匹配与打样"], ["decide", "比样定商"], ["confirmed", "已确认合作"]
 ];
 const STAGE_LABEL = Object.fromEntries(STAGES);
 const STAGE_TAG = {
@@ -126,7 +125,7 @@ const clients = [
         { step: "设计初审", role: "设计负责人", note: "视觉规范与禁用规则符合性" },
         { step: "产品终审", role: "总部 PD", note: "习惯两轮内定稿，超三轮需重开方向" },
         { step: "品质合规", role: "品质合规团队", note: "认证与测试标准核验" },
-        { step: "定商确认", role: "采购总监", note: "依据打样比样结果确认合作供应商" }
+        { step: "定商知会", role: "采购总监", note: "接收 Eastlink 定商结果与比样依据备案（无需客户确认动作）" }
       ],
       briefTemplate: {
         fields: ["上市档期", "SKU 结构", "分品类价格带", "FSC / 环保要求", "低饱和视觉方向", "认证清单", "包装规范版本"],
@@ -510,7 +509,7 @@ const projects = [
       "客户决策人": "客户采购总监", "Eastlink Owner": "业务员 A"
     },
     timeline: [
-      { t: "06-12", txt: "保温杯具需求包客户定商确认（供应商 E）" },
+      { t: "06-12", txt: "保温杯具需求包定商确认（供应商 E · 内审），结果同步客户" },
       { t: "07-28", txt: "布艺收纳设计稿 V1 客户提出修改意见" },
       { t: "08-05", txt: "布艺收纳候选打样评分完成，定商建议进入内审" }
     ]
@@ -525,7 +524,7 @@ const projects = [
       "客户决策人": "客户 Category Manager", "Eastlink Owner": "业务员 B"
     },
     timeline: [
-      { t: "05-20", txt: "比样定商完成，客户确认合作供应商" },
+      { t: "05-20", txt: "比样定商完成（内审确认），结果同步客户" },
       { t: "07-15", txt: "金样确认，等待大货下单（P2 范围）" }
     ]
   },
@@ -775,7 +774,7 @@ const feed = [
 const history = [
   { t: "07-18", txt: "REQ-M1 打样名单内审通过，打样邀请已发出" },
   { t: "07-15", txt: "Tesco 厨房收纳全部设计稿客户定稿" },
-  { t: "06-12", txt: "HEMA 秋冬家居保温杯具需求包客户定商确认（供应商 E）" }
+  { t: "06-12", txt: "HEMA 秋冬家居保温杯具需求包定商确认（供应商 E · 内审），结果同步客户" }
 ];
 
 /* ---------------- 全局状态 ---------------- */
@@ -818,7 +817,7 @@ const ROLES = {
   client: {
     banner: "客户视角 · HEMA（模拟客户登录）",
     cls: "client",
-    hint: "仅可见自己的项目、待确认事项，以及自己体系的供应商；看不到内部打分与落选者。",
+    hint: "提需求、确认设计稿、提供品牌规范；定商由 Eastlink 确定并同步结果。看不到内部打分与落选者。",
     nav: ["dashboard", "projects", "suppliers", "quality"],
     clientId: "CLI-001"
   },
@@ -864,7 +863,7 @@ function deriveStage(p) {
   if (!ps.length) return p.id === "PRJ-2606" ? "received" : "structuring";
   if (ps.some(x => x.status === "design")) return "design";
   if (ps.some(x => ["matching", "shortlist_review", "sampling"].includes(x.status))) return "sampling";
-  if (ps.some(x => ["final_internal", "final_client"].includes(x.status))) return "decide";
+  if (ps.some(x => x.status === "final_internal")) return "decide";
   return "confirmed";
 }
 
@@ -1024,7 +1023,6 @@ function deriveReviews() {
   packages.forEach(p => {
     if (p.status === "shortlist_review") items.push({ kind: "shortlist", stage: "internal", p });
     if (p.status === "final_internal") items.push({ kind: "final", stage: "internal", p });
-    if (p.status === "final_client") items.push({ kind: "final", stage: "client", p });
   });
   designs.forEach(d => {
     if (d.status === "internal_review") items.push({ kind: "design", stage: "internal", d });
@@ -1108,8 +1106,7 @@ function renderDashboard() {
   revs.filter(r => r.stage === "client").forEach(r => {
     const p = r.p || pkg(r.d.pkg);
     const c = client(prj(p.prj)?.client);
-    const name = r.kind === "final" ? `${p.name} 定商确认` : `设计稿 V${r.d.ver}（${p.name}）`;
-    todos.push(["skyc", "等待客户", `${name} · ${c ? c.name : ""}`, "客户处理"]);
+    todos.push(["skyc", "等待客户", `设计稿 V${r.d.ver}（${p.name}）· ${c ? c.name : ""}`, "客户处理"]);
   });
   designs.filter(d => d.status === "changes").forEach(d => {
     const pk = pkg(d.pkg);
@@ -1123,7 +1120,7 @@ function renderDashboard() {
       <div class="tile"><span>进行中项目</span><b>${projects.length}</b><div class="bar"><i style="--p:72%"></i></div><p>覆盖 ${clients.length} 个客户</p></div>
       <div class="tile"><span>待选打样候选</span><b>${nMatching}</b><div class="bar"><i style="--p:${nMatching * 18}%"></i></div><p>设计已定稿，待匹配候选</p></div>
       <div class="tile ${nInternal ? "warn" : ""}"><span>待内审</span><b>${nInternal}</b><div class="bar"><i style="--p:${nInternal * 25}%"></i></div><p>打样名单 / 定商建议 / 设计稿</p></div>
-      <div class="tile"><span>待客户确认</span><b>${nClient}</b><div class="bar soft"><i style="--p:${nClient * 25}%"></i></div><p>设计定稿 + 定商确认</p></div>
+      <div class="tile"><span>待客户确认</span><b>${nClient}</b><div class="bar soft"><i style="--p:${nClient * 25}%"></i></div><p>设计稿定稿（定商无需客户确认）</p></div>
     </div>
 
     <section class="panel">
@@ -1163,27 +1160,36 @@ function dashClient() {
   return `
     <div class="tile-grid">
       <div class="tile"><span>我的项目</span><b>${myPrjs.length}</b><div class="bar"><i style="--p:60%"></i></div><p>进行中的合作项目</p></div>
-      <div class="tile ${revs.length ? "warn" : ""}"><span>待我确认</span><b>${revs.length}</b><div class="bar"><i style="--p:${revs.length * 30}%"></i></div><p>设计定稿 / 定商确认</p></div>
+      <div class="tile ${revs.length ? "warn" : ""}"><span>待我确认</span><b>${revs.length}</b><div class="bar"><i style="--p:${revs.length * 30}%"></i></div><p>设计稿定稿确认</p></div>
       <div class="tile"><span>我提供的供应商</span><b>${provided.length}</b><div class="bar soft"><i style="--p:${provided.length * 30}%"></i></div><p>全量可见，含准入中</p></div>
       <div class="tile"><span>正在合作供应商</span><b>${cooperating.size}</b><div class="bar good"><i style="--p:${cooperating.size * 25}%"></i></div><p>为我的项目服务中</p></div>
     </div>
 
     <section class="panel">
-      <div class="panel-head"><div><p class="label">Pending Confirmation</p><h3>待您确认</h3></div></div>
+      <div class="panel-head"><div><p class="label">Pending Confirmation</p><h3>待您确认（仅设计稿）</h3></div></div>
       ${revs.length ? revs.map(r => {
-        if (r.kind === "final") {
-          const p = r.p, pr = prj(p.prj);
-          const win = sup(p.suggestSup);
-          return `<div class="confirm-card"><h4>${p.name} · 定商确认</h4>
-            <p>${pr.name} · ${p.sku} SKU · 建议合作：<strong>${win ? win.name : "—"}</strong>（依据打样比样）</p>
-            <div class="chip-row">${samplesOf(p.id).filter(s => s.score).map(s => `<span class="chip ${s.supplier === p.suggestSup ? "green" : ""}">${sup(s.supplier).name} · 样品 ${Math.round((s.score.质量 + s.score.工艺还原 + s.score.报价) / 3)} 分</span>`).join("")}</div>
-            <p class="muted tight">请在右侧审核中心确认合作，或填写原因要求换选 / 加打样。</p></div>`;
-        }
         const d = r.d, p = pkg(d.pkg);
         return `<div class="confirm-card"><h4>设计稿 V${d.ver} · ${p.name}</h4>
           <p>${prj(p.prj).name} · 设计师 ${d.designer} · ${d.date} 提交</p>
           <p class="muted tight">请在右侧审核中心确认定稿（定稿后进入打样候选匹配），或提出修改意见。</p></div>`;
       }).join("") : `<div class="empty">暂无待确认事项</div>`}
+      <p class="muted tight">您只需确认设计稿——合作供应商由 Eastlink 依据打样比样确定并同步结果，无需您二次确认。</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Decision Sync</p><h3>定商结果通知</h3></div></div>
+      ${myPrjs.flatMap(pr0 => pkgsOf(pr0.id).filter(x => x.status === "confirmed")).map(x =>
+        `<div class="ri-line"><b>${x.name} → ${x.confirmed.map(id => sup(id).name).join("、")}</b><span class="muted">${prj(x.prj).name} · 依据打样比样确定 · 质量保障见「质量控制」</span></div>`
+      ).join("") || `<div class="empty">暂无已确认合作的需求包</div>`}
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Brand Standards</p><h3>品牌规范托管（您提供 · Eastlink 执行）</h3></div></div>
+      <div class="chip-row">
+        <span class="chip blue">品牌智能档案</span><span class="chip blue">材料与色彩资产库</span>
+        <span class="chip blue">合规验厂标准</span><span class="chip blue">Brief 拆解模板</span>
+      </div>
+      <p class="muted tight">您的品牌规范细则（视觉禁区、Pantone 色卡与色差要求、认可/禁用材料、验厂红线与测试标准）已结构化托管——拆解、设计、匹配与质量管控全程按此执行；规范更新请随 Brief 或邮件同步给项目 Owner。</p>
     </section>
 
     <section class="panel">
@@ -1343,7 +1349,6 @@ function projectDetail(prjId) {
           let supCol = "—";
           if (x.status === "design") supCol = latestD ? `<span class="muted">设计 V${latestD.ver} · ${DESIGN_STATUS[latestD.status].label}</span>` : `<span class="muted">设计排期中</span>`;
           else if (x.status === "confirmed") supCol = x.confirmed.map(id => `<span class="chip green">${sup(id).name}</span>`).join(" ");
-          else if (x.status === "final_client") supCol = `<span class="chip skyc">建议：${sup(x.suggestSup)?.name || "—"}</span>`;
           else if (x.status === "final_internal") supCol = isClient ? `<span class="muted">比样定商中</span>` : `<span class="chip">建议：${sup(x.suggestSup)?.name || "—"}</span>`;
           else if (["shortlist_review", "sampling"].includes(x.status)) supCol = isClient ? `<span class="muted">打样进行中</span>` : x.shortlist.map(id => `<span class="chip">${sup(id).name}</span>`).join(" ");
           else if (isClient) supCol = `<span class="muted">内部筹备中</span>`;
@@ -1353,7 +1358,6 @@ function projectDetail(prjId) {
             else if (x.status === "design") act = `<span class="muted">设计稿区处理</span>`;
             else if (x.status === "sampling") act = `<span class="muted">打样与比样区</span>`;
             else if (["shortlist_review", "final_internal"].includes(x.status)) act = `<span class="muted">审核中心处理</span>`;
-            else if (x.status === "final_client") act = `<span class="muted">等待客户定商</span>`;
           }
           const hasSku = x.skuList && x.skuList.length;
           const open = hasSku && state.skuOpen[x.id];
@@ -1401,7 +1405,7 @@ function samplingCard(x) {
   const rows = ss.map(s => {
     const su = sup(s.supplier);
     const st = SAMPLE_STATUS[s.status];
-    const isWin = x.suggestSup === s.supplier && ["final_internal", "final_client", "confirmed"].includes(x.status);
+    const isWin = x.suggestSup === s.supplier && ["final_internal", "confirmed"].includes(x.status);
     let act = "";
     if (isSales) {
       if (s.status === "sampling") act = `<button class="ghost mini" data-action="sample-advance" data-sample="${s.id}">标记已寄样</button>`;
@@ -1436,9 +1440,7 @@ function samplingCard(x) {
   if (isSales && x.status === "sampling" && allScored) {
     foot = `<button class="primary mini" data-action="gen-final" data-pkg="${x.id}">生成定商建议（按评分）</button>`;
   } else if (x.status === "final_internal") {
-    foot = `<span class="muted" style="font-size:12px">定商建议已生成 → 右侧审核中心内审</span>`;
-  } else if (x.status === "final_client") {
-    foot = `<span class="muted" style="font-size:12px">等待客户确认定商</span>`;
+    foot = `<span class="muted" style="font-size:12px">定商建议已生成 → 右侧审核中心内审（通过即确认合作，结果同步客户）</span>`;
   } else if (x.status === "confirmed") {
     foot = `<span class="chip green">已确认合作：${x.confirmed.map(id => sup(id).name).join("、")}</span>`;
   }
@@ -1650,7 +1652,7 @@ function renderCandidates() {
         <span class="sl-label">打样候选名单（${cur.shortlist.length}）</span>
         ${cur.shortlist.map(id => `<span class="chip">${sup(id).name}</span>`).join("") || `<span class="note" style="width:auto">从上方候选中勾选 2–3 家进入打样比价</span>`}
         <button class="primary mini" data-action="submit-internal" data-pkg="${cur.id}" ${locked || !cur.shortlist.length ? "disabled" : ""}>${locked ? "已提交" : "提交内审 · 发打样邀请"}</button>
-        <span class="note">内审通过后各家按定稿设计打样 → 评分比样 → 定商建议 → 客户确认；系统记录每一步依据。</span>`;
+        <span class="note">内审通过后各家按定稿设计打样 → 按 SKU 评分比样 → 定商建议内审通过即确认合作（结果同步客户）；系统记录每一步依据。</span>`;
     }
   }
 }
@@ -2012,7 +2014,7 @@ function suppliersClientView() {
   const coop = suppliers.filter(s => coopIds.has(s.id) && !provided.some(x => x.id === s.id));
 
   const cardLite = s => {
-    const usedIn = packages.filter(p => myPrjIds.includes(p.prj) && (p.confirmed.includes(s.id) || (p.status === "final_client" && p.suggestSup === s.id)));
+    const usedIn = packages.filter(p => myPrjIds.includes(p.prj) && p.confirmed.includes(s.id));
     return `<div class="sup-card">
       <div class="sup-top"><span class="tag ${SUP_STATUS[s.status].tag}">${SUP_STATUS[s.status].label}</span>${sourceTag(s)}</div>
       <h4>${s.name}</h4>
@@ -2120,30 +2122,20 @@ function reviewShortlistItem(it) {
 function reviewFinalItem(it) {
   const p = it.p, pr = prj(p.prj), c = client(pr.client);
   const isSales = state.role === "sales";
-  const isClient = state.role === "client";
   const win = sup(p.suggestSup);
   const chips = samplesOf(p.id).filter(s => s.score).map(s => {
     const avg = Math.round((s.score.质量 + s.score.工艺还原 + s.score.报价) / 3);
     return `<span class="chip ${s.supplier === p.suggestSup ? "green" : ""}">${sup(s.supplier).name} · 样品 ${avg} 分</span>`;
   }).join("");
-  let actions = "";
-  if (isSales && it.stage === "internal") {
-    actions = `<button class="primary mini" data-action="final-pass" data-pkg="${p.id}">内审通过 → 提交客户定商</button>
-               <button class="ghost mini" data-action="reason-open" data-rt="final-return" data-rid="${p.id}">退回比样</button>`;
-  } else if (isClient && it.stage === "client") {
-    actions = `<button class="primary mini" data-action="final-approve" data-pkg="${p.id}">确认该供应商合作</button>
-               <button class="ghost mini" data-action="reason-open" data-rt="final-swap" data-rid="${p.id}">要求换选 / 加打样</button>`;
-  } else if (it.stage === "client") {
-    actions = `<span class="r-wait">等待 ${c ? c.name : "客户"} 定商</span>`;
-  } else {
-    actions = `<span class="r-wait">内审环节 · 业务员处理</span>`;
-  }
-  const mine = (isSales && it.stage === "internal") || (isClient && it.stage === "client");
-  const reasonBox = state.reasonFor && (state.reasonFor.t === "final-return" || state.reasonFor.t === "final-swap") && state.reasonFor.id === p.id ? reasonBoxHtml() : "";
-  return `<div class="r-item ${mine ? "mine" : ""}">
+  const actions = isSales
+    ? `<button class="primary mini" data-action="final-pass" data-pkg="${p.id}">内审通过 → 确认合作（结果同步客户）</button>
+       <button class="ghost mini" data-action="reason-open" data-rt="final-return" data-rid="${p.id}">退回比样</button>`
+    : `<span class="r-wait">内审环节 · 业务员处理</span>`;
+  const reasonBox = state.reasonFor && state.reasonFor.t === "final-return" && state.reasonFor.id === p.id ? reasonBoxHtml() : "";
+  return `<div class="r-item ${isSales ? "mine" : ""}">
     <div class="r-top"><span class="chip green">定商建议</span><span class="tag ${PKG_STATUS[p.status].tag}">${PKG_STATUS[p.status].label}</span></div>
     <h4>${p.name} · 建议定商：${win ? win.name : "—"}</h4>
-    <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 依据候选打样按 SKU 评分比样得出（综合分为各 SKU 均值，明细见项目详情打样区）</div>
+    <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 依据候选打样按 SKU 评分比样得出（综合分为各 SKU 均值，明细见项目详情打样区）；定商属 Eastlink 内部决策，客户不再二次确认</div>
     ${p.returnNote ? `<div class="r-note">${p.returnNote}</div>` : ""}
     <div class="chip-row">${chips}</div>
     <div class="r-actions">${actions}</div>
@@ -2454,7 +2446,7 @@ const DEMO_STEPS = [
   { k: "design", n: 3, t: "HEMA 2027 项目详情", d: "设计闭环：内审 → 客户意见 → V2 定稿" },
   { k: "match", n: 4, t: "匹配台 · 文具需求包", d: "硬性门槛开关 + 漏斗 + 权重滑杆" },
   { k: "sampling", n: 5, t: "打样与比样", d: "寄样 → 按 SKU 评分 → 定商建议" },
-  { k: "client", n: 6, t: "切客户视角", d: "定稿确认 + 定商确认（切回用左下角色框）" },
+  { k: "client", n: 6, t: "切客户视角", d: "只确认设计稿 · 定商结果通知（切回用左下角色框）" },
   { k: "supplier", n: 7, t: "切供应商视角", d: "打样任务 + SKU 明细（切回用左下角色框）" },
   { k: "brand", n: 8, t: "品牌档案与合规", d: "客户管理页签：智能档案 + 验厂红线" },
   { k: "quality", n: 9, t: "质量控制塔", d: "验厂 / CAP / 测试 / TCF / 验货一屏闭环" }
@@ -2606,22 +2598,12 @@ function genFinal(pkgId) {
 
 function finalPass(pkgId) {
   const p = pkg(pkgId);
-  p.status = "final_client";
-  const c = client(prj(p.prj).client);
-  log(`${p.name} 定商建议内审通过，提交 ${c ? c.name : "客户"} 确认`, p.prj);
-  done(`${p.name} 定商建议内审通过（业务员 A）`);
-  toast(`已提交 ${c ? c.name : "客户"} 定商。切换客户视角可模拟确认`);
-  renderView();
-}
-
-function finalApprove(pkgId) {
-  const p = pkg(pkgId);
   p.status = "confirmed";
   p.confirmed = [p.suggestSup];
-  const pr = prj(p.prj);
-  log(`${client(pr.client).name} 确认 ${p.name} 合作供应商：${sup(p.suggestSup).name}`, p.prj);
-  done(`${p.name} 客户定商确认：${sup(p.suggestSup).name}`);
-  toast("客户已确认合作供应商，需求包闭环");
+  const c = client(prj(p.prj).client);
+  log(`${p.name} 定商内审通过，确认合作供应商：${sup(p.suggestSup).name}（依据打样评分），结果已同步 ${c ? c.name : "客户"}`, p.prj);
+  done(`${p.name} 定商确认：${sup(p.suggestSup).name}（内审 · 业务员 A）`);
+  toast(`已确认合作：${sup(p.suggestSup).name}，结果已同步客户（无需客户二次确认）`);
   renderView();
 }
 
@@ -2690,13 +2672,6 @@ function applyReason(text) {
     p.returnNote = `定商建议内审退回：${note}`;
     log(`${p.name} 定商建议被内审退回：${note}`, p.prj);
     toast("已退回比样阶段，可复核评分后重新生成建议");
-  } else if (rf.t === "final-swap") {
-    const p = pkg(rf.id);
-    p.status = "matching";
-    p.returnNote = `客户要求换选/加打样：${note}`;
-    log(`${client(prj(p.prj).client).name} 对 ${p.name} 定商提出异议：${note}`, p.prj);
-    done(`${p.name} 客户要求换选/加打样`);
-    toast("已记录客户意见，需求包回到候选匹配（可加选后重新打样）");
   } else if (rf.t === "design-return") {
     const d = designs.find(x => x.id === rf.id);
     d.status = "changes";
@@ -2718,9 +2693,9 @@ function applyReason(text) {
 /* ---------- 平台全景导图 ---------- */
 
 const MAP_INIT = [
-  { id: "r-client", x: 46,  y: 34,  w: 158, h: 46, band: "role", label: "客户", sub: "发起 Brief · 两次确认",
-    desc: "提交 Brief（正式文件 / 邮件 / 微信 / 口头都行）；确认设计稿定稿；依据打样比样结果确认最终合作供应商，可要求换选或加打样。",
-    hi: ["m-brief", "m-design", "m-decide", "d-client", "d-pool"] },
+  { id: "r-client", x: 46,  y: 34,  w: 158, h: 46, band: "role", label: "客户", sub: "Brief · 定稿 · 品牌规范",
+    desc: "客户只做三件事：提交 Brief 需求（正式文件 / 邮件 / 微信 / 口头都行）；确认设计稿定稿；提供品牌规范细则（视觉 / 材料色彩 / 合规标准）。定商由 Eastlink 依据打样比样内部确定并同步结果。",
+    hi: ["m-brief", "m-design", "d-client", "d-pool"] },
   { id: "r-sales", x: 320, y: 34,  w: 196, h: 46, band: "role", label: "业务员 · 项目 Owner", sub: "拆解 · 选候选 · 比样",
     desc: "承接 Brief 并拆解为需求包；设计定稿后在匹配工作台选打样候选并内审；跟进打样、录入评分、生成定商建议。",
     hi: ["m-brief", "m-parse", "m-pkg", "m-match", "m-sample"] },
@@ -2743,8 +2718,8 @@ const MAP_INIT = [
     desc: "设计定稿后先过硬性门槛（准入 / 品类 / 工艺全覆盖，认证与验厂红线可切为硬性），再按 8 维加权排序选 2–3 家打样候选；漏斗全程透明，名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
   { id: "m-sample", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "打样比样", sub: "按 SKU 评分 · 综合比样",
     desc: "候选各自按定稿设计打样：质量 / 工艺还原 / 报价按 SKU 逐项评分，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常在比样表中透明可见。", hi: ["r-sup", "d-log"] },
-  { id: "m-decide", x: 904,  y: 250, w: 112, h: 58, band: "main", label: "定商确认", sub: "内审 + 客户确认",
-    desc: "定商建议内审后提交客户确认合作供应商；客户可要求换选 / 加打样（回到候选匹配）。", hi: ["r-client", "d-log"] },
+  { id: "m-decide", x: 904,  y: 250, w: 112, h: 58, band: "main", label: "比样定商", sub: "内审确认 · 同步客户",
+    desc: "定商建议内审通过即确认合作供应商（依据打样比样评分，内部决策），结果同步客户——客户无需二次确认；内审也可退回比样 / 换选。", hi: ["d-log"] },
   { id: "m-coop",   x: 1051, y: 250, w: 112, h: 58, band: "main", label: "确认合作", sub: "P2：大货 / 绩效",
     desc: "客户确认后进入合作；P2 延伸大货订单跟进与供应商绩效沉淀，反哺匹配打分。", hi: ["d-prj"] },
 
@@ -2771,7 +2746,7 @@ const MAP_EDGES = [
   { from: "m-coop",   to: "d-prj",    label: "沉淀复用",   type: "asset", vert: true },
   { from: "r-client", to: "m-brief",  label: "提交 Brief", type: "role" },
   { from: "r-client", to: "m-design", label: "确认设计稿", type: "role", vert: true },
-  { from: "r-client", to: "m-decide", label: "确认供应商", type: "role", vert: true },
+  { from: "m-decide", to: "r-client", label: "结果同步", type: "role", vert: true },
   { from: "r-sales",  to: "m-parse",  label: "拆解",       type: "role", sel: true },
   { from: "r-sales",  to: "m-match",  label: "选打样候选", type: "role", sel: true, vert: true },
   { from: "r-sales",  to: "m-sample", label: "评分比样",   type: "role", sel: true, vert: true },
@@ -3630,7 +3605,6 @@ document.addEventListener("click", e => {
   else if (a === "sample-score") sampleScore(btn.dataset.sample);
   else if (a === "gen-final") genFinal(btn.dataset.pkg);
   else if (a === "final-pass") finalPass(btn.dataset.pkg);
-  else if (a === "final-approve") finalApprove(btn.dataset.pkg);
   else if (a === "design-pass") designPass(btn.dataset.design);
   else if (a === "design-approve") designApprove(btn.dataset.design);
   else if (a === "upload-version") { const pk = btn.dataset.pkg; pickFile("image/*,application/pdf", f => uploadVersion(pk, f)); }

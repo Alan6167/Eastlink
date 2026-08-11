@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Eastlink 合作供应商平台 · Demo</title>
-  <meta name="description" content="Eastlink 合作供应商平台交互原型：Brief 拆解、需求包多维度供应商匹配、内审与客户确认、设计稿协同。">
+  <meta name="description" content="Eastlink 合作供应商平台交互原型：Brief 拆解、需求包多维度供应商匹配、设计稿协同与质量控制塔。">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230666FF'/%3E%3Cg fill='%23fff'%3E%3Crect x='10' y='8' width='4' height='16'/%3E%3Crect x='10' y='8' width='13' height='4'/%3E%3Crect x='10' y='14.2' width='10' height='3.6'/%3E%3Crect x='10' y='20' width='13' height='4'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -69,7 +69,7 @@
         <div class="think-hero panel">
           <p class="label">Platform Thinking</p>
           <h2>Eastlink 是什么：客户给一个 Brief，平台把它变成一组"选对了的供应商"和"确认过的设计"</h2>
-          <p class="muted">客户提交 Brief → 拆解成需求包 → <b>先设计并定稿</b> → 按维度匹配打样候选 → <b>候选打样比样</b> → 客户确认定商 → 合作。所有需要人做判断的动作统一进右侧审核中心；所有资源沉淀在客户、供应商、项目三份主数据里。</p>
+          <p class="muted">客户提交 Brief → 拆解成需求包 → <b>先设计并定稿</b>（客户唯一确认节点）→ 按维度匹配打样候选 → <b>候选打样比样</b> → 内审定商（结果同步客户）→ 合作。所有需要人做判断的动作统一进右侧审核中心；所有资源沉淀在客户、供应商、项目三份主数据里。</p>
         </div>
 
         <section class="panel">
@@ -79,12 +79,12 @@
             <div class="f done">拆解中</div><i></i>
             <div class="f now">设计中</div><i></i>
             <div class="f">匹配与打样</div><i></i>
-            <div class="f">定商确认</div><i></i>
+            <div class="f">比样定商</div><i></i>
             <div class="f">已确认合作</div>
           </div>
           <div class="flow-note">
-            <div><b>需求包状态机</b><span>设计中 → 待选打样候选 → 打样名单内审 → 打样中 → 定商建议内审 → 待客户定商 → 已确认合作；设计定稿自动进入匹配，客户可换选 / 加打样（记录原因）。需求包内拆到 SKU，设计与打样都细化到 SKU 跟踪。</span></div>
-            <div><b>为什么先设计后打样</b><span>设计定稿是打样前提——候选按同一套定稿出样，比样才公平；客户确认的是"设计稿"和"比样后的定商建议"两个节点。设计版本内逐 SKU 跟踪出稿覆盖，全出稿才可提交内审。</span></div>
+            <div><b>需求包状态机</b><span>设计中 → 待选打样候选 → 打样名单内审 → 打样中 → 定商建议内审 → 已确认合作（结果同步客户）；设计定稿自动进入匹配，内审可退回比样 / 换选（记录原因）。需求包内拆到 SKU，设计与打样都细化到 SKU 跟踪。</span></div>
+            <div><b>客户只做三件事</b><span>提出 Brief 需求、<b>确认设计稿定稿</b>（唯一确认节点）、提供品牌规范细则（视觉 / 材料色彩 / 合规标准）——定商由 Eastlink 依据打样比样内部确定并同步结果，客户无需二次确认。设计版本内逐 SKU 跟踪出稿覆盖，全出稿才可提交内审。</span></div>
             <div><b>打样比样</b><span>候选各自出样，质量 / 工艺还原 / 报价<b>按 SKU 逐项评分</b>，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常透明可见，依据全程留痕。</span></div>
             <div><b>质量控制塔</b><span>TCF 按 SKU 建档（设计定稿 / 材料声明 / 测试报告 / 样品记录 / 验货报告）；验厂到期预警、测试与验货结果、CAP 整改在塔内闭环——<b>客户合规标准是口径，红线在匹配拦截，塔内跟踪执行</b>；四项就绪门全绿才可进入大货下单（P2）。</span></div>
           </div>
@@ -159,7 +159,7 @@
                 <tr><td><b>匹配工作台</b></td><td>核心操作</td><td>不开放</td><td class="dim">不可见</td><td class="dim">不可见</td></tr>
                 <tr><td><b>供应商管理</b></td><td>全池</td><td>全池只读</td><td>"我提供的"全量 + "合作中的"，无内部评分</td><td>仅自己档案</td></tr>
                 <tr><td><b>客户管理</b></td><td>可操作</td><td>只读</td><td class="dim">不可见</td><td class="dim">不可见</td></tr>
-                <tr><td><b>审核中心</b></td><td>内审动作</td><td>查看</td><td>设计定稿 / 定商确认（可换选）</td><td>打样任务 / 合作通知</td></tr>
+                <tr><td><b>审核中心</b></td><td>内审动作（含定商确认）</td><td>查看</td><td>仅设计稿定稿 / 修改意见</td><td>打样任务 / 合作通知</td></tr>
               </tbody>
             </table>
           </div>
@@ -171,7 +171,7 @@
           <div class="check-grid">
             <div><b>① Brief 承接与拆解</b><span>实际 Brief 长什么样（正式文件还是微信几句话）？拆解谁在做、按什么习惯拆？有没有一个需求包拆给两家分单的情况？</span></div>
             <div><b>② 匹配维度校准</b><span>选供应商最看重的前三个因素？有没有一票否决项（指定认证、必须验厂）？客户提供的供应商是"必须优先"还是"仅供参考"？维度数据现在记在哪？</span></div>
-            <div><b>③ 内审与客户确认</b><span>内审谁来审——业务员还是主管？客户实际怎么确认供应商（邮件/会议/全权委托）？换选一般给什么理由？</span></div>
+            <div><b>③ 内审与客户交互 ✅ 部分确认</b><span>已确认：定商由 Eastlink 内审确定，客户不再二次确认（本 Demo 已按此实现）。待确认：内审谁来审——业务员还是主管？定商结果以什么形式同步客户（邮件/月报/系统通知）？</span></div>
             <div><b>④ 设计与打样顺序 ✅ 已确认</b><span>已确认：先设计定稿 → 候选供应商打样 → 比样后定商（本 Demo 已按此实现）。待补充确认：打样候选名单是否需要客户确认（Demo 假设只内审）？打样费用谁承担？</span></div>
             <div><b>⑤ 内部角色分工</b><span>谁接 Brief、谁拆解、谁选供应商、谁对客户？要不要拆成业务员 / 采购两条线？一个业务员同时跟几个项目？</span></div>
             <div><b>⑥ 现状痛点</b><span>整个流程最耗时、最容易出错的是哪一步？现在靠什么在管（Excel/微信/邮件）？最想被系统替代的是哪部分？</span></div>
@@ -181,7 +181,7 @@
         <section class="panel">
           <div class="panel-head"><div><p class="label">Roadmap</p><h3>分期规划</h3></div></div>
           <div class="phase-grid">
-            <div class="now"><b>P1 · 本 Demo 范围</b><span>三份主数据 + Brief 拆解 + 需求包匹配（多维度打分）+ 内审/客户确认流 + 设计稿协同 + 角色权限。</span></div>
+            <div class="now"><b>P1 · 本 Demo 范围</b><span>三份主数据 + Brief 拆解 + 需求包匹配（多维度打分）+ 内审流（含定商）/ 设计稿客户确认 + 质量控制塔 + 角色权限。</span></div>
             <div><b>P2 · 系统化协同</b><span>真实后端与账号体系、客户在线门户、供应商门户（接任务/报价）、打样与订单跟进、绩效数据沉淀。</span></div>
             <div><b>P3 · 智能化</b><span>匹配模型基于历史成交自学习、AI 拆解 Brief、AI 推荐供应商与风险预警。</span></div>
           </div>
