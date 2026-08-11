@@ -572,7 +572,7 @@ const packages = [
     skuList: [
       { id: "BTS-201", name: "儿童双肩背包 · 主款", spec: "600D 再生涤纶 · 反光条", qty: "2.8 万/月", price: "€7.5", status: "设计中" },
       { id: "BTS-202", name: "抽绳运动袋", spec: "210D 涤纶 · 单色印刷", qty: "2.0 万/月", price: "€4.0", status: "设计中" },
-      { id: "BTS-203", name: "拉链笔袋包", spec: "帆布 · 双头拉链", qty: "1.2 万/月", price: "€4.5", status: "待设计" }
+      { id: "BTS-203", name: "拉链笔袋包", spec: "帆布 · 双头拉链", qty: "1.2 万/月", price: "€4.5", status: "设计中" }
     ]
   },
   {
@@ -650,26 +650,36 @@ const packages = [
   }
 ];
 
+/* skuMap：该设计版本内各 SKU 的出稿覆盖（需求包整体定稿前，逐 SKU 跟踪） */
 const designs = [
   { id: "D-01", pkg: "REQ-02", ver: 1, designer: "设计师 A", date: "08-05",
-    status: "internal_review", palette: ["#2F6BD8", "#F2F6FB"], note: null },
+    status: "internal_review", palette: ["#2F6BD8", "#F2F6FB"], note: null,
+    skuMap: [{ sku: "BTS-201", status: "已出稿" }, { sku: "BTS-202", status: "已出稿" }, { sku: "BTS-203", status: "已出稿" }] },
   { id: "D-02", pkg: "REQ-01", ver: 1, designer: "设计师 A", date: "07-30",
-    status: "approved", palette: ["#E64A45", "#F7F3EE"], note: null },
+    status: "approved", palette: ["#E64A45", "#F7F3EE"], note: null,
+    skuMap: [{ sku: "BTS-101", status: "已出稿" }, { sku: "BTS-102", status: "已出稿" }, { sku: "BTS-103", status: "已出稿" }, { sku: "BTS-104", status: "已出稿" }] },
   { id: "D-03", pkg: "REQ-03", ver: 1, designer: "设计师 B", date: "07-26",
-    status: "approved", palette: ["#4C9A6E", "#F2F7F0"], note: null },
+    status: "approved", palette: ["#4C9A6E", "#F2F7F0"], note: null,
+    skuMap: [{ sku: "BTS-301", status: "已出稿" }, { sku: "BTS-302", status: "已出稿" }] },
   { id: "D-04", pkg: "REQ-H1", ver: 1, designer: "设计师 A", date: "06-20",
     status: "changes", palette: ["#8FA8C8", "#E7EDF5"],
-    note: "客户修改意见：整体色调偏冷，希望更贴近 HEMA 红白视觉体系。" },
+    note: "客户修改意见：整体色调偏冷，希望更贴近 HEMA 红白视觉体系。",
+    skuMap: [{ sku: "AW-101", status: "修改中", note: "主色调整改" }, { sku: "AW-102", status: "修改中", note: "配色随主 SKU 调整" }, { sku: "AW-103", status: "已出稿" }] },
   { id: "D-05", pkg: "REQ-H1", ver: 2, designer: "设计师 A", date: "07-02",
-    status: "approved", palette: ["#E64A45", "#F7F3EE"], note: null },
+    status: "approved", palette: ["#E64A45", "#F7F3EE"], note: null,
+    skuMap: [{ sku: "AW-101", status: "已出稿" }, { sku: "AW-102", status: "已出稿" }, { sku: "AW-103", status: "已出稿" }] },
   { id: "D-06", pkg: "REQ-H2", ver: 1, designer: "设计师 B", date: "06-28",
-    status: "approved", palette: ["#2F6BD8", "#F2F6FB"], note: null },
+    status: "approved", palette: ["#2F6BD8", "#F2F6FB"], note: null,
+    skuMap: [{ sku: "AW-201", status: "已出稿" }, { sku: "AW-202", status: "已出稿" }, { sku: "AW-203", status: "已出稿" }] },
   { id: "D-07", pkg: "REQ-T1", ver: 2, designer: "设计师 B", date: "05-12",
-    status: "approved", palette: ["#4C9A6E", "#F2F7F0"], note: null },
+    status: "approved", palette: ["#4C9A6E", "#F2F7F0"], note: null,
+    skuMap: [{ sku: "TK-101", status: "已出稿" }, { sku: "TK-102", status: "已出稿" }] },
   { id: "D-08", pkg: "REQ-T2", ver: 1, designer: "设计师 A", date: "05-10",
-    status: "approved", palette: ["#C88B3C", "#FBF5EC"], note: null },
+    status: "approved", palette: ["#C88B3C", "#FBF5EC"], note: null,
+    skuMap: [{ sku: "TK-201", status: "已出稿" }, { sku: "TK-202", status: "已出稿" }] },
   { id: "D-09", pkg: "REQ-M1", ver: 1, designer: "设计师 B", date: "07-08",
-    status: "approved", palette: ["#EE2C3C", "#FDF3F0"], note: null }
+    status: "approved", palette: ["#EE2C3C", "#FDF3F0"], note: null,
+    skuMap: [{ sku: "XM-101", status: "已出稿" }, { sku: "XM-102", status: "已出稿" }, { sku: "XM-103", status: "已出稿" }, { sku: "XM-104", status: "已出稿" }] }
 ];
 
 /* 打样任务：候选供应商按定稿设计出样，评分后比样定商 */
@@ -679,9 +689,19 @@ const samples = [
   { id: "S-02", pkg: "REQ-03", supplier: "SUP-008", status: "sampling", due: "08-24",
     score: null, preset: { 质量: 90, 工艺还原: 86, 报价: 90 }, note: "打样进行中" },
   { id: "S-03", pkg: "REQ-H1", supplier: "SUP-008", status: "scored", due: "—",
-    score: { 质量: 92, 工艺还原: 90, 报价: 85 }, preset: null, note: "布纹与配色还原度最好" },
+    score: { 质量: 92, 工艺还原: 90, 报价: 85 }, preset: null, note: "布纹与配色还原度最好",
+    skuScores: [
+      { sku: "AW-101", 质量: 93, 工艺还原: 91, 报价: 84 },
+      { sku: "AW-102", 质量: 91, 工艺还原: 90, 报价: 86 },
+      { sku: "AW-103", 质量: 92, 工艺还原: 89, 报价: 85 }
+    ] },
   { id: "S-04", pkg: "REQ-H1", supplier: "SUP-005", status: "scored", due: "—",
-    score: { 质量: 88, 工艺还原: 84, 报价: 90 }, preset: null, note: "报价最优，车缝走线一般" },
+    score: { 质量: 88, 工艺还原: 84, 报价: 90 }, preset: null, note: "报价最优，车缝走线一般",
+    skuScores: [
+      { sku: "AW-101", 质量: 89, 工艺还原: 85, 报价: 91 },
+      { sku: "AW-102", 质量: 87, 工艺还原: 83, 报价: 89 },
+      { sku: "AW-103", 质量: 88, 工艺还原: 84, 报价: 90 }
+    ] },
   { id: "S-05", pkg: "REQ-M1", supplier: "SUP-007", status: "delivered", due: "08-18",
     score: null, preset: { 质量: 89, 工艺还原: 92, 报价: 83 }, note: "IP 还原度待评审" },
   { id: "S-06", pkg: "REQ-M1", supplier: "SUP-012", status: "sampling", due: "08-22",
@@ -718,6 +738,7 @@ const state = {
   nbFile: null,
   railAll: false,
   skuOpen: {},
+  sampSku: {},
   pinClient: true,
   reasonFor: null,          // { t: 'pkg-internal-return'|'pkg-swap'|'design-return'|'design-changes', id }
   clientSel: "CLI-001",
@@ -1140,6 +1161,7 @@ function dashSupplier() {
         <h5>${pk.name} · 打样任务</h5>
         <p class="muted">${pr.name} · 设计稿 ${d ? "V" + d.ver + " 定稿" : "待定稿"} · 截止 ${s.due}</p>
         <p class="muted">要求：${pk.procs.join(" / ")} · 认证 ${pk.certs.join(" / ")} · 目标价 ${pk.priceBand}</p>
+        <p class="muted">出样 SKU（${(pk.skuList || []).length} 个，逐 SKU 评分）：${(pk.skuList || []).map(k => k.id).join(" / ") || "—"}</p>
         <div class="chip-row"><span class="tag ${st.tag}">${st.label}</span>${act}</div>
       </div>
     </div>`;
@@ -1320,15 +1342,26 @@ function samplingCard(x) {
     }
     const scores = s.score ? ["质量", "工艺还原", "报价"].map(k =>
       `<div class="score-line"><em>${k}</em><div class="bar ${s.score[k] >= 90 ? "good" : ""}"><i style="--p:${s.score[k]}%"></i></div><strong>${s.score[k]}</strong></div>`).join("")
-      : `<span class="muted" style="font-size:11.5px">评分待录入</span>`;
+      : `<span class="muted" style="font-size:11.5px">评分待录入 · 出样 SKU：${(x.skuList || []).map(k => k.id).join(" / ") || "—"}</span>`;
+    const skuOpen = s.skuScores && s.skuScores.length && state.sampSku[s.id];
+    const skuBtn = s.skuScores && s.skuScores.length
+      ? `<button class="text-link" data-action="samp-sku-toggle" data-sample="${s.id}">SKU 明细 ${skuOpen ? "▴" : "▾"}</button>` : "";
+    const skuTbl = skuOpen ? `<div class="sku-box" style="margin-top:8px"><table>
+        <thead><tr><th>SKU</th><th>质量</th><th>工艺还原</th><th>报价</th><th>综合</th></tr></thead>
+        <tbody>${s.skuScores.map(k => {
+          const a = Math.round((k.质量 + k.工艺还原 + k.报价) / 3);
+          return `<tr><td><b>${k.sku}</b></td><td>${k.质量}</td><td>${k.工艺还原}</td><td>${k.报价}</td><td><b>${a}</b></td></tr>`;
+        }).join("")}</tbody></table>
+      <p class="muted" style="font-size:10.5px;margin-top:4px">综合分为各 SKU 均值；单 SKU 异常可作为换选 / 分单依据（P2）。</p></div>` : "";
     return `<div class="samp-row ${isWin ? "win" : ""}">
       <div class="sr-head">
         <b>${su.name}</b>${isWin ? `<span class="chip green">建议定商</span>` : ""}
         <span class="tag ${st.tag}">${st.label}</span>
         <span class="muted" style="font-size:11px">截止 ${s.due}${s.note ? ` · ${s.note}` : ""}</span>
-        ${act}
+        ${skuBtn}${act}
       </div>
       <div class="sr-scores">${scores}</div>
+      ${skuTbl}
     </div>`;
   }).join("");
   let foot = "";
@@ -1357,10 +1390,17 @@ function designCard(d) {
   const ds = designsOf(d.pkg);
   const isLatest = d.ver === ds[ds.length - 1].ver;
 
+  const cov = d.skuMap || [];
+  const covDone = cov.filter(k => k.status === "已出稿").length;
+  const covFull = !cov.length || covDone === cov.length;
+
   let actions = "";
   if (isSales && d.status === "internal_review") {
-    actions = `<button class="primary mini" data-action="design-pass" data-design="${d.id}">内审通过 → 提交客户</button>
-               <button class="ghost mini" data-action="reason-open" data-rt="design-return" data-rid="${d.id}">退回</button>`;
+    actions = covFull
+      ? `<button class="primary mini" data-action="design-pass" data-design="${d.id}">内审通过 → 提交客户</button>
+         <button class="ghost mini" data-action="reason-open" data-rt="design-return" data-rid="${d.id}">退回</button>`
+      : `<button class="primary mini" disabled title="版本内全部 SKU 出稿后才可内审">内审通过（SKU 未全出稿）</button>
+         <button class="ghost mini" data-action="reason-open" data-rt="design-return" data-rid="${d.id}">退回</button>`;
   } else if (isSales && d.status === "changes" && isLatest) {
     actions = `<button class="primary mini" data-action="upload-version" data-pkg="${d.pkg}">上传新版本 V${d.ver + 1}</button>`;
   } else if (isSales && d.status === "client_review") {
@@ -1376,6 +1416,10 @@ function designCard(d) {
     <div class="d-body">
       <h5>${p.name}</h5>
       <div class="d-meta">设计师 ${d.designer} · ${d.date} · <span class="tag ${st.tag}">${st.label}</span></div>
+      ${cov.length ? `<div class="d-skus">
+        <span>SKU 出稿 ${covDone}/${cov.length}</span>
+        <div class="chip-row">${cov.map(k => `<span class="chip ${k.status === "已出稿" ? "green" : k.status === "修改中" ? "amber" : "outline"}" title="${k.note || k.status}">${k.sku}</span>`).join("")}</div>
+      </div>` : ""}
       ${d.note ? `<div class="d-note">${d.note}</div>` : ""}
       <div class="d-actions">${actions}</div>
       ${reasonBox}
@@ -2025,7 +2069,7 @@ function reviewFinalItem(it) {
   return `<div class="r-item ${mine ? "mine" : ""}">
     <div class="r-top"><span class="chip green">定商建议</span><span class="tag ${PKG_STATUS[p.status].tag}">${PKG_STATUS[p.status].label}</span></div>
     <h4>${p.name} · 建议定商：${win ? win.name : "—"}</h4>
-    <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 依据候选打样评分比样得出</div>
+    <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 依据候选打样按 SKU 评分比样得出（综合分为各 SKU 均值，明细见项目详情打样区）</div>
     ${p.returnNote ? `<div class="r-note">${p.returnNote}</div>` : ""}
     <div class="chip-row">${chips}</div>
     <div class="r-actions">${actions}</div>
@@ -2056,7 +2100,7 @@ function reviewDesignItem(it) {
   return `<div class="r-item ${mine ? "mine" : ""}">
     <div class="r-top"><span class="chip skyc">设计稿</span><span class="tag ${DESIGN_STATUS[d.status].tag}">${DESIGN_STATUS[d.status].label}</span></div>
     <h4>${p.name} · V${d.ver}</h4>
-    <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 设计师 ${d.designer} · ${d.date}</div>
+    <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 设计师 ${d.designer} · ${d.date}${d.skuMap && d.skuMap.length ? ` · SKU 出稿 ${d.skuMap.filter(k => k.status === "已出稿").length}/${d.skuMap.length}` : ""}</div>
     <div class="thumb click-prev" data-action="file-open" data-kind="design" data-id="${d.id}" style="height:52px;border-radius:8px;margin-bottom:8px;${thumbBg(d)}"></div>
     <div class="r-actions">${actions}</div>
     ${reasonBox}
@@ -2163,7 +2207,7 @@ const DEMO_STEPS = [
   { k: "brief", n: 2, t: "新建 Brief · 现场拆包", d: "选客户自动带出品牌模板与价格带" },
   { k: "design", n: 3, t: "HEMA 2027 项目详情", d: "设计闭环：内审 → 客户意见 → V2 定稿" },
   { k: "match", n: 4, t: "匹配台 · 文具需求包", d: "硬性门槛开关 + 漏斗 + 权重滑杆" },
-  { k: "sampling", n: 5, t: "打样与比样", d: "寄样 → 评分 → 生成定商建议" },
+  { k: "sampling", n: 5, t: "打样与比样", d: "寄样 → 按 SKU 评分 → 定商建议" },
   { k: "client", n: 6, t: "切客户视角", d: "定稿确认 + 定商确认（切回用左下角色框）" },
   { k: "supplier", n: 7, t: "切供应商视角", d: "打样任务 + SKU 明细（切回用左下角色框）" },
   { k: "brand", n: 8, t: "品牌档案与合规", d: "客户管理页签：智能档案 + 验厂红线" }
@@ -2261,9 +2305,23 @@ function sampleScore(sampleId) {
   if (!s || !s.preset) return;
   s.score = { ...s.preset };
   s.status = "scored";
+  /* 按 SKU 生成明细分（零和偏移 → 各 SKU 均值恰等于综合分） */
+  const skus = (pkg(s.pkg).skuList || []).map(k => k.id);
+  if (skus.length) {
+    const zeroSum = n => {
+      const o = [];
+      for (const pair of [[2, -2], [1, -1]]) if (o.length + 2 <= n) o.push(...pair);
+      while (o.length < n) o.push(0);
+      return o;
+    };
+    const o1 = zeroSum(skus.length), o2 = [...o1.slice(1), o1[0]];
+    s.skuScores = skus.map((id, i) => ({
+      sku: id, 质量: s.preset.质量 + o1[i], 工艺还原: s.preset.工艺还原 + o2[i], 报价: s.preset.报价
+    }));
+  }
   const avg = Math.round((s.score.质量 + s.score.工艺还原 + s.score.报价) / 3);
-  log(`${sup(s.supplier).name} 的 ${pkg(s.pkg).name} 样品评分完成：综合 ${avg} 分`, pkg(s.pkg).prj);
-  toast(`已录入评分（演示预置分）：综合 ${avg} 分`);
+  log(`${sup(s.supplier).name} 的 ${pkg(s.pkg).name} 样品评分完成：综合 ${avg} 分（按 SKU 明细见比样区）`, pkg(s.pkg).prj);
+  toast(`已录入评分（按 SKU，综合 ${avg} 分）`);
   renderView();
 }
 
@@ -2342,7 +2400,8 @@ function uploadVersion(pkgId, file) {
     status: "internal_review",
     palette: [last.palette[1], last.palette[0]],
     note: null,
-    file: file || null
+    file: file || null,
+    skuMap: (p.skuList || []).map(k => ({ sku: k.id, status: "已出稿" }))
   });
   log(`设计稿 V${last.ver + 1}（${p.name}）已上传${file ? `：${file.name}` : ""}，进入内审`, p.prj);
   toast(`已上传 V${last.ver + 1}${file ? `（${file.name}）` : ""}，进入内审`);
@@ -2413,12 +2472,12 @@ const MAP_INIT = [
     desc: "把原始 Brief 拆成结构化字段并按品类拆出需求包；品牌档案的模板与价格带自动带入。", hi: ["r-sales", "m-pkg"] },
   { id: "m-pkg",    x: 316,  y: 250, w: 112, h: 58, band: "hot",  label: "需求包", sub: "流转最小单位",
     desc: "一个 Brief 拆 N 个需求包，各自独立走完设计、打样和定商；项目状态由需求包汇总得出。", hi: ["m-parse", "m-design"] },
-  { id: "m-design", x: 463,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "版本 + 客户定稿",
-    desc: "先设计：设计稿内审 → 客户确认 → 定稿；修改意见记录原文。设计定稿是打样的前提——候选按同一套定稿出样，比样才公平。", hi: ["r-client", "d-log"] },
+  { id: "m-design", x: 463,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "版本内逐 SKU 出稿",
+    desc: "先设计：版本内逐 SKU 跟踪出稿覆盖，全出稿才可内审 → 客户确认 → 定稿；修改意见记录原文并标记受影响 SKU。设计定稿是打样的前提——候选按同一套定稿出样，比样才公平。", hi: ["r-client", "d-log"] },
   { id: "m-match",  x: 610,  y: 250, w: 112, h: 58, band: "main", label: "多维度匹配", sub: "硬门槛 + 8 维排序",
     desc: "设计定稿后先过硬性门槛（准入 / 品类 / 工艺全覆盖，认证与验厂红线可切为硬性），再按 8 维加权排序选 2–3 家打样候选；漏斗全程透明，名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
-  { id: "m-sample", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "打样比样", sub: "候选出样 · 三项评分",
-    desc: "候选各自按定稿设计打样：质量 / 工艺还原 / 报价三项评分；全部评分后按综合分生成定商建议。", hi: ["r-sup", "d-log"] },
+  { id: "m-sample", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "打样比样", sub: "按 SKU 评分 · 综合比样",
+    desc: "候选各自按定稿设计打样：质量 / 工艺还原 / 报价按 SKU 逐项评分，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常在比样表中透明可见。", hi: ["r-sup", "d-log"] },
   { id: "m-decide", x: 904,  y: 250, w: 112, h: 58, band: "main", label: "定商确认", sub: "内审 + 客户确认",
     desc: "定商建议内审后提交客户确认合作供应商；客户可要求换选 / 加打样（回到候选匹配）。", hi: ["r-client", "d-log"] },
   { id: "m-coop",   x: 1051, y: 250, w: 112, h: 58, band: "main", label: "确认合作", sub: "P2：大货 / 绩效",
@@ -3313,6 +3372,7 @@ document.addEventListener("click", e => {
   else if (a === "file-open") openFileView(btn.dataset.kind, btn.dataset);
   else if (a === "file-close") closeFileView();
   else if (a === "sku-toggle") { state.skuOpen[btn.dataset.pkg] = !state.skuOpen[btn.dataset.pkg]; renderView(); }
+  else if (a === "samp-sku-toggle") { state.sampSku[btn.dataset.sample] = !state.sampSku[btn.dataset.sample]; renderView(); }
   else if (a === "rail-all-toggle") { state.railAll = !state.railAll; renderRail(); }
   else if (a === "demo-jump") {
     const k = btn.dataset.step;
