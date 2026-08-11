@@ -217,7 +217,7 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
 .dash-grid .span-2 { grid-column: span 2; }
 
-.pipe-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.pipe-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
 .pipe-grid > div {
   border: 1px solid var(--line); border-radius: 10px;
   padding: 10px 8px 8px; text-align: center;
@@ -607,6 +607,53 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 
 .map-savestate { color: var(--faint); font-size: 11px; }
 
+/* 客户详情页签 */
+.c-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.c-tabs button {
+  padding: 8px 18px; border-radius: 9px;
+  border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--muted); background: #fff;
+}
+.c-tabs button:hover { border-color: var(--brand); color: var(--brand); }
+.c-tabs button.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.c-tabpane.hide { display: none; }
+
+/* 历史案例条目 */
+.case { border-left: 3px solid var(--green); padding: 3px 0 3px 9px; margin: 5px 0; }
+.case b { display: block; font-size: 12px; color: var(--ink); }
+.case span { display: block; font-size: 11.5px; color: var(--muted); padding: 1px 0 0; }
+.case.bad { border-left-color: var(--red); }
+.case.bad span { color: var(--red); }
+
+/* 向导品牌提示盒 */
+.nb-hint {
+  border: 1px dashed var(--line); border-radius: 10px;
+  padding: 10px 12px; margin-top: 12px; font-size: 12px; color: var(--muted);
+  background: #FBFCFF;
+}
+.nb-hint b { color: var(--ink); font-size: 12.5px; display: block; margin-bottom: 6px; }
+.nb-hint .chip-row { margin: 4px 0; }
+.nb-hint > span { display: block; margin-top: 6px; }
+
+/* 打样与比样 */
+.samp-card { border: 1px solid var(--line); border-radius: 12px; padding: 13px 15px; margin-bottom: 12px; }
+.samp-card .sc-head { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.samp-card .sc-head b { font-size: 14px; }
+.samp-row { border: 1px dashed var(--line); border-radius: 10px; padding: 9px 12px; margin-bottom: 8px; }
+.samp-row.win { border: 1px solid #C4EFDB; background: var(--green-soft); }
+.samp-row .sr-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+.samp-row .sr-head b { font-size: 13px; }
+.samp-row .sr-scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 16px; }
+.samp-row .sr-scores .score-line { grid-template-columns: 62px 1fr 30px; padding: 2px 0; }
+.samp-card .sc-foot { margin-top: 4px; }
+
+/* 供应商打样任务卡 */
+.samp-task { display: flex; gap: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; margin-bottom: 10px; }
+.samp-task .thumb { width: 74px; height: 74px; border-radius: 10px; flex-shrink: 0; border: 1px solid var(--line); }
+.samp-task .st-body { flex: 1; min-width: 0; }
+.samp-task h5 { font-size: 13.5px; margin-bottom: 3px; }
+.samp-task p { margin-bottom: 2px; }
+.samp-task .chip-row { margin-top: 7px; align-items: center; }
+
 /* 品牌智能档案 */
 .swatch-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 8px; }
 .swatch { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--faint); font-variant-numeric: tabular-nums; }
@@ -631,7 +678,7 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .edge .hit { stroke: transparent; stroke-width: 14; fill: none; cursor: pointer; }
 .edge.esel path:not(.hit) { stroke-width: 3; }
 .edge.esel text { fill: var(--ink); }
-@media (max-width: 760px) { .map-form { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .map-form { grid-template-columns: 1fr; } .samp-row .sr-scores { grid-template-columns: 1fr; } }
 
 /* ============ 新建 Brief 模态框 ============ */
 .modal-mask {
