@@ -487,13 +487,24 @@ const packages = [
     id: "REQ-01", prj: "PRJ-2601", name: "文具套装需求包", cat: "文具", sku: 40,
     monthly: 100000, qtyLabel: "10 万件/月", priceBand: "€1.5 – 3.0",
     procs: ["印刷", "模切"], certs: ["FSC", "EN71", "REACH"], leadLimit: 40,
-    status: "matching", shortlist: [], confirmed: [], suggestSup: null, returnNote: null
+    status: "matching", shortlist: [], confirmed: [], suggestSup: null, returnNote: null,
+    skuList: [
+      { id: "BTS-101", name: "A5 线圈笔记本 · 3 款封面", spec: "FSC 纸 80g · 60 页", qty: "3.2 万/月", price: "€1.5", status: "定稿" },
+      { id: "BTS-102", name: "12 色彩铅纸盒装", spec: "椴木杆 · FSC 纸盒", qty: "2.4 万/月", price: "€2.2", status: "定稿" },
+      { id: "BTS-103", name: "笔袋文具 5 件套", spec: "PP 磨砂盒 · 模切内衬", qty: "2.6 万/月", price: "€3.0", status: "定稿" },
+      { id: "BTS-104", name: "贴纸手账套装", spec: "铜版纸模切 · 环保覆膜", qty: "1.8 万/月", price: "€1.8", status: "定稿" }
+    ]
   },
   {
     id: "REQ-02", prj: "PRJ-2601", name: "背包袋类需求包", cat: "包袋", sku: 22,
     monthly: 60000, qtyLabel: "6 万件/月", priceBand: "€4.0 – 8.0",
     procs: ["缝纫", "印刷"], certs: ["BSCI", "REACH"], leadLimit: 45,
-    status: "design", shortlist: [], confirmed: [], suggestSup: null, returnNote: null
+    status: "design", shortlist: [], confirmed: [], suggestSup: null, returnNote: null,
+    skuList: [
+      { id: "BTS-201", name: "儿童双肩背包 · 主款", spec: "600D 再生涤纶 · 反光条", qty: "2.8 万/月", price: "€7.5", status: "设计中" },
+      { id: "BTS-202", name: "抽绳运动袋", spec: "210D 涤纶 · 单色印刷", qty: "2.0 万/月", price: "€4.0", status: "设计中" },
+      { id: "BTS-203", name: "拉链笔袋包", spec: "帆布 · 双头拉链", qty: "1.2 万/月", price: "€4.5", status: "待设计" }
+    ]
   },
   {
     id: "REQ-03", prj: "PRJ-2601", name: "水杯水具需求包", cat: "水具", sku: 10,
@@ -501,15 +512,22 @@ const packages = [
     procs: ["注塑", "丝印"], certs: ["LFGB", "FDA"], leadLimit: 50,
     status: "sampling", shortlist: ["SUP-005", "SUP-008"], confirmed: [], suggestSup: null, returnNote: null,
     skuList: [
-      { id: "BTS-301", name: "运动水壶 550ml", design: "V1 定稿", sample: "打样评审中", test: "待送测", next: "比样定商" },
-      { id: "BTS-302", name: "儿童保温杯 350ml", design: "V1 定稿", sample: "候选打样中", test: "待送测", next: "比样定商" }
+      { id: "BTS-301", name: "运动水壶 550ml", spec: "Tritan 瓶身 · 丝印 logo", qty: "2.2 万/月", price: "€2.8", status: "打样中",
+        design: "V1 定稿", sample: "打样评审中", test: "待送测", next: "比样定商" },
+      { id: "BTS-302", name: "儿童保温杯 350ml", spec: "316 内胆 · 吸管盖", qty: "1.8 万/月", price: "€4.0", status: "打样中",
+        design: "V1 定稿", sample: "候选打样中", test: "待送测", next: "比样定商" }
     ]
   },
   {
     id: "REQ-H1", prj: "PRJ-2602", name: "布艺收纳需求包", cat: "家居", sku: 12,
     monthly: 30000, qtyLabel: "3 万件/月", priceBand: "€3.0 – 8.0",
     procs: ["模压"], certs: ["FSC", "BSCI"], leadLimit: 45,
-    status: "final_internal", shortlist: ["SUP-008", "SUP-005"], confirmed: [], suggestSup: "SUP-008", returnNote: null
+    status: "final_internal", shortlist: ["SUP-008", "SUP-005"], confirmed: [], suggestSup: "SUP-008", returnNote: null,
+    skuList: [
+      { id: "AW-101", name: "布艺收纳筐三件套", spec: "棉麻面料 · 模压定型", qty: "1.4 万/月", price: "€6.5", status: "打样中" },
+      { id: "AW-102", name: "床底收纳袋", spec: "无纺布 · 可视窗", qty: "1.0 万/月", price: "€3.5", status: "打样中" },
+      { id: "AW-103", name: "挂式收纳格", spec: "棉麻 · 四格", qty: "0.6 万/月", price: "€4.0", status: "打样中" }
+    ]
   },
   {
     id: "REQ-H2", prj: "PRJ-2602", name: "保温杯具需求包", cat: "水具", sku: 8,
@@ -517,9 +535,12 @@ const packages = [
     procs: ["注塑", "丝印"], certs: ["LFGB", "FDA"], leadLimit: 50,
     status: "confirmed", shortlist: ["SUP-005"], confirmed: ["SUP-005"], suggestSup: "SUP-005", returnNote: null,
     skuList: [
-      { id: "AW-201", name: "保温杯 500ml · 燕麦色", design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
-      { id: "AW-202", name: "保温杯 350ml · 藏蓝", design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
-      { id: "AW-203", name: "儿童吸管杯 300ml", design: "V1 定稿", sample: "二次修样确认", test: "送测中", next: "测试通过后下单" }
+      { id: "AW-201", name: "保温杯 500ml · 燕麦色", spec: "304 内胆 · 粉体涂装", qty: "1.0 万/月", price: "€9.5", status: "已确认",
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+      { id: "AW-202", name: "保温杯 350ml · 藏蓝", spec: "304 内胆 · 粉体涂装", qty: "0.8 万/月", price: "€8.0", status: "已确认",
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+      { id: "AW-203", name: "儿童吸管杯 300ml", spec: "Tritan · 防漏吸管盖", qty: "0.7 万/月", price: "€6.5", status: "已确认",
+        design: "V1 定稿", sample: "二次修样确认", test: "送测中", next: "测试通过后下单" }
     ]
   },
   {
@@ -528,21 +549,35 @@ const packages = [
     procs: ["注塑"], certs: ["LFGB", "BSCI"], leadLimit: 50,
     status: "confirmed", shortlist: ["SUP-005"], confirmed: ["SUP-005"], suggestSup: "SUP-005", returnNote: null,
     skuList: [
-      { id: "TK-101", name: "密封收纳盒 1.2L", design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
-      { id: "TK-102", name: "密封收纳盒 2.4L", design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" }
+      { id: "TK-101", name: "密封收纳盒 1.2L", spec: "PP 食品级 · 四扣密封", qty: "1.8 万/月", price: "£2.8", status: "已确认",
+        design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+      { id: "TK-102", name: "密封收纳盒 2.4L", spec: "PP 食品级 · 四扣密封", qty: "1.4 万/月", price: "£4.2", status: "已确认",
+        design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" }
     ]
   },
   {
     id: "REQ-T2", prj: "PRJ-2603", name: "餐厨配件需求包", cat: "家居", sku: 9,
     monthly: 30000, qtyLabel: "3 万件/月", priceBand: "£2.0 – 9.0",
     procs: ["注塑", "模压"], certs: ["LFGB"], leadLimit: 50,
-    status: "confirmed", shortlist: ["SUP-008"], confirmed: ["SUP-008"], suggestSup: "SUP-008", returnNote: null
+    status: "confirmed", shortlist: ["SUP-008"], confirmed: ["SUP-008"], suggestSup: "SUP-008", returnNote: null,
+    skuList: [
+      { id: "TK-201", name: "沥水置物架", spec: "PP + 竹纤维托盘", qty: "1.2 万/月", price: "£5.5", status: "已确认",
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+      { id: "TK-202", name: "调料收纳罐 4 件套", spec: "PET 罐身 · 模压盖", qty: "1.0 万/月", price: "£6.8", status: "已确认",
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" }
+    ]
   },
   {
     id: "REQ-M1", prj: "PRJ-2604", name: "圣诞 IP 礼品需求包", cat: "礼品", sku: 18,
     monthly: 80000, qtyLabel: "8 万件/月", priceBand: "¥15 – 69",
     procs: ["印刷", "组装"], certs: ["EN71", "Disney FAMA"], leadLimit: 40,
-    status: "sampling", shortlist: ["SUP-007", "SUP-012"], confirmed: [], suggestSup: null, returnNote: null
+    status: "sampling", shortlist: ["SUP-007", "SUP-012"], confirmed: [], suggestSup: null, returnNote: null,
+    skuList: [
+      { id: "XM-101", name: "IP 盲盒挂件 · 6 款", spec: "PVC 软胶 · 独立彩盒", qty: "3.5 万/月", price: "¥19", status: "打样中" },
+      { id: "XM-102", name: "圣诞马克杯礼盒", spec: "陶瓷 · 烫金印刷礼盒", qty: "2.0 万/月", price: "¥39", status: "打样中" },
+      { id: "XM-103", name: "IP 拼图 500 片", spec: "FSC 灰板 · 哑膜", qty: "1.5 万/月", price: "¥45", status: "打样中" },
+      { id: "XM-104", name: "节日袜礼品套装", spec: "针织 + 卡头组装", qty: "1.0 万/月", price: "¥15", status: "打样中" }
+    ]
   }
 ];
 
@@ -612,6 +647,8 @@ const state = {
   weights: Object.fromEntries(DIMS.map(d => [d.key, d.w])),
   gates: { cert: false, redline: false },
   nbFile: null,
+  railAll: false,
+  skuOpen: {},
   pinClient: true,
   reasonFor: null,          // { t: 'pkg-internal-return'|'pkg-swap'|'design-return'|'design-changes', id }
   clientSel: "CLI-001",
@@ -1159,12 +1196,23 @@ function projectDetail(prjId) {
             else if (["shortlist_review", "final_internal"].includes(x.status)) act = `<span class="muted">审核中心处理</span>`;
             else if (x.status === "final_client") act = `<span class="muted">等待客户定商</span>`;
           }
+          const hasSku = x.skuList && x.skuList.length;
+          const open = hasSku && state.skuOpen[x.id];
+          const skuCell = hasSku
+            ? `<button class="text-link sku-btn" data-action="sku-toggle" data-pkg="${x.id}">${x.sku} 个 ${open ? "▴" : "▾"}</button>`
+            : `${x.sku} 个`;
+          const skuRow = open ? `<tr class="sku-row"><td colspan="8"><div class="sku-box">
+              <p class="sku-cap">SKU 明细 · 代表条目 ${x.skuList.length} 条（共 ${x.sku} 个 SKU，Demo 列举）</p>
+              <table><thead><tr><th>SKU 编号</th><th>名称</th><th>规格 / 材质</th><th>数量</th><th>目标单价</th><th>状态</th></tr></thead>
+              <tbody>${x.skuList.map(k => `<tr><td><b>${k.id}</b></td><td>${k.name}</td><td>${k.spec || "待补充"}</td><td>${k.qty || "待分配"}</td><td>${k.price || "见价格带"}</td>
+                <td><span class="chip ${{ "已确认": "green", "打样中": "skyc", "定稿": "blue", "设计中": "", "待设计": "outline" }[k.status] ?? ""}">${k.status || "—"}</span></td></tr>`).join("")}</tbody></table>
+            </div></td></tr>` : "";
           return `<tr>
             <td><b>${x.name}</b>${x.returnNote ? `<br><span class="chip red">有退回意见</span>` : ""}</td>
-            <td>${x.cat}</td><td>${x.sku}</td><td>${x.qtyLabel}</td>
+            <td>${x.cat}</td><td>${skuCell}</td><td>${x.qtyLabel}</td>
             <td>${x.certs.join(" / ")}</td>
             <td><span class="tag ${st.tag}">${st.label}</span></td>
-            <td>${supCol}</td><td>${act}</td></tr>`;
+            <td>${supCol}</td><td>${act}</td></tr>${skuRow}`;
         }).join("")}</tbody></table></div>` : `<div class="empty">Brief 拆解中，需求包尚未生成${isSales ? " —— 拆解完成后先设计，定稿后再匹配打样候选" : ""}</div>`}
       ${ps.some(x => x.returnNote) ? ps.filter(x => x.returnNote).map(x => `<div class="return-note tight">【${x.name}】${x.returnNote}</div>`).join("") : ""}
     </section>
@@ -1301,6 +1349,7 @@ function renderMatching() {
           <div class="kv"><span>交期上限</span><b>${cur.leadLimit} 天</b></div>
           ${c && c.compliance ? `<div class="kv"><span>客户验厂红线</span><b>${c.compliance.auditCerts.join(" / ")}</b></div>` : `<div class="kv"><span>需求包状态</span><b>${PKG_STATUS[cur.status].label}</b></div>`}
         </div>
+        ${cur.skuList && cur.skuList.length ? `<p class="muted tight">含：${cur.skuList.slice(0, 3).map(k => k.name).join("、")}${cur.skuList.length > 3 ? " 等" : ""} —— SKU 明细见项目详情</p>` : ""}
       </section>
 
       <section class="panel" style="margin-bottom:0">
@@ -1775,8 +1824,8 @@ function reasonBoxHtml() {
     </div></div>`;
 }
 
-function renderReview() {
-  const items = reviewsForRole();
+function renderReview(scope) {
+  let items = reviewsForRole();
   $("reviewCount").textContent = state.role === "client" ? items.length : deriveReviews().length;
   document.querySelectorAll("[data-rtab]").forEach(b => b.classList.toggle("active", b.dataset.rtab === state.rtab));
   const box = $("reviewList");
@@ -1798,9 +1847,25 @@ function renderReview() {
     return;
   }
 
-  if (!items.length) { box.innerHTML = `<div class="empty">没有待处理的审核事项</div>`; return; }
+  /* 上下文过滤（业务员/管理层）：按项目 or 按匹配链路 */
+  let sub = "";
+  if (scope && scope.prj) {
+    const pr = prj(scope.prj);
+    items = items.filter(it => (it.p || pkg(it.d.pkg)).prj === scope.prj);
+    sub = `<div class="rail-sub"><span>当前项目：${pr ? pr.name : scope.prj}</span><button class="text-link" data-action="rail-all-toggle">查看全部</button></div>`;
+  } else if (scope && scope.kinds) {
+    items = items.filter(it => scope.kinds.includes(it.kind));
+    sub = `<div class="rail-sub"><span>只看匹配与定商相关</span></div>`;
+  } else if (scope && scope.allNote) {
+    sub = `<div class="rail-sub"><span>全部待办</span><button class="text-link" data-action="rail-all-toggle">只看当前项目</button></div>`;
+  }
 
-  box.innerHTML = items.map(it => {
+  if (!items.length) {
+    box.innerHTML = sub + `<div class="empty">${scope && scope.prj ? "该项目没有待处理事项" : scope && scope.kinds ? "当前没有匹配相关审核" : "没有待处理的审核事项"}</div>`;
+    return;
+  }
+
+  box.innerHTML = sub + items.map(it => {
     if (it.kind === "shortlist") return reviewShortlistItem(it);
     if (it.kind === "final") return reviewFinalItem(it);
     return reviewDesignItem(it);
@@ -1898,6 +1963,119 @@ function reviewDesignItem(it) {
    动作 & 事件
    ============================================================ */
 
+/* ---------- 右栏：随左侧导航上下文切换（业务员/管理层） ---------- */
+
+function setRailHead(label, title, tabsOn) {
+  $("railLabel").textContent = label;
+  $("railTitle").textContent = title;
+  $("railTabs").style.display = tabsOn ? "" : "none";
+}
+
+function renderRail() {
+  /* 客户/供应商角色：右栏保持个人待办/通知，不做上下文切换 */
+  if (state.role === "client" || state.role === "supplier" || state.view === "dashboard") {
+    setRailHead("Review Center", "审核中心", true);
+    renderReview();
+    return;
+  }
+  if (state.view === "projects") {
+    setRailHead("Review Center", "审核中心", true);
+    renderReview(state.prjOpen ? (state.railAll ? { allNote: true } : { prj: state.prjOpen }) : null);
+    return;
+  }
+  if (state.view === "matching") {
+    setRailHead("Review Center", "审核中心", true);
+    renderReview({ kinds: ["shortlist", "final"] });
+    return;
+  }
+  if (state.view === "clients") { setRailHead("Client Intel", "客户情报", false); railClient(); return; }
+  if (state.view === "suppliers") { setRailHead("Supplier Intel", "供应商情报", false); railSupplier(); return; }
+  if (state.view === "thinking") { setRailHead("Demo Flow", "演示动线", false); railDemo(); return; }
+  setRailHead("Review Center", "审核中心", true);
+  renderReview();
+}
+
+function railClient() {
+  $("reviewCount").textContent = deriveReviews().length;
+  const box = $("reviewList");
+  const c = client(state.clientSel);
+  if (!c) { box.innerHTML = `<div class="empty">未选择客户</div>`; return; }
+  const pend = deriveReviews().filter(it => it.stage === "client" && prj((it.p || pkg(it.d.pkg)).prj)?.client === c.id);
+  const redl = (c.compliance && c.compliance.auditCerts) || [];
+  const news = feed.filter(f => f.txt.includes(c.name)).slice(0, 3);
+  box.innerHTML = `
+    <div class="rail-sub"><span>当前客户：${c.name}</span></div>
+    <div class="r-item">
+      <div class="r-top"><span class="chip skyc">待客户确认</span><span class="chip">${pend.length} 项</span></div>
+      ${pend.length ? pend.map(it => {
+        const p = it.p || pkg(it.d.pkg), pr = prj(p.prj);
+        return `<div class="ri-line"><b>${it.kind === "design" ? `设计稿 V${it.d.ver} 定稿 · ${p.name}` : `定商确认 · ${p.name}`}</b>
+          <button class="text-link" data-action="open-prj" data-prj="${pr.id}">打开项目</button></div>`;
+      }).join("") : `<p class="muted">暂无需要该客户确认的事项</p>`}
+    </div>
+    <div class="r-item">
+      <div class="r-top"><span class="chip red">验厂红线</span></div>
+      ${redl.length
+        ? `<div class="chip-row">${redl.map(x => `<span class="chip red">${x}</span>`).join("")}</div><p class="muted" style="margin-top:6px">下单前必须有效 · 匹配台自动校验，可切为硬性门槛</p>`
+        : `<p class="muted">未设置硬性验厂红线（按项目要求执行）</p>`}
+    </div>
+    <div class="r-item">
+      <div class="r-top"><span class="chip">最近动态</span></div>
+      ${news.length ? news.map(n => `<div class="ri-news"><time>${n.t}</time>${n.txt}</div>`).join("") : `<p class="muted">近期暂无该客户相关动态</p>`}
+    </div>`;
+}
+
+function railSupplier() {
+  $("reviewCount").textContent = deriveReviews().length;
+  const box = $("reviewList");
+  const s = sup(state.supSel);
+  if (!s) { box.innerHTML = `<div class="empty">未选择供应商</div>`; return; }
+  const tasks = samples.filter(x => x.supplier === s.id && x.status !== "scored");
+  const coop = packages.filter(p => p.confirmed.includes(s.id));
+  const st = SUP_STATUS[s.status];
+  box.innerHTML = `
+    <div class="rail-sub"><span>当前供应商：${s.name}</span></div>
+    <div class="r-item">
+      <div class="r-top"><span class="tag ${st.tag}">${st.label}</span>${sourceTag(s)}</div>
+      <p class="muted">${s.type} · ${s.region} · 主营 ${s.cats[0]}</p>
+      ${s.status === "onboarding" ? `<p class="muted" style="margin-top:6px">准入待办：资料补充 + 验厂排期，完成前不参与候选（漏斗中透明展示原因）</p>` : ""}
+    </div>
+    <div class="r-item">
+      <div class="r-top"><span class="chip skyc">打样任务进行中</span><span class="chip">${tasks.length} 项</span></div>
+      ${tasks.length ? tasks.map(x => `<div class="ri-line"><b>${pkg(x.pkg).name}</b><span class="muted">${SAMPLE_STATUS[x.status].label} · 截止 ${x.due}</span></div>`).join("") : `<p class="muted">暂无进行中的打样任务</p>`}
+    </div>
+    <div class="r-item">
+      <div class="r-top"><span class="chip green">已确认合作</span><span class="chip">${coop.length} 个需求包</span></div>
+      ${coop.length ? coop.map(p => `<div class="ri-line"><b>${p.name}</b><button class="text-link" data-action="open-prj" data-prj="${p.prj}">打开项目</button></div>`).join("") : `<p class="muted">暂无确认合作的需求包</p>`}
+    </div>
+    <div class="r-item">
+      <div class="r-top"><span class="chip green">认证（点击预览证书）</span></div>
+      ${s.certs.length ? `<div class="chip-row">${s.certs.map(x => `<span class="chip green click-prev" data-action="file-open" data-kind="cert" data-sup="${s.id}" data-cert="${x}" title="点击预览证书">${x}</span>`).join("")}</div>` : `<p class="muted">认证资料收集中</p>`}
+    </div>`;
+}
+
+const DEMO_STEPS = [
+  { k: "map", n: 1, t: "全景导图开场", d: "平台思路页 2 分钟讲全局（本页）" },
+  { k: "brief", n: 2, t: "新建 Brief · 现场拆包", d: "选客户自动带出品牌模板与价格带" },
+  { k: "design", n: 3, t: "HEMA 2027 项目详情", d: "设计闭环：内审 → 客户意见 → V2 定稿" },
+  { k: "match", n: 4, t: "匹配台 · 文具需求包", d: "硬性门槛开关 + 漏斗 + 权重滑杆" },
+  { k: "sampling", n: 5, t: "打样与比样", d: "寄样 → 评分 → 生成定商建议" },
+  { k: "client", n: 6, t: "切客户视角", d: "定稿确认 + 定商确认（切回用左下角色框）" },
+  { k: "supplier", n: 7, t: "切供应商视角", d: "打样任务 + SKU 明细（切回用左下角色框）" },
+  { k: "brand", n: 8, t: "品牌档案与合规", d: "客户管理页签：智能档案 + 验厂红线" }
+];
+
+function railDemo() {
+  $("reviewCount").textContent = deriveReviews().length;
+  $("reviewList").innerHTML = `
+    <div class="rail-sub"><span>拿着 Demo 讲给别人听 · 点击直达</span></div>
+    ${DEMO_STEPS.map(s => `
+      <button class="demo-step" data-action="demo-jump" data-step="${s.k}">
+        <i>${s.n}</i><span><b>${s.t}</b><small>${s.d}</small></span>
+      </button>`).join("")}
+    <p class="muted tight">访谈时业务员的修正当场画到左侧画板上，导出 JSON 汇总。</p>`;
+}
+
 function renderView() {
   renderChrome();
   ({
@@ -1908,7 +2086,7 @@ function renderView() {
     suppliers: renderSuppliers,
     thinking: () => { renderMap(); setupMapInteractions(); }
   }[state.view])();
-  renderReview();
+  renderRail();
 }
 
 function setView(v) {
@@ -1916,6 +2094,7 @@ function setView(v) {
   state.view = role.nav.includes(v) ? v : role.nav[0];
   state.reasonFor = null;
   state.supEdit = false;
+  state.railAll = false;
   renderView();
   window.scrollTo({ top: 0 });
 }
@@ -2625,6 +2804,7 @@ function openBriefModal() {
       </div>
       <div>
         <p class="label" style="margin-bottom:8px">② 结构化拆解为需求包（可先不拆，项目停在"拆解中"）</p>
+        <p class="muted" style="margin-bottom:8px">每个需求包创建后按 SKU 数自动生成 SKU 占位（编号/规格/单价待细化），明细在项目详情展开补充。</p>
         <div id="nb-pkgs">${pkgRowHtml()}</div>
         <button class="ghost mini" data-action="brief-add-pkg">+ 再加一个需求包</button>
       </div>
@@ -2698,12 +2878,17 @@ function briefCreate() {
   });
 
   pkgRows.forEach(p => {
+    const catCode = { "文具": "ST", "包袋": "BG", "水具": "DR", "家居": "HM", "礼品": "GF" }[p.cat] || "SK";
     packages.push({
       id: `REQ-${String(packages.length + 1).padStart(2, "0")}`,
       prj: prjId, name: p.name, cat: p.cat, sku: p.sku, monthly: p.qty,
       qtyLabel: `${(p.qty / 10000).toFixed(p.qty % 10000 ? 1 : 0)} 万件/月`,
       priceBand: p.price, procs: p.procs, certs: p.certs, leadLimit: p.lead,
-      status: "design", shortlist: [], confirmed: [], suggestSup: null, returnNote: null
+      status: "design", shortlist: [], confirmed: [], suggestSup: null, returnNote: null,
+      skuList: Array.from({ length: Math.min(p.sku, 4) }, (_, i) => ({
+        id: `${catCode}-${String(i + 1).padStart(2, "0")}`, name: `${p.cat} SKU-${String(i + 1).padStart(2, "0")}（待细化）`,
+        spec: "待补充", qty: "待分配", price: "见价格带", status: "待设计"
+      }))
     });
   });
   if (pkgRows.length) prj(prjId).timeline.push({ t: today, txt: `Brief 结构化拆解完成，拆出 ${pkgRows.length} 个需求包，进入设计阶段` });
@@ -2987,6 +3172,19 @@ document.addEventListener("click", e => {
   else if (a === "upload-version") { const pk = btn.dataset.pkg; pickFile("image/*,application/pdf", f => uploadVersion(pk, f)); }
   else if (a === "file-open") openFileView(btn.dataset.kind, btn.dataset);
   else if (a === "file-close") closeFileView();
+  else if (a === "sku-toggle") { state.skuOpen[btn.dataset.pkg] = !state.skuOpen[btn.dataset.pkg]; renderView(); }
+  else if (a === "rail-all-toggle") { state.railAll = !state.railAll; renderRail(); }
+  else if (a === "demo-jump") {
+    const k = btn.dataset.step;
+    if (k === "map") { setView("thinking"); toast("开场：用左侧全景导图讲 2 分钟全局"); }
+    else if (k === "brief") openBriefModal();
+    else if (k === "design") { state.prjOpen = "PRJ-2601"; setView("projects"); toast("设计稿区演示：内审 → 客户意见 → V2 → 定稿"); }
+    else if (k === "match") { state.pkgSel = "REQ-01"; setView("matching"); toast("演示门槛开关与漏斗，勾 2 家提交内审"); }
+    else if (k === "sampling") { state.prjOpen = "PRJ-2601"; setView("projects"); toast("项目详情中部即「打样与比样」区"); }
+    else if (k === "client") setRole("client");
+    else if (k === "supplier") setRole("supplier");
+    else if (k === "brand") { state.clientSel = "CLI-001"; state.clientTab = "brand"; setView("clients"); }
+  }
   else if (a === "nb-pick") pickFile("", f => {
     state.nbFile = f;
     const el = $("nb-file-name");
@@ -3001,9 +3199,9 @@ document.addEventListener("click", e => {
     applyReason(txt);
   }
   else if (a === "reason-cancel") { state.reasonFor = null; renderView(); }
-  else if (a === "client-sel") { state.clientSel = btn.dataset.client; renderClients(); }
+  else if (a === "client-sel") { state.clientSel = btn.dataset.client; renderClients(); renderRail(); }
   else if (a === "client-tab") { state.clientTab = btn.dataset.tab; renderClients(); }
-  else if (a === "sup-sel") { state.supSel = btn.dataset.sup; state.supEdit = false; renderSupplierCards(); }
+  else if (a === "sup-sel") { state.supSel = btn.dataset.sup; state.supEdit = false; renderSupplierCards(); renderRail(); }
   else if (a === "sup-edit") { state.supEdit = true; renderSupplierCards(); }
   else if (a === "sup-edit-save") supEditSave();
   else if (a === "sup-edit-cancel") { state.supEdit = false; renderSupplierCards(); }
@@ -3110,7 +3308,7 @@ document.querySelectorAll(".nav-btn").forEach(b => b.addEventListener("click", (
   if (b.dataset.view === "projects") state.prjOpen = null;
   setView(b.dataset.view);
 }));
-document.querySelectorAll("[data-rtab]").forEach(b => b.addEventListener("click", () => { state.rtab = b.dataset.rtab; renderReview(); }));
+document.querySelectorAll("[data-rtab]").forEach(b => b.addEventListener("click", () => { state.rtab = b.dataset.rtab; renderRail(); }));
 
 /* ---------------- 启动 ---------------- */
 
