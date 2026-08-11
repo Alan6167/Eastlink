@@ -687,6 +687,37 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .edge.esel text { fill: var(--ink); }
 @media (max-width: 760px) { .map-form { grid-template-columns: 1fr; } .samp-row .sr-scores { grid-template-columns: 1fr; } }
 
+/* ============ 文件预览与真实上传 ============ */
+.click-prev { cursor: zoom-in; transition: border-color .15s, box-shadow .15s; }
+.thumb.click-prev { position: relative; }
+.thumb.click-prev::before {
+  content: "点击预览"; position: absolute; inset: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(18, 37, 74, 0); color: transparent;
+  font-size: 11px; font-weight: 600; letter-spacing: 1px;
+  transition: background .15s, color .15s; border-radius: inherit;
+}
+.thumb.click-prev:hover::before { background: rgba(18, 37, 74, .42); color: #fff; }
+.asset-card.click-prev:hover { border-color: var(--brand); box-shadow: 0 4px 14px rgba(6, 102, 255, .13); }
+.chip.click-prev:hover { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand) inset; }
+
+.file-modal { width: min(780px, 100%); }
+.fv-stage {
+  background: #EDF2FA; border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px; display: flex; align-items: center; justify-content: center;
+  max-height: 62vh; overflow: auto;
+}
+.fv-stage svg, .fv-stage img { max-width: 100%; max-height: 56vh; height: auto; display: block; border-radius: 8px; }
+.fv-stage img { background: #fff; box-shadow: 0 6px 22px rgba(18, 37, 74, .16); min-width: 96px; min-height: 96px; object-fit: contain; image-rendering: auto; }
+.fv-stage svg { background: #fff; box-shadow: 0 6px 22px rgba(18, 37, 74, .1); }
+.fv-meta { display: flex; flex-wrap: wrap; gap: 5px 16px; margin-top: 10px; font-size: 11.5px; color: var(--faint); }
+.fv-meta b { color: var(--ink); font-weight: 600; }
+.up-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.up-name {
+  font-size: 11.5px; color: var(--faint);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 230px;
+}
+
 /* ============ 新建 Brief 模态框 ============ */
 .modal-mask {
   position: fixed; inset: 0; z-index: 60;

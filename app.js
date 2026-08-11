@@ -611,6 +611,7 @@ const state = {
   pkgSel: "REQ-01",
   weights: Object.fromEntries(DIMS.map(d => [d.key, d.w])),
   gates: { cert: false, redline: false },
+  nbFile: null,
   pinClient: true,
   reasonFor: null,          // { t: 'pkg-internal-return'|'pkg-swap'|'design-return'|'design-changes', id }
   clientSel: "CLI-001",
@@ -659,6 +660,13 @@ const prj = id => projects.find(p => p.id === id);
 const client = id => clients.find(c => c.id === id);
 const pkgsOf = prjId => packages.filter(p => p.prj === prjId);
 const designsOf = pkgId => designs.filter(d => d.pkg === pkgId).sort((a, b) => a.ver - b.ver);
+
+/* 缩略图背景：有真实上传的图片文件时用原图，否则用配色渐变示意 */
+const thumbBg = d => d && d.file && d.file.src && d.file.mime.startsWith("image/")
+  ? `background-image:url(${d.file.src});background-size:cover;background-position:center`
+  : d
+    ? `background:linear-gradient(135deg, ${d.palette[0]} 0%, ${d.palette[0]} 52%, ${d.palette[1]} 52%, ${d.palette[1]} 100%)`
+    : "background:#EEF2F9";
 const esc = s => String(s == null ? "" : s);
 
 function latestDesignByPkg(prjId) {
@@ -1021,7 +1029,7 @@ function dashSupplier() {
     else if (s.status === "delivered" || s.status === "reviewing") act = `<span class="muted" style="font-size:11.5px">等待 Eastlink 评审</span>`;
     else if (s.status === "scored" && s.score) act = `<span class="chip green">我的样品综合 ${Math.round((s.score.质量 + s.score.工艺还原 + s.score.报价) / 3)} 分</span>`;
     return `<div class="samp-task">
-      <div class="thumb" style="background:${d ? `linear-gradient(135deg, ${d.palette[0]} 0%, ${d.palette[0]} 52%, ${d.palette[1]} 52%, ${d.palette[1]} 100%)` : "#EEF2F9"}"></div>
+      <div${d ? ` class="thumb click-prev" data-action="file-open" data-kind="design" data-id="${d.id}"` : ` class="thumb"`} style="${thumbBg(d)}"></div>
       <div class="st-body">
         <h5>${pk.name} · 打样任务</h5>
         <p class="muted">${pr.name} · 设计稿 ${d ? "V" + d.ver + " 定稿" : "待定稿"} · 截止 ${s.due}</p>
@@ -1115,7 +1123,7 @@ function projectDetail(prjId) {
     <div class="panel" style="margin-top:12px">
       <div class="prj-head">
         <div>
-          <p class="label">${p.id} · Brief ${p.briefVer}（${p.briefFile}）</p>
+          <p class="label">${p.id} · Brief ${p.briefVer} · <button class="text-link" data-action="file-open" data-kind="brief" data-prj="${p.id}" title="点击预览 Brief 文件">${p.briefFile}</button></p>
           <h2>${p.name}</h2>
           <p class="muted">客户：${c ? c.name : "待建档"} · Owner：${p.owner} · 上市：${p.launch}</p>
         </div>
@@ -1247,7 +1255,7 @@ function designCard(d) {
   const reasonBox = state.reasonFor && !state.reasonFor.inReview && ((state.reasonFor.t === "design-return" || state.reasonFor.t === "design-changes") && state.reasonFor.id === d.id) ? reasonBoxHtml() : "";
 
   return `<div class="design-card">
-    <div class="thumb" data-ver="V${d.ver}" style="background:linear-gradient(135deg, ${d.palette[0]} 0%, ${d.palette[0]} 52%, ${d.palette[1]} 52%, ${d.palette[1]} 100%)"></div>
+    <div class="thumb click-prev" data-action="file-open" data-kind="design" data-id="${d.id}" data-ver="V${d.ver}" style="${thumbBg(d)}"></div>
     <div class="d-body">
       <h5>${p.name}</h5>
       <div class="d-meta">设计师 ${d.designer} · ${d.date} · <span class="tag ${st.tag}">${st.label}</span></div>
@@ -1481,9 +1489,9 @@ function renderClients() {
       <div class="panel-head"><div><p class="label">Brand Assets</p><h3>品牌资产库（${b.assets.length}）</h3></div>
         <button class="ghost mini" data-action="brand-asset-add" data-client="${c.id}">+ 上传资产</button></div>
       <div class="asset-grid">
-        ${b.assets.map(a => `
-          <div class="asset-card">
-            <div class="a-icon" style="background:linear-gradient(135deg, ${b.colors[0]} 0%, ${b.colors[0]} 55%, ${b.colors[1] || "#EEF2F9"} 55%)"></div>
+        ${b.assets.map((a, i) => `
+          <div class="asset-card click-prev" data-action="file-open" data-kind="asset" data-client="${c.id}" data-idx="${i}" title="点击预览">
+            <div class="a-icon" style="${a.file && a.file.src && a.file.mime.startsWith("image/") ? `background-image:url(${a.file.src});background-size:cover;background-position:center` : `background:linear-gradient(135deg, ${b.colors[0]} 0%, ${b.colors[0]} 55%, ${b.colors[1] || "#EEF2F9"} 55%)`}"></div>
             <div class="a-body">
               <h5>${a.name}</h5>
               <p>${a.ver} · ${a.date} · <span class="chip ${{ "规范": "blue", "视觉": "skyc", "素材": "green", "授权": "amber", "参考": "" }[a.type] || ""}">${a.type}</span></p>
@@ -1491,7 +1499,7 @@ function renderClients() {
             <button class="text-link" data-action="brand-asset-ref" data-name="${a.name}">引用到项目</button>
           </div>`).join("")}
       </div>
-      <p class="muted tight">品牌资产在新建 Brief 和设计稿环节可直接引用（本 Demo 为演示文件卡，正式版支持真实上传与版本管理）。</p>
+      <p class="muted tight">点击资产卡可打开预览；「+ 上传资产」真实选取本机文件（仅存本页内存，刷新即清）。品牌资产在新建 Brief 和设计稿环节可直接引用。</p>
     </section>` : `<div class="empty">该客户暂无品牌档案</div>`;
 
   const compliancePane = c.compliance ? `
@@ -1638,7 +1646,7 @@ function supplierDetailHtml(s) {
       <div class="sec"><b>能力标签（匹配数据源）</b>
         <span>品类：</span><div class="chip-row">${s.cats.map((c, i) => `<span class="chip ${i === 0 ? "blue" : ""}">${c}${i === 0 ? " · 主营" : ""}</span>`).join("")}</div>
         <span>工艺：</span><div class="chip-row">${s.procs.map(x => `<span class="chip">${x}</span>`).join("")}</div>
-        <span>认证：</span><div class="chip-row">${s.certs.length ? s.certs.map(x => `<span class="chip green">${x}</span>`).join("") : `<span class="chip amber">待收集</span>`}</div></div>
+        <span>认证：</span><div class="chip-row">${s.certs.length ? s.certs.map(x => `<span class="chip green click-prev" data-action="file-open" data-kind="cert" data-sup="${s.id}" data-cert="${x}" title="点击预览证书">${x}</span>`).join("") : `<span class="chip amber">待收集</span>`}</div></div>
       <div class="sec"><b>产能与交付</b>
         <span>月产能：<strong>${(s.capacity / 10000).toFixed(0)} 万件</strong></span>
         <span>平均交期：${s.lead ?? "—"} 天 · 打样 ${s.sample ?? "—"} 天</span>
@@ -1738,7 +1746,7 @@ function suppliersClientView() {
       <div class="sup-top"><span class="tag ${SUP_STATUS[s.status].tag}">${SUP_STATUS[s.status].label}</span>${sourceTag(s)}</div>
       <h4>${s.name}</h4>
       <p class="muted">${s.type} · ${s.region} · ${s.cats.join(" / ")}</p>
-      <div class="chip-row" style="margin-top:8px">${s.certs.length ? s.certs.map(x => `<span class="chip green">${x}</span>`).join("") : `<span class="chip amber">认证资料收集中</span>`}</div>
+      <div class="chip-row" style="margin-top:8px">${s.certs.length ? s.certs.map(x => `<span class="chip green click-prev" data-action="file-open" data-kind="cert" data-sup="${s.id}" data-cert="${x}" title="点击预览证书">${x}</span>`).join("") : `<span class="chip amber">认证资料收集中</span>`}</div>
       <p class="muted" style="margin-top:8px">${usedIn.length ? "参与：" + usedIn.map(p => p.name).join("、") : s.status === "onboarding" ? "准入进行中：资料补充 + 验厂排期" : "暂未参与您的项目"}</p>
     </div>`;
   };
@@ -1880,7 +1888,7 @@ function reviewDesignItem(it) {
     <div class="r-top"><span class="chip skyc">设计稿</span><span class="tag ${DESIGN_STATUS[d.status].tag}">${DESIGN_STATUS[d.status].label}</span></div>
     <h4>${p.name} · V${d.ver}</h4>
     <div class="r-meta">${pr.name} · ${c ? c.name : ""} · 设计师 ${d.designer} · ${d.date}</div>
-    <div class="thumb" style="height:52px;border-radius:8px;margin-bottom:8px;background:linear-gradient(135deg, ${d.palette[0]} 0%, ${d.palette[0]} 52%, ${d.palette[1]} 52%, ${d.palette[1]} 100%)"></div>
+    <div class="thumb click-prev" data-action="file-open" data-kind="design" data-id="${d.id}" style="height:52px;border-radius:8px;margin-bottom:8px;${thumbBg(d)}"></div>
     <div class="r-actions">${actions}</div>
     ${reasonBox}
   </div>`;
@@ -2040,7 +2048,7 @@ function designApprove(dId) {
   renderView();
 }
 
-function uploadVersion(pkgId) {
+function uploadVersion(pkgId, file) {
   const ds = designsOf(pkgId);
   const last = ds[ds.length - 1];
   const p = pkg(pkgId);
@@ -2050,10 +2058,11 @@ function uploadVersion(pkgId) {
     date: nowLabel().replace("今天 ", "今天"),
     status: "internal_review",
     palette: [last.palette[1], last.palette[0]],
-    note: null
+    note: null,
+    file: file || null
   });
-  log(`设计稿 V${last.ver + 1}（${p.name}）已上传，进入内审`, p.prj);
-  toast(`已上传 V${last.ver + 1}，进入内审`);
+  log(`设计稿 V${last.ver + 1}（${p.name}）已上传${file ? `：${file.name}` : ""}，进入内审`, p.prj);
+  toast(`已上传 V${last.ver + 1}${file ? `（${file.name}）` : ""}，进入内审`);
   renderView();
 }
 
@@ -2584,6 +2593,7 @@ function pkgRowHtml() {
 }
 
 function openBriefModal() {
+  state.nbFile = null;
   $("briefModalInner").innerHTML = `
     <div class="modal-head">
       <div><p class="label">New Brief</p><h3>新建项目 · 接收 Brief</h3></div>
@@ -2604,7 +2614,8 @@ function openBriefModal() {
               <option>正式文件（PDF / PPT）</option><option>邮件正文</option>
               <option>微信聊天记录</option><option>口头描述 + 参考图</option>
             </select></label>
-          <label class="field">原始 Brief 文件名（Mock 不真实上传）<input id="nb-file" placeholder="如：Brief_V1.pdf"></label>
+          <div class="field">原始 Brief 文件（可选 · 真实选取，仅本页预览）
+            <span class="up-row"><button type="button" class="ghost mini" data-action="nb-pick">选择文件</button><span class="up-name" id="nb-file-name">未选择</span></span></div>
           <label class="field">项目主题<input id="nb-theme" placeholder="如：Summer Outdoor"></label>
           <label class="field">目标市场<input id="nb-market" placeholder="如：欧洲门店"></label>
           <label class="field">整体价格带<input id="nb-price" placeholder="如：€2.0 – 9.0"></label>
@@ -2671,7 +2682,8 @@ function briefCreate() {
   projects.push({
     id: prjId, name, client: cliVal === "__new" ? null : cliVal, owner: "业务员 A",
     launch, briefVer: "V1",
-    briefFile: $("nb-file").value.trim() || (source === "正式文件（PDF / PPT）" ? "Brief_V1.pdf" : "（非正式 Brief · 待整理归档）"),
+    briefFile: state.nbFile ? state.nbFile.name : (source === "正式文件（PDF / PPT）" ? "Brief_V1.pdf" : "（非正式 Brief · 待整理归档）"),
+    briefUpload: state.nbFile,
     brief: {
       "项目主题": $("nb-theme").value.trim() || "待补充",
       "目标市场": $("nb-market").value.trim() || "待确认",
@@ -2703,10 +2715,243 @@ function briefCreate() {
   toast(pkgRows.length ? "项目已创建，需求包进入设计阶段（设计定稿后匹配打样候选）" : "项目已创建，当前处于拆解中");
 }
 
+/* ============================================================
+   文件预览与真实上传（纯内存：刷新即清，不上传任何服务器）
+   ============================================================ */
+
+/* 真实文件选择器：图片/PDF ≤3.5MB 读成 dataURL 可预览，其余仅记录元信息 */
+function pickFile(accept, cb) {
+  const inp = $("fileInput");
+  inp.accept = accept || "";
+  inp.value = "";
+  inp.onchange = () => {
+    const f = inp.files[0];
+    if (!f) return;
+    const meta = { name: f.name.replace(/[<>"'&]/g, ""), mime: f.type || "application/octet-stream", size: f.size, src: null };
+    if (f.size <= 3.5 * 1024 * 1024 && (meta.mime.startsWith("image/") || meta.mime === "application/pdf")) {
+      const r = new FileReader();
+      r.onload = () => { meta.src = r.result; cb(meta); };
+      r.readAsDataURL(f);
+    } else {
+      if (f.size > 3.5 * 1024 * 1024) toast("文件较大，Demo 只保留元信息，不缓存预览");
+      cb(meta);
+    }
+  };
+  inp.click();
+}
+
+const fmtSize = n => !n && n !== 0 ? "—" : n < 1024 ? `${n} B` : n < 1048576 ? `${(n / 1024).toFixed(0)} KB` : `${(n / 1048576).toFixed(1)} MB`;
+
+/* ---------- Mock 示意图生成器（SVG 字符串，品牌配色） ---------- */
+
+const FV_INK = "#12254A", FV_FAINT = "#64748F", FV_LINE = "#DCE5F2", FV_BLUE = "#0666FF", FV_GREEN = "#0C7A4B";
+
+/* 按品类画产品线稿（设计稿示意） */
+function fvSketch(cat, c0) {
+  const S = `fill:${c0};fill-opacity:.16;stroke:${FV_INK};stroke-width:3`;
+  const A = `fill:${c0};fill-opacity:.4;stroke:${FV_INK};stroke-width:2.5`;
+  if (cat.includes("包袋")) return `
+    <path d="M160 240 Q250 150 340 240 L340 370 Q340 392 318 392 L182 392 Q160 392 160 370 Z" style="${S}"/>
+    <path d="M222 196 Q250 162 278 196" fill="none" stroke="${FV_INK}" stroke-width="6" stroke-linecap="round"/>
+    <rect x="205" y="292" width="90" height="64" rx="14" style="${A}"/>
+    <path d="M172 262 H328" stroke="${FV_INK}" stroke-width="2.5" stroke-dasharray="7 6" fill="none"/>`;
+  if (cat.includes("文具") || cat.includes("文创")) return `
+    <rect x="160" y="188" width="145" height="184" rx="10" style="${S}"/>
+    ${[0, 1, 2, 3, 4].map(i => `<circle cx="160" cy="${212 + i * 34}" r="6" fill="#fff" stroke="${FV_INK}" stroke-width="2.5"/>`).join("")}
+    ${[0, 1, 2].map(i => `<path d="M190 ${240 + i * 36} H278" stroke="${FV_INK}" stroke-width="2.5" opacity=".45"/>`).join("")}
+    <g transform="rotate(16 350 280)"><rect x="338" y="196" width="24" height="140" rx="5" style="${A}"/>
+    <path d="M338 336 L350 366 L362 336 Z" style="${S}"/></g>`;
+  if (cat.includes("水具")) return `
+    <rect x="230" y="162" width="40" height="28" rx="7" style="${A}"/>
+    <path d="M212 212 Q212 190 238 190 L262 190 Q288 190 288 212 L288 342 Q288 372 258 372 L242 372 Q212 372 212 342 Z" style="${S}"/>
+    <rect x="212" y="268" width="76" height="44" style="${A}"/>`;
+  if (cat.includes("家居") || cat.includes("厨房")) return `
+    <rect x="152" y="204" width="196" height="34" rx="9" style="${A}"/>
+    <rect x="164" y="238" width="172" height="126" rx="10" style="${S}"/>
+    <ellipse cx="250" cy="292" rx="28" ry="11" fill="#fff" stroke="${FV_INK}" stroke-width="2.5"/>`;
+  if (cat.includes("礼品") || cat.includes("玩具")) return `
+    <rect x="158" y="214" width="184" height="34" rx="7" style="${A}"/>
+    <rect x="170" y="248" width="160" height="118" rx="8" style="${S}"/>
+    <rect x="238" y="214" width="24" height="152" style="${A}"/>
+    <circle cx="230" cy="202" r="15" style="${S}"/><circle cx="270" cy="202" r="15" style="${S}"/>`;
+  return `
+    <rect x="165" y="180" width="170" height="195" rx="16" style="${S}"/>
+    <path d="M180 214 H320" stroke="${FV_INK}" stroke-width="2.5" stroke-dasharray="7 6"/>
+    <rect x="288" y="150" width="34" height="46" rx="6" style="${A}"/>`;
+}
+
+/* 设计稿示意：画板 + 品类线稿 + 尺寸标注 + 色彩/工艺/认证栏 */
+function svgDesignArt(d, p) {
+  const [c0, c1] = d.palette;
+  const dims = `stroke:${FV_FAINT};stroke-width:1.6`;
+  return `<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img" style="background:#FBFCFF">
+    <defs><pattern id="fvgrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0 H0 V24" fill="none" stroke="#EAF0FA" stroke-width="1"/></pattern></defs>
+    <rect width="800" height="560" fill="url(#fvgrid)"/>
+    <text x="42" y="58" font-size="21" font-weight="700" fill="${FV_INK}">${p.name} · 设计稿</text>
+    <text x="42" y="82" font-size="12.5" fill="${FV_FAINT}">需求包 ${p.id} · 品类 ${p.cat} · 目标价 ${p.priceBand}</text>
+    <rect x="694" y="38" width="66" height="32" rx="9" fill="${c0}"/>
+    <text x="727" y="59" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">V${d.ver}</text>
+    <rect x="42" y="104" width="418" height="368" rx="14" fill="#fff" stroke="${FV_LINE}"/>
+    ${fvSketch(p.cat, c0)}
+    <path d="M160 412 V424 M340 412 V424 M160 418 H340" style="${dims}"/>
+    <text x="250" y="440" font-size="11.5" fill="${FV_FAINT}" text-anchor="middle">420 mm（示意标注）</text>
+    <path d="M368 190 H380 M368 372 H380 M374 190 V372" style="${dims}"/>
+    <text x="392" y="286" font-size="11.5" fill="${FV_FAINT}">300 mm</text>
+    <text x="492" y="132" font-size="13" font-weight="700" fill="${FV_INK}">色彩规范</text>
+    <rect x="492" y="146" width="48" height="48" rx="10" fill="${c0}"/><text x="550" y="176" font-size="11.5" fill="${FV_FAINT}">${c0}</text>
+    <rect x="492" y="204" width="48" height="48" rx="10" fill="${c1}" stroke="${FV_LINE}"/><text x="550" y="234" font-size="11.5" fill="${FV_FAINT}">${c1}</text>
+    <text x="492" y="298" font-size="13" font-weight="700" fill="${FV_INK}">工艺要求（硬性门槛）</text>
+    ${p.procs.map((x, i) => `<text x="492" y="${322 + i * 24}" font-size="12.5" fill="${FV_FAINT}">· ${x}</text>`).join("")}
+    <text x="492" y="${322 + p.procs.length * 24 + 26}" font-size="13" font-weight="700" fill="${FV_INK}">认证要求</text>
+    <text x="492" y="${322 + p.procs.length * 24 + 50}" font-size="12.5" fill="${FV_FAINT}">${p.certs.join(" / ") || "—"}</text>
+    <text x="42" y="516" font-size="12" fill="${FV_FAINT}">设计师 ${d.designer} · ${d.date} · ${DESIGN_STATUS[d.status].label}</text>
+    <text x="42" y="538" font-size="11" fill="#93A3BF">Eastlink Demo 生成示意稿 · 非真实文件</text>
+  </svg>`;
+}
+
+/* 文档页示意（规范类资产 / Brief 附件） */
+function svgDoc(title, rows, accent) {
+  const bars = [432, 470, 380, 452, 300, 462, 420, 338, 408, 282, 446, 360];
+  const body = rows && rows.length
+    ? rows.slice(0, 9).map(([k, v], i) => `
+        <text x="62" y="${188 + i * 46}" font-size="13.5" font-weight="700" fill="${FV_INK}">${k}</text>
+        <text x="556" y="${188 + i * 46}" font-size="13" fill="${FV_FAINT}" text-anchor="end">${String(v).slice(0, 26)}</text>
+        <path d="M62 ${202 + i * 46} H556" stroke="${FV_LINE}" stroke-width="1"/>`).join("")
+    : bars.map((w, i) => `<rect x="62" y="${176 + i * 40}" width="${w}" height="12" rx="6" fill="#E7EDF7"/>`).join("");
+  return `<svg viewBox="0 0 620 820" xmlns="http://www.w3.org/2000/svg" role="img">
+    <rect x="34" y="34" width="560" height="760" rx="10" fill="#D9E2F2"/>
+    <rect x="26" y="26" width="560" height="760" rx="10" fill="#fff" stroke="${FV_LINE}"/>
+    <rect x="26" y="26" width="560" height="10" fill="${accent || FV_BLUE}"/>
+    <text x="62" y="94" font-size="21" font-weight="700" fill="${FV_INK}">${title}</text>
+    <text x="62" y="120" font-size="12" fill="${FV_FAINT}">Demo 生成示意文档 · 非真实文件内容</text>
+    ${body}
+    <text x="62" y="762" font-size="11" fill="#93A3BF">第 1 页 · Eastlink 合作供应商平台 Demo</text>
+  </svg>`;
+}
+
+/* 图库拼贴示意（视觉 / 素材 / 参考类资产） */
+function svgPhotoGrid(label, colors) {
+  const c0 = colors[0] || FV_BLUE, c1 = colors[1] || "#4FB3F6";
+  const shape = i => [
+    `<circle cx="116" cy="105" r="42" fill="#fff" fill-opacity=".85"/>`,
+    `<rect x="74" y="63" width="84" height="84" rx="16" fill="#fff" fill-opacity=".85"/>`,
+    `<path d="M116 60 L162 150 L70 150 Z" fill="#fff" fill-opacity=".85"/>`
+  ][i % 3];
+  return `<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img">
+    <rect width="800" height="560" fill="#FBFCFF"/>
+    <text x="40" y="52" font-size="18" font-weight="700" fill="${FV_INK}">${label}</text>
+    <text x="40" y="74" font-size="12" fill="${FV_FAINT}">Demo 生成示意拼贴 · 非真实素材</text>
+    ${[0, 1, 2, 3, 4, 5].map(i => {
+      const x = 40 + (i % 3) * 248, y = 94 + Math.floor(i / 3) * 226;
+      return `<g transform="translate(${x} ${y})">
+        <rect width="232" height="210" rx="14" fill="${i % 2 ? c1 : c0}" fill-opacity="${i % 3 === 2 ? ".55" : ".85"}"/>
+        ${shape(i)}</g>`;
+    }).join("")}
+    <text x="40" y="548" font-size="11" fill="#93A3BF">Eastlink 合作供应商平台 Demo</text>
+  </svg>`;
+}
+
+/* 证书版式示意（供应商认证） */
+function svgCert(certName, supName) {
+  return `<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img">
+    <rect width="800" height="560" fill="#fff"/>
+    <rect x="24" y="24" width="752" height="512" rx="14" fill="none" stroke="${FV_BLUE}" stroke-width="4"/>
+    <rect x="40" y="40" width="720" height="480" rx="10" fill="none" stroke="${FV_LINE}"/>
+    <text x="400" y="112" font-size="13" letter-spacing="6" fill="${FV_FAINT}" text-anchor="middle">CERTIFICATE OF COMPLIANCE</text>
+    <text x="400" y="168" font-size="36" font-weight="800" fill="${FV_INK}" text-anchor="middle">${certName}</text>
+    <path d="M320 196 H480" stroke="${FV_BLUE}" stroke-width="3"/>
+    <text x="400" y="248" font-size="14" fill="${FV_FAINT}" text-anchor="middle">兹证明</text>
+    <text x="400" y="290" font-size="24" font-weight="700" fill="${FV_INK}" text-anchor="middle">${supName}</text>
+    <text x="400" y="330" font-size="14" fill="${FV_FAINT}" text-anchor="middle">已通过 ${certName} 相关标准的审核要求</text>
+    <text x="180" y="472" font-size="12.5" fill="${FV_FAINT}">有效期至 2027-12（示意）</text>
+    <text x="180" y="496" font-size="11" fill="#93A3BF">Eastlink 合作供应商平台 Demo · 非真实证书</text>
+    <circle cx="620" cy="440" r="56" fill="none" stroke="${FV_GREEN}" stroke-width="2" stroke-dasharray="4 5"/>
+    <circle cx="620" cy="440" r="44" fill="#2FCE8B" fill-opacity=".14" stroke="${FV_GREEN}" stroke-width="2.5"/>
+    <text x="620" y="448" font-size="17" font-weight="700" fill="${FV_GREEN}" text-anchor="middle">示意</text>
+  </svg>`;
+}
+
+/* ---------- 预览弹窗 ---------- */
+
+function fvStageFor(file, fallbackSvg) {
+  if (file && file.src && file.mime.startsWith("image/")) return { stage: `<img src="${file.src}" alt="${file.name}">`, real: true };
+  if (file && file.src && file.mime === "application/pdf")
+    return { stage: `<embed src="${file.src}" type="application/pdf" style="width:100%;height:56vh">`, real: true, pdf: true };
+  return { stage: fallbackSvg, real: false };
+}
+
+function openFileView(kind, ref) {
+  let title = "", stage = "", metas = [];
+  let hint = "示意预览由 Demo 实时生成；正式版接入真实文件服务与版本管理。";
+
+  if (kind === "design") {
+    const d = designs.find(x => x.id === ref.id);
+    if (!d) return;
+    const p = pkg(d.pkg);
+    const fv = fvStageFor(d.file, "");
+    title = `${p.name} · 设计稿 V${d.ver}`;
+    stage = fv.real ? fv.stage : svgDesignArt(d, p);
+    if (fv.real) hint = fv.pdf ? "真实上传的 PDF（仅本页内存）；浏览器限制内嵌时以元信息为准。" : "真实上传文件，仅保存在本页内存，刷新后恢复示意图。";
+    metas = [["文件名", d.file ? d.file.name : `${p.id}_设计稿_V${d.ver}.svg（示意）`], ["版本", `V${d.ver}`], ["状态", DESIGN_STATUS[d.status].label],
+             ["设计师", d.designer], ["日期", d.date], d.file ? ["大小", fmtSize(d.file.size)] : null];
+  }
+  else if (kind === "asset") {
+    const c = client(ref.client);
+    const a = c && c.brand && c.brand.assets[+ref.idx];
+    if (!a) return;
+    const fallback = a.type === "规范" ? svgDoc(a.name, null, c.brand.colors[0])
+      : a.type === "授权" ? svgCert(a.name, c.name)
+      : svgPhotoGrid(a.name, c.brand.colors);
+    const fv = fvStageFor(a.file, fallback);
+    title = `${c.name} · ${a.name}`;
+    stage = fv.stage;
+    if (fv.real) hint = "真实上传文件，仅保存在本页内存（刷新即清），不会上传到任何服务器。";
+    metas = [["文件名", a.file ? a.file.name : `${a.name}.pdf（示意）`], ["类型", a.type], ["版本", a.ver], ["更新", a.date],
+             ["所属", c.name], a.file ? ["大小", fmtSize(a.file.size)] : null];
+  }
+  else if (kind === "brief") {
+    const p = prj(ref.prj);
+    if (!p) return;
+    const fv = fvStageFor(p.briefUpload, svgDoc(`${p.name} · Brief ${p.briefVer}`, Object.entries(p.brief)));
+    title = `${p.name} · Brief 原文`;
+    stage = fv.stage;
+    if (fv.real) hint = fv.pdf ? "真实上传的 Brief PDF（仅本页内存）。" : "真实上传的 Brief 文件，仅保存在本页内存。";
+    metas = [["文件名", p.briefFile], ["版本", `Brief ${p.briefVer}`], ["客户", client(p.client) ? client(p.client).name : "待建档"],
+             ["Owner", p.owner], ["上市", p.launch]];
+  }
+  else if (kind === "cert") {
+    const s = sup(ref.sup);
+    if (!s) return;
+    title = `${s.name} · ${ref.cert} 证书`;
+    stage = svgCert(ref.cert, s.name);
+    metas = [["证书", ref.cert], ["持有方", s.name], ["文件", `${ref.cert}_证书扫描件.pdf（示意）`], ["核验", "准入审核已核验（Demo）"]];
+  }
+  else return;
+
+  $("fileModalInner").innerHTML = `
+    <div class="modal-head">
+      <div><p class="label">File Preview</p><h3>${title}</h3></div>
+      <button class="ghost mini" data-action="file-close">✕ 关闭</button>
+    </div>
+    <div class="modal-body">
+      <div class="fv-stage">${stage}</div>
+      <div class="fv-meta">${metas.filter(Boolean).map(([k, v]) => `<span>${k}：<b>${v}</b></span>`).join("")}</div>
+      <p class="muted tight" style="margin-top:9px">${hint}</p>
+    </div>`;
+  $("fileModal").classList.add("open");
+}
+
+function closeFileView() {
+  $("fileModal").classList.remove("open");
+  $("fileModalInner").innerHTML = "";
+}
+
 /* ----- 事件委托 ----- */
 
 document.addEventListener("click", e => {
   if (e.target.id === "briefModal") { $("briefModal").classList.remove("open"); return; }
+  if (e.target.id === "fileModal") { closeFileView(); return; }
   const chip = e.target.closest(".chip-toggle");
   if (chip) { chip.classList.toggle("sel"); return; }
   const btn = e.target.closest("[data-action]");
@@ -2739,7 +2984,14 @@ document.addEventListener("click", e => {
   else if (a === "final-approve") finalApprove(btn.dataset.pkg);
   else if (a === "design-pass") designPass(btn.dataset.design);
   else if (a === "design-approve") designApprove(btn.dataset.design);
-  else if (a === "upload-version") uploadVersion(btn.dataset.pkg);
+  else if (a === "upload-version") { const pk = btn.dataset.pkg; pickFile("image/*,application/pdf", f => uploadVersion(pk, f)); }
+  else if (a === "file-open") openFileView(btn.dataset.kind, btn.dataset);
+  else if (a === "file-close") closeFileView();
+  else if (a === "nb-pick") pickFile("", f => {
+    state.nbFile = f;
+    const el = $("nb-file-name");
+    if (el) el.textContent = `${f.name}（${fmtSize(f.size)}）`;
+  });
   else if (a === "reason-open") {
     state.reasonFor = { t: btn.dataset.rt, id: btn.dataset.rid, inReview: !!btn.closest(".review") };
     renderView();
@@ -2756,12 +3008,15 @@ document.addEventListener("click", e => {
   else if (a === "sup-edit-save") supEditSave();
   else if (a === "sup-edit-cancel") { state.supEdit = false; renderSupplierCards(); }
   else if (a === "brand-asset-add") {
-    const c = client(btn.dataset.client);
-    if (c && c.brand) {
-      c.brand.assets.unshift({ name: "新上传资产（演示）", ver: "V1", type: "素材", date: "刚刚" });
-      toast("资产已加入品牌资产库（Demo 演示，正式版为真实文件上传）");
+    const cid = btn.dataset.client;
+    pickFile("", f => {
+      const c = client(cid);
+      if (!c || !c.brand) return;
+      const type = f.mime.startsWith("image/") ? "素材" : f.mime === "application/pdf" ? "规范" : "文件";
+      c.brand.assets.unshift({ name: f.name, ver: "V1", type, date: "刚刚", file: f });
+      toast(`「${f.name}」已加入品牌资产库（仅本页内存，点击卡片可预览）`);
       renderClients();
-    }
+    });
   }
   else if (a === "brand-asset-ref") toast(`「${btn.dataset.name}」已引用到当前项目（演示）——正式版在 Brief 与设计稿环节直接挂接`);
   else if (a === "brief-new") openBriefModal();
