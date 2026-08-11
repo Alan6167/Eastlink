@@ -80,6 +80,21 @@ const clients = [
         { name: "历史爆款产品图库", ver: "—", type: "参考", date: "持续更新" }
       ]
     },
+    compliance: {
+      auditCerts: ["BSCI"],
+      audit: { scheme: "amfori BSCI", grade: "C 级及以上（A/B 优先分配）", cycle: "证书有效期 2 年，到期前 90 天启动复审", transition: "新供应商可凭 SMETA 4P 报告过渡 6 个月，期间完成 BSCI" },
+      social: "童工零容忍；周工时 ≤60h；消防与应急通道达标；未申报分包一经发现终止合作",
+      tests: [
+        { cat: "文具", std: "EN71-1/2/3 · REACH 附录 XVII · 邻苯二甲酸盐 · 甲醛" },
+        { cat: "包袋", std: "REACH · AZO 偶氮 · 镍释放 · 六价铬（皮革件）" },
+        { cat: "水具", std: "LFGB §30/31 · EU 10/2011 食品接触迁移 · 感官测试" },
+        { cat: "家居", std: "REACH · 纺织阻燃 · FSC CoC（纸木类）" }
+      ],
+      docs: "TCF 按 SKU 建档；测试报告有效期 ≤2 年，食品接触与儿童品类 ≤1 年；报告出具方限 TÜV / SGS / Intertek",
+      inspection: "AQL Ⅱ 级：Major 2.5 / Minor 4.0；首单必验 + 年度抽验，验货由 Eastlink QC 或指定第三方执行",
+      env: "纸木制品 FSC 强制；2027 目标塑料再生料占比 ≥30%；包装去塑化路线图",
+      redlines: ["无有效 BSCI 不可下单", "纸木品无 FSC 不可下单", "食品接触无 LFGB 不可出运"]
+    },
   },
   {
     id: "CLI-002", name: "Tesco", region: "英国 · 商超", level: "核心客户",
@@ -98,6 +113,19 @@ const clients = [
         { name: "厨房品类视觉模板", ver: "V2", type: "视觉", date: "2026-04" },
         { name: "标签与合规文案库", ver: "V3", type: "素材", date: "2026-02" }
       ]
+    },
+    compliance: {
+      auditCerts: ["SEDEX", "SMETA"],
+      audit: { scheme: "SMETA（SEDEX 4-Pillar）", grade: "无重大不符合项", cycle: "2 年一审；SAQ 自评每年更新", transition: "接受 BSCI 报告并行 3 个月，需同时提交 SMETA 排期" },
+      social: "遵循 ETI Base Code；工时与工资记录可追溯 12 个月",
+      tests: [
+        { cat: "家居 / 厨房", std: "LFGB · EU 10/2011 全套迁移 · UKCA 标识 · 洗碗机耐久循环" },
+        { cat: "水具", std: "LFGB · FDA（北美线复用）· 密封与跌落测试" }
+      ],
+      docs: "食品接触类测试报告有效期 ≤1 年；技术文件按 Tesco QC Pack 模板提交",
+      inspection: "AQL Ⅱ 级：Major 1.5 / Minor 4.0（严于常规）；首三单连续必验",
+      env: "包装可回收声明必填；一次性塑料件需提交替代方案说明",
+      redlines: ["无 SMETA 不可下单", "食品接触未做全套迁移测试不可出运"]
     },
   },
   {
@@ -118,6 +146,19 @@ const clients = [
         { name: "门店陈列参考图集", ver: "—", type: "参考", date: "2026-07" }
       ]
     },
+    compliance: {
+      auditCerts: ["BSCI", "SEDEX"],
+      audit: { scheme: "BSCI 或 SMETA 均可", grade: "C 级及以上", cycle: "2 年一审；IP 联名品类叠加 IP 方审厂", transition: "可凭工厂自检 + Eastlink 验厂报告先行打样" },
+      social: "常规社会责任要求；IP 方保留突击审核权",
+      tests: [
+        { cat: "礼品 / 玩具属性", std: "EN71（出口线）/ GB6675（内销线）· 邻苯" },
+        { cat: "文具", std: "GB21027 学生用品安全 · 内外销双标执行" }
+      ],
+      docs: "IP 授权链文件必须完整（授权书 → 品类 → 区域 → 期限）；Disney 系 IP 需 FAMA",
+      inspection: "AQL Ⅱ 级：Major 2.5 / Minor 4.0；上新档期紧张时驻厂验货",
+      env: "包装印刷油墨环保声明",
+      redlines: ["IP 类无完整授权链不可打样", "Disney 系无 FAMA 不可下单"]
+    },
   },
   {
     id: "CLI-004", name: "Flying Tiger", region: "丹麦 · 生活方式", level: "新客户",
@@ -134,6 +175,18 @@ const clients = [
       assets: [
         { name: "公开产品风格研究", ver: "V1", type: "参考", date: "2026-08" }
       ]
+    },
+    compliance: {
+      auditCerts: ["BSCI"],
+      audit: { scheme: "amfori BSCI", grade: "待确认（新客户）", cycle: "待确认", transition: "首单前完成验厂即可" },
+      social: "参照丹麦企业责任惯例，标准梳理中",
+      tests: [
+        { cat: "文创 / 文具", std: "EN71 · REACH · POPs 持久性污染物（丹麦执行严格）" }
+      ],
+      docs: "标准建立中——以首个项目为试点沉淀模板",
+      inspection: "AQL 待定，暂按 Major 2.5 / Minor 4.0 执行",
+      env: "待确认",
+      redlines: ["首单前必须完成 BSCI 验厂"]
     },
   }
 ];
@@ -572,7 +625,8 @@ function dimScores(s, p) {
   const risk = RISK[s.risk].score;
 
   return { category, process, cert, quality, delivery, price, capacity, clientExp, risk,
-    _missCerts: p.certs.filter(x => !s.certs.includes(x)), _ratio: ratio, _clientName: clientName };
+    _missCerts: p.certs.filter(x => !s.certs.includes(x)), _ratio: ratio, _clientName: clientName,
+    _comp: projClient ? projClient.compliance : null };
 }
 
 function totalScore(scores) {
@@ -596,7 +650,14 @@ function reasons(s, p, sc) {
   if (sc._ratio < 1) warn.push(`产能缺口约 ${Math.round((1 - sc._ratio) * 100)}%`);
   if (s.lead != null && s.lead > p.leadLimit) warn.push(`交期超限 ${s.lead - p.leadLimit} 天`);
   if (s.risk !== "低") warn.push(`风险等级：${s.risk}`);
-  return { good: good.slice(0, 4), warn };
+
+  const red = [];
+  const comp = sc._comp;
+  if (comp && comp.auditCerts && comp.auditCerts.length) {
+    const ok = comp.auditCerts.some(a => s.certs.some(x => x.includes(a)));
+    if (!ok) red.push(`${sc._clientName} 验厂红线：缺 ${comp.auditCerts.join(" / ")}，下单前须完成验厂`);
+  }
+  return { good: good.slice(0, 4), warn, red };
 }
 
 function rankedCandidates(p) {
@@ -983,7 +1044,7 @@ function renderMatching() {
           <div class="kv"><span>工艺要求</span><b>${cur.procs.join(" / ")}</b></div>
           <div class="kv"><span>认证要求</span><b>${cur.certs.join(" / ")}</b></div>
           <div class="kv"><span>交期上限</span><b>${cur.leadLimit} 天</b></div>
-          <div class="kv"><span>需求包状态</span><b>${PKG_STATUS[cur.status].label}</b></div>
+          ${c && c.compliance ? `<div class="kv"><span>客户验厂红线</span><b>${c.compliance.auditCerts.join(" / ")}</b></div>` : `<div class="kv"><span>需求包状态</span><b>${PKG_STATUS[cur.status].label}</b></div>`}
         </div>
       </section>
 
@@ -1061,6 +1122,7 @@ function renderCandidates() {
           ${DIMS.map(d => `<div class="dim"><label>${d.name}</label><div class="bar ${x.sc[d.key] >= 90 ? "good" : ""}"><i style="--p:${x.sc[d.key]}%"></i></div><b>${x.sc[d.key]}</b></div>`).join("")}
         </div>
         <div class="reason-row">
+          ${(x.rs.red || []).map(r => `<span class="chip red">⛔ ${r}</span>`).join("")}
           ${x.rs.good.map(g => `<span class="chip green">✓ ${g}</span>`).join("")}
           ${x.rs.warn.map(w => `<span class="chip amber">⚠ ${w}</span>`).join("")}
         </div>
@@ -1152,6 +1214,33 @@ function renderClients() {
           </div>`).join("")}
       </div>
       <p class="muted tight">品牌资产在新建 Brief 和设计稿环节可直接引用（本 Demo 为演示文件卡，正式版支持真实上传与版本管理）。</p>
+    </section>` : ""}
+
+    ${c.compliance ? `
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Compliance & Audit</p><h3>${c.name} · 合规与验厂标准</h3></div>
+        <span class="chip red">红线自动参与匹配校验</span></div>
+      <div class="sec-grid">
+        <div class="sec"><b>验厂标准</b>
+          <span>体系：<strong>${c.compliance.audit.scheme}</strong></span>
+          <span>等级要求：${c.compliance.audit.grade}</span>
+          <span>周期：${c.compliance.audit.cycle}</span>
+          <span>过渡政策：${c.compliance.audit.transition}</span></div>
+        <div class="sec"><b>社会责任要求</b><span>${c.compliance.social}</span></div>
+        <div class="sec"><b>TCF 与文件要求</b><span>${c.compliance.docs}</span></div>
+        <div class="sec"><b>验货标准</b><span>${c.compliance.inspection}</span></div>
+        <div class="sec"><b>环保与可持续</b><span>${c.compliance.env}</span></div>
+        <div class="sec"><b>一票否决红线</b>
+          <div class="chip-row" style="margin-top:4px">${c.compliance.redlines.map(r => `<span class="chip red">⛔ ${r}</span>`).join("")}</div>
+          <span style="margin-top:6px">红线在匹配工作台自动校验：候选供应商触碰红线时亮红色警示。</span></div>
+      </div>
+      <div class="table-wrap" style="margin-top:12px">
+        <table class="data-table">
+          <thead><tr><th style="width:140px">品类</th><th>测试标准（客户指定）</th></tr></thead>
+          <tbody>${c.compliance.tests.map(x => `<tr><td><b>${x.cat}</b></td><td>${x.std}</td></tr>`).join("")}</tbody>
+        </table>
+      </div>
+      <p class="muted tight">分品类测试标准在新建 Brief 拆包时自动带入需求包的认证要求；正式版支持标准版本管理与生效日期。</p>
     </section>` : ""}
 
     <section class="panel">
