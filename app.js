@@ -64,25 +64,77 @@ const clients = [
     id: "CLI-001", name: "HEMA", region: "荷兰 · 零售连锁", level: "战略客户",
     since: "2020", annual: "¥4,200 万", contact: "采购总监（客户方）",
     prefs: "FSC 强制 · REACH 全线 · 环保材料优先",
-    habit: "逐需求包确认推荐名单 + 设计稿逐版确认"
+    habit: "逐需求包确认推荐名单 + 设计稿逐版确认",
+    brand: {
+      dna: "平价优质的荷兰国民生活品牌：简洁、实用、亲和；面向家庭日常场景，反对过度设计。",
+      colors: ["#E30613", "#FFFFFF", "#1A1A1A"],
+      visual: "Logo 红底白字、不可变形拉伸；包装大面留白；无衬线字体体系；插画低饱和、几何化。",
+      store: "白色货架 + 红色促销带；按生活场景分区陈列；每年 8 个上新档期，BTS 与圣诞为最大档。",
+      history: "偏好简洁图形与低饱和插画；2025 秋冬拒绝过高饱和撞色系列；文具品类复购最好。",
+      decision: "总部 PD 终审 → 设计负责人 → 品质合规；设计稿习惯两轮内定稿，超三轮需重开方向。",
+      assets: [
+        { name: "HEMA 品牌 VI 手册", ver: "V3.2", type: "规范", date: "2026-03" },
+        { name: "2027 BTS 主视觉套件", ver: "V1", type: "视觉", date: "2026-07" },
+        { name: "Logo 与图形素材包", ver: "V2", type: "素材", date: "2025-11" },
+        { name: "包装与吊牌规范", ver: "V4", type: "规范", date: "2026-01" },
+        { name: "历史爆款产品图库", ver: "—", type: "参考", date: "持续更新" }
+      ]
+    },
   },
   {
     id: "CLI-002", name: "Tesco", region: "英国 · 商超", level: "核心客户",
     since: "2021", annual: "¥2,600 万", contact: "Category Manager（客户方）",
     prefs: "LFGB / FDA 食品接触 · 价格敏感",
-    habit: "整单确认为主，重点包抽查"
+    habit: "整单确认为主，重点包抽查",
+    brand: {
+      dna: "英国国民商超自有品牌：性价比第一，功能诉求直白，包装信息层级清晰。",
+      colors: ["#00539F", "#EE1C2E", "#FFFFFF"],
+      visual: "蓝红主色带；包装正面必须有清晰功能图示与容量标注；促销标签位预留。",
+      store: "民生品类货架密度高；价格带标签醒目；季节档期跟随英国节日日历。",
+      history: "厨房收纳线连续两季增长；对新材料接受度保守，倾向经过验证的方案。",
+      decision: "Category Manager 主导，整单确认为主；重点包抽查实物样。",
+      assets: [
+        { name: "Tesco 自有品牌包装规范", ver: "V5", type: "规范", date: "2025-09" },
+        { name: "厨房品类视觉模板", ver: "V2", type: "视觉", date: "2026-04" },
+        { name: "标签与合规文案库", ver: "V3", type: "素材", date: "2026-02" }
+      ]
+    },
   },
   {
     id: "CLI-003", name: "MINISO", region: "中国 · IP 零售", level: "成长客户",
     since: "2023", annual: "¥1,100 万", contact: "商品经理（客户方）",
     prefs: "IP 授权合规 · 上新速度优先",
-    habit: "推荐名单确认 + IP 方二次审核"
+    habit: "推荐名单确认 + IP 方二次审核",
+    brand: {
+      dna: "IP 驱动的快时尚零售：上新速度即生命线，情绪价值优先，单品性价比敏感。",
+      colors: ["#EE2C3C", "#FFFFFF"],
+      visual: "IP 形象必须按授权指引使用，比例与配色不可修改；包装统一露出 IP 联名标识。",
+      store: "IP 专区集中陈列；月度上新；爆款快速返单，长尾快速清退。",
+      history: "圣诞 IP 礼品去年售罄率 92%；对交期极敏感，延期即错档。",
+      decision: "商品经理初审 → IP 授权方二次审核（周期约 2 周，需预留）。",
+      assets: [
+        { name: "IP 授权素材包（当季）", ver: "V1", type: "授权", date: "2026-06" },
+        { name: "IP 联名设计指引", ver: "V2", type: "规范", date: "2026-05" },
+        { name: "门店陈列参考图集", ver: "—", type: "参考", date: "2026-07" }
+      ]
+    },
   },
   {
     id: "CLI-004", name: "Flying Tiger", region: "丹麦 · 生活方式", level: "新客户",
     since: "2025", annual: "¥380 万", contact: "Buyer（客户方）",
     prefs: "设计驱动 · 小单快反",
-    habit: "合作初期，确认方式待建立"
+    habit: "合作初期，确认方式待建立",
+    brand: {
+      dna: "丹麦设计驱动的生活方式品牌：大胆用色、幽默趣味，商品即内容。",
+      colors: ["#0F1B79", "#F5C518", "#E84855"],
+      visual: "高饱和撞色是品牌语言；图形手绘感；包装本身要有『被送礼』的完成度。",
+      store: "动线式小店铺陈；低价冲动型购买；每月主题更换。",
+      history: "新客户，首个项目拆解中；参考其公开产品线整理风格库。",
+      decision: "Buyer 单点决策，节奏快；确认方式待首个项目磨合。",
+      assets: [
+        { name: "公开产品风格研究", ver: "V1", type: "参考", date: "2026-08" }
+      ]
+    },
   }
 ];
 
@@ -381,6 +433,7 @@ const state = {
   reasonFor: null,          // { t: 'pkg-internal-return'|'pkg-swap'|'design-return'|'design-changes', id }
   clientSel: "CLI-001",
   supSel: "SUP-001",
+  supEdit: false,
   mapSel: null,
   supFilters: { status: "all", cat: "all", risk: "all", source: "all", q: "" }
 };
@@ -1068,6 +1121,39 @@ function renderClients() {
       </div>
     </section>
 
+    ${c.brand ? `
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Brand Intelligence</p><h3>${c.name} · 品牌智能档案</h3></div>
+        <span class="chip skyc">拆解与设计的背景输入</span></div>
+      <div class="sec-grid">
+        <div class="sec"><b>品牌 DNA</b><span>${c.brand.dna}</span></div>
+        <div class="sec"><b>视觉语言</b>
+          <div class="swatch-row">${c.brand.colors.map(x => `<span class="swatch"><i style="background:${x}"></i>${x}</span>`).join("")}</div>
+          <span>${c.brand.visual}</span></div>
+        <div class="sec"><b>门店与陈列</b><span>${c.brand.store}</span></div>
+        <div class="sec"><b>历史偏好与雷区</b><span>${c.brand.history}</span></div>
+        <div class="sec"><b>决策链与确认习惯</b><span>${c.brand.decision}</span></div>
+        <div class="sec"><b>怎么被平台使用</b><span>Brief 拆解时自动带出品牌要求；设计稿内审对照视觉规范；匹配时叠加客户经验维度。P3：AI 依据档案预审设计稿。</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Brand Assets</p><h3>品牌资产库（${c.brand.assets.length}）</h3></div>
+        <button class="ghost mini" data-action="brand-asset-add" data-client="${c.id}">+ 上传资产</button></div>
+      <div class="asset-grid">
+        ${c.brand.assets.map(a => `
+          <div class="asset-card">
+            <div class="a-icon" style="background:linear-gradient(135deg, ${c.brand.colors[0]} 0%, ${c.brand.colors[0]} 55%, ${c.brand.colors[1] || "#EEF2F9"} 55%)"></div>
+            <div class="a-body">
+              <h5>${a.name}</h5>
+              <p>${a.ver} · ${a.date} · <span class="chip ${{ "规范": "blue", "视觉": "skyc", "素材": "green", "授权": "amber", "参考": "" }[a.type] || ""}">${a.type}</span></p>
+            </div>
+            <button class="text-link" data-action="brand-asset-ref" data-name="${a.name}">引用到项目</button>
+          </div>`).join("")}
+      </div>
+      <p class="muted tight">品牌资产在新建 Brief 和设计稿环节可直接引用（本 Demo 为演示文件卡，正式版支持真实上传与版本管理）。</p>
+    </section>` : ""}
+
     <section class="panel">
       <div class="panel-head"><div><p class="label">Projects</p><h3>${c.name} 的项目</h3></div></div>
       ${myPrjs.length ? `<div class="table-wrap"><table class="data-table">
@@ -1148,14 +1234,15 @@ function renderSupplierCards() {
 
   const s = sup(state.supSel);
   const det = $("supDetail");
-  if (det && s) det.innerHTML = supplierDetailHtml(s);
+  if (det && s) det.innerHTML = state.supEdit && state.role === "sales" ? supplierEditHtml(s) : supplierDetailHtml(s);
 }
 
 function supplierDetailHtml(s) {
   const usedIn = packages.filter(p => p.confirmed.includes(s.id) || p.shortlist.includes(s.id));
   return `
     <div class="panel-head"><div><p class="label">Supplier Profile</p><h3>${s.name} · 完整档案</h3></div>
-      <div class="sup-top">${sourceTag(s)}<span class="tag ${SUP_STATUS[s.status].tag}">${SUP_STATUS[s.status].label}</span><span class="tag ${RISK[s.risk].tag}">风险 ${s.risk}</span></div></div>
+      <div class="sup-top">${sourceTag(s)}<span class="tag ${SUP_STATUS[s.status].tag}">${SUP_STATUS[s.status].label}</span><span class="tag ${RISK[s.risk].tag}">风险 ${s.risk}</span>
+      ${state.role === "sales" ? `<button class="primary mini" data-action="sup-edit">✎ 编辑档案</button>` : ""}</div></div>
     <div class="sec-grid">
       <div class="sec"><b>基础信息</b>
         <span>编号：<strong>${s.id}</strong> · ${s.type}</span><span>地区：${s.region}</span>
@@ -1178,6 +1265,75 @@ function supplierDetailHtml(s) {
         <span>准入状态：<strong>${SUP_STATUS[s.status].label}</strong></span></div>
       <div class="sec"><b>系统建议</b><span>${s.suggest}</span></div>
     </div>`;
+}
+
+const SUP_CATS = ["文具", "包袋", "水具", "礼品", "家居"];
+
+function supplierEditHtml(s) {
+  const chips = (list, sel, cls) => list.map(x => `<span class="chip chip-toggle ${cls} ${sel.includes(x) ? "sel" : ""}">${x}</span>`).join("");
+  return `
+    <div class="panel-head"><div><p class="label">Edit Supplier</p><h3>编辑档案 · ${s.name}</h3></div>
+      <span class="chip amber">改动实时影响匹配打分（Demo 内存演示，刷新还原）</span></div>
+    <div class="form-grid">
+      <label class="field">准入状态
+        <select id="se-status">${Object.entries(SUP_STATUS).map(([k, v]) => `<option value="${k}" ${s.status === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
+      <label class="field">供应商类型<input id="se-type" value="${esc(s.type)}"></label>
+      <label class="field">所在地区<input id="se-region" value="${esc(s.region)}"></label>
+      <label class="field">联系人<input id="se-contact" value="${esc(s.contact)}"></label>
+      <label class="field">月产能（件）<input id="se-capacity" type="number" value="${s.capacity ?? ""}"></label>
+      <label class="field">平均交期（天）<input id="se-lead" type="number" value="${s.lead ?? ""}"></label>
+      <label class="field">打样（天）<input id="se-sample" type="number" value="${s.sample ?? ""}"></label>
+      <label class="field">报价竞争力（0-100）<input id="se-price" type="number" min="0" max="100" value="${s.price ?? ""}"></label>
+      <label class="field">质量通过率（%）<input id="se-quality" type="number" min="0" max="100" value="${s.quality ?? ""}"></label>
+      <label class="field">交付准时率（%）<input id="se-onTime" type="number" min="0" max="100" value="${s.onTime ?? ""}"></label>
+      <label class="field">风险等级
+        <select id="se-risk">${["低", "中", "高"].map(x => `<option ${s.risk === x ? "selected" : ""}>${x}</option>`).join("")}</select></label>
+      <label class="field">主营品类
+        <select id="se-maincat">${SUP_CATS.map(x => `<option ${s.cats[0] === x ? "selected" : ""}>${x}</option>`).join("")}</select></label>
+      <label class="field" style="grid-column:1/-1">系统建议 / 备注<input id="se-suggest" value="${esc(s.suggest)}"></label>
+    </div>
+    <div class="field" style="margin-top:10px">兼营品类（点选）<div class="chip-row" id="se-cats">${chips(SUP_CATS, s.cats.slice(1), "")}</div></div>
+    <div class="field" style="margin-top:8px">工艺能力（点选 · 匹配数据源）<div class="chip-row" id="se-procs">${chips(NB_PROCS, s.procs, "")}</div></div>
+    <div class="field" style="margin-top:8px">资质认证（点选 · 匹配数据源）<div class="chip-row" id="se-certs">${chips(NB_CERTS, s.certs, "")}</div></div>
+    <div class="r-actions" style="margin-top:14px">
+      <button class="primary" data-action="sup-edit-save">保存档案</button>
+      <button class="ghost" data-action="sup-edit-cancel">取消</button>
+    </div>`;
+}
+
+function supEditSave() {
+  const s = sup(state.supSel);
+  if (!s) return;
+  const num = (id, clamp) => {
+    const v = $(id).value.trim();
+    if (v === "") return null;
+    const n = Number(v);
+    return isNaN(n) ? null : (clamp ? Math.max(0, Math.min(100, n)) : Math.max(0, n));
+  };
+  const oldStatus = s.status;
+  s.status = $("se-status").value;
+  s.type = $("se-type").value.trim() || s.type;
+  s.region = $("se-region").value.trim() || s.region;
+  s.contact = $("se-contact").value.trim() || s.contact;
+  s.capacity = num("se-capacity") ?? s.capacity;
+  s.lead = num("se-lead");
+  s.sample = num("se-sample");
+  s.price = num("se-price", true);
+  s.quality = num("se-quality", true);
+  s.onTime = num("se-onTime", true);
+  s.risk = $("se-risk").value;
+  s.suggest = $("se-suggest").value.trim() || s.suggest;
+  const main = $("se-maincat").value;
+  const others = [...document.querySelectorAll("#se-cats .chip-toggle.sel")].map(x => x.textContent).filter(x => x !== main);
+  s.cats = [main, ...others];
+  s.procs = [...document.querySelectorAll("#se-procs .chip-toggle.sel")].map(x => x.textContent);
+  s.certs = [...document.querySelectorAll("#se-certs .chip-toggle.sel")].map(x => x.textContent);
+  if (oldStatus !== s.status) {
+    feed.unshift({ t: nowLabel(), txt: `${s.name} 准入状态变更：${SUP_STATUS[oldStatus].label} → ${SUP_STATUS[s.status].label}` });
+  }
+  state.supEdit = false;
+  toast("档案已更新，匹配打分将实时使用新数据");
+  renderSuppliers();
 }
 
 function suppliersClientView() {
@@ -1338,6 +1494,7 @@ function setView(v) {
   const role = ROLES[state.role];
   state.view = role.nav.includes(v) ? v : role.nav[0];
   state.reasonFor = null;
+  state.supEdit = false;
   renderView();
   window.scrollTo({ top: 0 });
 }
@@ -2089,7 +2246,19 @@ document.addEventListener("click", e => {
   }
   else if (a === "reason-cancel") { state.reasonFor = null; renderView(); }
   else if (a === "client-sel") { state.clientSel = btn.dataset.client; renderClients(); }
-  else if (a === "sup-sel") { state.supSel = btn.dataset.sup; renderSupplierCards(); }
+  else if (a === "sup-sel") { state.supSel = btn.dataset.sup; state.supEdit = false; renderSupplierCards(); }
+  else if (a === "sup-edit") { state.supEdit = true; renderSupplierCards(); }
+  else if (a === "sup-edit-save") supEditSave();
+  else if (a === "sup-edit-cancel") { state.supEdit = false; renderSupplierCards(); }
+  else if (a === "brand-asset-add") {
+    const c = client(btn.dataset.client);
+    if (c && c.brand) {
+      c.brand.assets.unshift({ name: "新上传资产（演示）", ver: "V1", type: "素材", date: "刚刚" });
+      toast("资产已加入品牌资产库（Demo 演示，正式版为真实文件上传）");
+      renderClients();
+    }
+  }
+  else if (a === "brand-asset-ref") toast(`「${btn.dataset.name}」已引用到当前项目（演示）——正式版在 Brief 与设计稿环节直接挂接`);
   else if (a === "brief-new") openBriefModal();
   else if (a === "brief-close") $("briefModal").classList.remove("open");
   else if (a === "brief-add-pkg") $("nb-pkgs").insertAdjacentHTML("beforeend", pkgRowHtml());
