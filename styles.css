@@ -720,6 +720,22 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .demo-step b { display: block; font-size: 12.5px; }
 .demo-step small { display: block; font-size: 11px; color: var(--faint); margin-top: 2px; line-height: 1.45; }
 
+.mc-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; }
+@media (max-width: 1100px) { .mc-grid { grid-template-columns: 1fr; } }
+.mc-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.color-row {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 10px; margin-bottom: 8px; background: #fff;
+}
+.color-row.click-prev:hover { border-color: var(--brand); box-shadow: 0 3px 12px rgba(6, 102, 255, .1); }
+.color-row i { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); flex-shrink: 0; }
+.color-row .cr-body { flex: 1; min-width: 0; }
+.color-row b { display: block; font-size: 12.5px; }
+.color-row small { display: block; font-size: 10.5px; color: var(--faint); margin-top: 1px; }
+.color-row .chip { flex-shrink: 0; }
+tr.click-prev:hover td { background: #F3F7FF; }
+
 .sku-btn { white-space: nowrap; }
 tr.sku-row > td { background: #F8FAFE; padding: 10px 12px 12px; }
 .sku-cap { font-size: 11px; color: var(--faint); font-weight: 700; margin-bottom: 6px; }

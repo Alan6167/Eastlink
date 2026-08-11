@@ -83,6 +83,28 @@ const clients = [
         packaging: "包装大面留白，信息层级清晰",
         forbidden: ["Logo 不可变形 / 改色", "禁高饱和撞色", "禁大面积满印图案"]
       },
+      matlib: {
+        colors: [
+          { name: "HEMA 红", pantone: "PMS 485C", hex: "#E30613", usage: "主色 · Logo 与包装主视觉", tol: "ΔE ≤ 1.5" },
+          { name: "暖白", pantone: "PMS 9080C", hex: "#F7F3EE", usage: "底色 · 大面留白", tol: "ΔE ≤ 2.0" },
+          { name: "墨黑", pantone: "Black 6C", hex: "#1A1A1A", usage: "正文与线稿", tol: "ΔE ≤ 2.0" },
+          { name: "低饱和蓝", pantone: "PMS 2915C", hex: "#8FB8DE", usage: "点缀 · 品类识别（低饱和体系）", tol: "ΔE ≤ 2.5" }
+        ],
+        colorNote: "打样以 Pantone 纸版色卡为准；季节辅助色每年 2 月更新，高饱和撞色全线禁用。",
+        materials: [
+          { name: "FSC 认证纸板", spec: "内页 80–120g · 灰板 1.5mm", cats: ["文具"], cert: "FSC CoC", status: "已认可" },
+          { name: "再生涤纶 600D", spec: "含 50% 再生纱（GRS）", cats: ["包袋"], cert: "GRS + REACH", status: "已认可" },
+          { name: "Tritan 共聚酯", spec: "食品接触级 · 透明本色", cats: ["水具"], cert: "LFGB / EU 10/2011", status: "已认可" },
+          { name: "PP 食品级", spec: "本色或低饱和色粉", cats: ["水具", "家居"], cert: "LFGB", status: "已认可" },
+          { name: "竹纤维复合料", spec: "餐厨件 · 天然色", cats: ["家居"], cert: "LFGB + 迁移测试", status: "试用中" }
+        ],
+        forbidden: [
+          { name: "PVC", why: "增塑剂风险，全品类禁用" },
+          { name: "偶氮染料面料", why: "AZO 超标风险" },
+          { name: "不可回收复合膜", why: "违背 2027 包装可回收目标" }
+        ],
+        sustainability: "2027 目标：纸类 100% FSC；塑料件再生含量 ≥30%；包装单一材质可回收。"
+      },
       store: {
         display: "白色货架 + 红色促销带，按生活场景分区陈列",
         priceBands: [
@@ -149,6 +171,24 @@ const clients = [
         packaging: "正面必须有功能图示与容量标注，促销标签位预留",
         forbidden: ["正面禁纯装饰图形", "禁占用促销标签位", "禁未经验证的材料宣称"]
       },
+      matlib: {
+        colors: [
+          { name: "Tesco 蓝", pantone: "PMS 293C", hex: "#00539F", usage: "主色带与 Logo", tol: "ΔE ≤ 1.5" },
+          { name: "警示红", pantone: "PMS 185C", hex: "#EE1C2E", usage: "促销与价格标签", tol: "ΔE ≤ 2.0" }
+        ],
+        colorNote: "自有品牌用色随包装规范执行，功能图示配色须保证货架 3 米可读。",
+        materials: [
+          { name: "PP 食品级", spec: "透明 / 本色 · 耐 -20~120℃", cats: ["家居", "水具"], cert: "LFGB + EU 10/2011", status: "已认可" },
+          { name: "FSC 竹木", spec: "餐厨配件 · 食品级涂层", cats: ["家居"], cert: "FSC + 迁移测试", status: "已认可" },
+          { name: "铂金硫化硅胶", spec: "食品接触 · 耐高温", cats: ["家居", "水具"], cert: "LFGB §30/31", status: "已认可" },
+          { name: "304 / 316 不锈钢", spec: "内胆与餐具件", cats: ["水具"], cert: "食品接触迁移测试", status: "已认可" }
+        ],
+        forbidden: [
+          { name: "PVC（食品接触）", why: "集团红线" },
+          { name: "三聚氰胺树脂（儿童品）", why: "高温迁移风险" }
+        ],
+        sustainability: "包装减塑路线：2026 起自有品牌塑料包装 100% 可回收。"
+      },
       store: {
         display: "民生品类货架密度高，价格带标签醒目",
         priceBands: [
@@ -204,6 +244,21 @@ const clients = [
         packaging: "包装即陈列，正面 IP 露出占比 ≥40%",
         forbidden: ["IP 形象禁改比例与配色", "禁自创 IP 表情动作", "禁遮挡联名标识"]
       },
+      matlib: {
+        colors: [
+          { name: "节庆红", pantone: "PMS 186C", hex: "#EE2C3C", usage: "圣诞档主色", tol: "ΔE ≤ 2.0" },
+          { name: "IP 主题色", pantone: "随授权指引", hex: "#F5D08C", usage: "以 IP 方 Style Guide 色值为准，禁自行调整", tol: "按 IP 方标准" }
+        ],
+        colorNote: "IP 类目色值以授权方 Style Guide 为最高优先级，与本库冲突时以 IP 方为准。",
+        materials: [
+          { name: "PVC 软胶", spec: "挂件公仔 · 6P 增塑剂合规", cats: ["礼品"], cert: "EN71-3 + 邻苯测试", status: "已认可" },
+          { name: "陶瓷（釉上彩）", spec: "马克杯 · 铅镉迁移合规", cats: ["礼品"], cert: "FDA / LFGB", status: "已认可" },
+          { name: "FSC 灰板", spec: "拼图与彩盒", cats: ["礼品", "文具"], cert: "FSC + EN71", status: "已认可" },
+          { name: "短毛绒", spec: "IP 玩偶 · 阻燃处理", cats: ["礼品"], cert: "EN71-1/2/3", status: "已认可" }
+        ],
+        forbidden: [{ name: "未授权 IP 素材", why: "法务红线，一票否决" }],
+        sustainability: "IP 品类暂无强制再生要求，彩盒逐步 FSC 化。"
+      },
       store: {
         display: "IP 专区集中陈列，月度更换主题",
         priceBands: [
@@ -258,6 +313,20 @@ const clients = [
         graphic: "高饱和撞色是品牌语言，图形手绘感",
         packaging: "包装要有『被送礼』的完成度",
         forbidden: ["禁性冷淡极简风", "禁无完成度的裸包装（新客户 · 规则校准中）"]
+      },
+      matlib: {
+        colors: [
+          { name: "克莱因深蓝", pantone: "PMS 2748C", hex: "#0F1B79", usage: "品牌底色", tol: "ΔE ≤ 2.0" },
+          { name: "明黄", pantone: "PMS 116C", hex: "#F5C518", usage: "主打撞色 · 允许大面积使用", tol: "ΔE ≤ 2.5" },
+          { name: "珊瑚红", pantone: "PMS 178C", hex: "#E84855", usage: "高饱和点缀（品牌语言）", tol: "ΔE ≤ 2.5" }
+        ],
+        colorNote: "高饱和撞色是品牌语言——与 HEMA 相反，低饱和『性冷淡』方向反而会被否。",
+        materials: [
+          { name: "FSC 纸品", spec: "手账、贴纸与包装", cats: ["文具"], cert: "FSC", status: "已认可" },
+          { name: "再生 PET 板材", spec: "文件收纳件", cats: ["文具"], cert: "GRS（提供声明）", status: "试用中" }
+        ],
+        forbidden: [{ name: "哑光高级灰涂装", why: "与品牌大胆用色冲突（新客户 · 校准中）" }],
+        sustainability: "新客户 · 可持续要求随首个项目校准。"
       },
       store: {
         display: "动线式小店铺陈，商品即内容",
@@ -1350,6 +1419,10 @@ function renderMatching() {
           ${c && c.compliance ? `<div class="kv"><span>客户验厂红线</span><b>${c.compliance.auditCerts.join(" / ")}</b></div>` : `<div class="kv"><span>需求包状态</span><b>${PKG_STATUS[cur.status].label}</b></div>`}
         </div>
         ${cur.skuList && cur.skuList.length ? `<p class="muted tight">含：${cur.skuList.slice(0, 3).map(k => k.name).join("、")}${cur.skuList.length > 3 ? " 等" : ""} —— SKU 明细见项目详情</p>` : ""}
+        ${(() => {
+          const mats = c && c.brand && c.brand.matlib ? c.brand.matlib.materials.filter(m => m.cats.includes(cur.cat)) : [];
+          return mats.length ? `<p class="muted tight">客户材料基线：${mats.map(m => m.name).join("、")}（详见客户管理 · 品牌智能）</p>` : "";
+        })()}
       </section>
 
       <section class="panel" style="margin-bottom:0">
@@ -1533,6 +1606,37 @@ function renderClients() {
       </div>
       <p class="muted tight">怎么被平台使用：Brief 拆解自动带出品牌要求与价格带；设计稿内审对照视觉规范与禁用规则；P3：AI 依据档案预审设计稿。</p>
     </section>
+
+    ${b.matlib ? `
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Materials & Colors</p><h3>材料与色彩资产库</h3></div>
+        <span class="chip outline">设计定稿与打样比样的物料基线</span></div>
+      <div class="mc-grid">
+        <div>
+          <p class="mc-title">色彩体系（点击色卡预览）</p>
+          ${b.matlib.colors.map((x, i) => `
+            <div class="color-row click-prev" data-action="file-open" data-kind="color" data-client="${c.id}" data-idx="${i}" title="点击预览色卡">
+              <i style="background:${x.hex}"></i>
+              <div class="cr-body"><b>${x.name}</b><small>${x.pantone} · ${x.hex} · ${x.usage}</small></div>
+              <span class="chip outline">${x.tol}</span>
+            </div>`).join("")}
+          <p class="muted tight">${b.matlib.colorNote}</p>
+        </div>
+        <div>
+          <p class="mc-title">认可材料（点击查看材料卡）</p>
+          <div class="sku-box"><table>
+            <thead><tr><th>材料</th><th>规格</th><th>适用品类</th><th>认证要求</th><th>状态</th></tr></thead>
+            <tbody>${b.matlib.materials.map((m, i) => `
+              <tr class="click-prev" data-action="file-open" data-kind="mat" data-client="${c.id}" data-idx="${i}" title="点击查看材料卡">
+                <td><b>${m.name}</b></td><td>${m.spec}</td><td>${m.cats.join(" / ")}</td><td>${m.cert}</td>
+                <td><span class="chip ${{ "已认可": "green", "试用中": "amber", "禁用": "red" }[m.status] || ""}">${m.status}</span></td></tr>`).join("")}</tbody>
+          </table></div>
+          <div class="chip-row" style="margin-top:10px">${b.matlib.forbidden.map(x => `<span class="chip red" title="${x.why}">⛔ ${x.name}</span>`).join("")}</div>
+          <p class="muted tight">可持续目标：${b.matlib.sustainability}（悬停禁用材料查看原因）</p>
+        </div>
+      </div>
+      <p class="muted tight">怎么被平台使用：匹配需求卡按品类自动带出材料基线；设计稿色彩以色卡与色差要求校验；打样与验货对照材料卡执行。</p>
+    </section>` : ""}
 
     <section class="panel">
       <div class="panel-head"><div><p class="label">Brand Assets</p><h3>品牌资产库（${b.assets.length}）</h3></div>
@@ -2828,6 +2932,7 @@ function renderBriefHint(clientId) {
     <b>${c.name} · Brief 拆解模板提示（来自品牌智能档案）</b>
     <div class="chip-row">${b.briefTemplate.fields.map(x => `<span class="chip skyc">${x}</span>`).join("")}</div>
     <div class="chip-row">${b.store.priceBands.map(x => `<span class="chip outline">${x.cat} ${x.band}</span>`).join("")}${b.visual.forbidden.slice(0, 2).map(x => `<span class="chip red">⛔ ${x}</span>`).join("")}</div>
+    ${b.matlib ? `<div class="chip-row">${b.matlib.materials.slice(0, 3).map(m => `<span class="chip green">${m.name}</span>`).join("")}<span class="chip outline">材料基线 · 详见品牌档案</span></div>` : ""}
     <span>${b.briefTemplate.note} 选择品类后，目标价格带自动带入参考值。</span>
   </div>`;
 }
@@ -3057,6 +3162,23 @@ function svgCert(certName, supName) {
   </svg>`;
 }
 
+/* 色卡示意（客户色彩体系） */
+function svgColorCard(col, holder) {
+  const kv = [["PANTONE", col.pantone], ["HEX", col.hex], ["用途", col.usage], ["色差要求", col.tol]];
+  return `<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img">
+    <rect width="800" height="560" fill="#FBFCFF"/>
+    <rect x="56" y="64" width="320" height="400" rx="18" fill="${col.hex}" stroke="${FV_LINE}"/>
+    <rect x="56" y="404" width="320" height="60" rx="0" fill="#fff" fill-opacity=".92"/>
+    <text x="76" y="440" font-size="15" font-weight="700" fill="${FV_INK}">${col.name} · ${col.pantone}</text>
+    <text x="430" y="130" font-size="30" font-weight="800" fill="${FV_INK}">${col.name}</text>
+    ${kv.map(([k, v], i) => `
+      <text x="430" y="${190 + i * 62}" font-size="12" fill="${FV_FAINT}" letter-spacing="2">${k}</text>
+      <text x="430" y="${214 + i * 62}" font-size="16.5" font-weight="700" fill="${FV_INK}">${String(v).slice(0, 24)}</text>`).join("")}
+    <text x="56" y="506" font-size="12" fill="${FV_FAINT}">${holder} 色彩标准 · 打样以 Pantone 纸版色卡为准</text>
+    <text x="56" y="528" font-size="11" fill="#93A3BF">Eastlink Demo 生成示意色卡 · 非正式标准文件</text>
+  </svg>`;
+}
+
 /* ---------- 预览弹窗 ---------- */
 
 function fvStageFor(file, fallbackSvg) {
@@ -3111,6 +3233,24 @@ function openFileView(kind, ref) {
     title = `${s.name} · ${ref.cert} 证书`;
     stage = svgCert(ref.cert, s.name);
     metas = [["证书", ref.cert], ["持有方", s.name], ["文件", `${ref.cert}_证书扫描件.pdf（示意）`], ["核验", "准入审核已核验（Demo）"]];
+  }
+  else if (kind === "color") {
+    const c = client(ref.client);
+    const col = c && c.brand && c.brand.matlib && c.brand.matlib.colors[+ref.idx];
+    if (!col) return;
+    title = `${c.name} · ${col.name} 色卡`;
+    stage = svgColorCard(col, c.name);
+    metas = [["Pantone", col.pantone], ["HEX", col.hex], ["用途", col.usage], ["色差要求", col.tol]];
+    hint = "示意色卡由 Demo 生成；实际打样以 Pantone 纸版色卡与客户签样为准。";
+  }
+  else if (kind === "mat") {
+    const c = client(ref.client);
+    const m = c && c.brand && c.brand.matlib && c.brand.matlib.materials[+ref.idx];
+    if (!m) return;
+    title = `${c.name} · ${m.name} 材料卡`;
+    stage = svgDoc(m.name, [["规格", m.spec], ["适用品类", m.cats.join(" / ")], ["认证要求", m.cert], ["状态", m.status], ["用途", "打样与大货物料基线"]], c.brand.colors[0]);
+    metas = [["材料", m.name], ["认证要求", m.cert], ["状态", m.status], ["所属", c.name]];
+    hint = "材料卡为 Demo 生成示意；正式版挂接材料检测报告与供应商物料档案。";
   }
   else return;
 
