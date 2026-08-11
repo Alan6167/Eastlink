@@ -67,9 +67,10 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
   display: flex; align-items: center; justify-content: center; gap: 4px;
   flex-shrink: 0;
 }
-.logo-mark .sq { width: 11px; height: 11px; border-radius: 3px; display: block; }
-.sq.sky { background: var(--sky); }
-.sq.green { background: var(--green); }
+.logo-mark .logo-e {
+  font-size: 23px; font-weight: 800; line-height: 1; color: #fff;
+  letter-spacing: 0; transform: translateY(-1px);
+}
 .logo-text strong { display: block; font-size: 17px; letter-spacing: .3px; }
 .logo-text span { display: block; font-size: 11px; opacity: .78; margin-top: 1px; }
 
