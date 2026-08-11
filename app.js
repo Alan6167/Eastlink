@@ -370,7 +370,9 @@ const suppliers = [
     capacity: 150000, price: 88, quality: 94, onTime: 95, lead: 32, sample: 6,
     certs: ["FSC", "BSCI", "ISO9001", "EN71", "REACH"], served: ["HEMA", "Tesco"],
     years: 5, annual: "¥820 万", risk: "低", contact: "销售对接人 · 138****1188",
-    suggest: "主推分配，文具品类首选"
+    suggest: "主推分配，文具品类首选",
+    audits: [{ scheme: "BSCI", grade: "B", valid: "2027-01", status: "有效" }],
+    caps: []
   },
   {
     id: "SUP-002", name: "供应商 B", status: "qualified", source: { type: "own" },
@@ -378,7 +380,9 @@ const suppliers = [
     capacity: 90000, price: 92, quality: 90, onTime: 88, lead: 38, sample: 8,
     certs: ["FSC", "EN71"], served: ["Flying Tiger"],
     years: 2, annual: "¥310 万", risk: "低", contact: "销售对接人 · 139****2233",
-    suggest: "报价强，注意 REACH 认证缺口"
+    suggest: "报价强，注意 REACH 认证缺口",
+    audits: [{ scheme: "SMETA 4P", grade: "低风险", valid: "2026-12", status: "有效" }],
+    caps: []
   },
   {
     id: "SUP-003", name: "供应商 C", status: "active", source: { type: "client", client: "CLI-001" },
@@ -402,7 +406,9 @@ const suppliers = [
     capacity: 60000, price: 82, quality: 91, onTime: 92, lead: 45, sample: 8,
     certs: ["LFGB", "FDA", "ISO9001", "BSCI"], served: ["Tesco", "HEMA"],
     years: 4, annual: "¥640 万", risk: "低", contact: "销售对接人 · 135****3311",
-    suggest: "水具/食品接触类首选"
+    suggest: "水具/食品接触类首选",
+    audits: [{ scheme: "BSCI", grade: "A", valid: "2027-03", status: "有效" }],
+    caps: []
   },
   {
     id: "SUP-006", name: "供应商 F", status: "onboarding", source: { type: "client", client: "CLI-001" },
@@ -410,7 +416,9 @@ const suppliers = [
     capacity: 80000, price: 87, quality: 85, onTime: 80, lead: 48, sample: 10,
     certs: ["LFGB"], served: [],
     years: 0, annual: "—", risk: "中", contact: "销售对接人 · 133****9090",
-    suggest: "客户提供 · 准入资料补充中，验厂待排期"
+    suggest: "客户提供 · 准入资料补充中，验厂待排期",
+    audits: [{ scheme: "BSCI", grade: "—", valid: "—", status: "待排期" }],
+    caps: []
   },
   {
     id: "SUP-007", name: "供应商 G", status: "active", source: { type: "client", client: "CLI-003" },
@@ -418,7 +426,9 @@ const suppliers = [
     capacity: 100000, price: 80, quality: 89, onTime: 91, lead: 35, sample: 7,
     certs: ["BSCI", "EN71", "REACH", "Disney FAMA"], served: ["MINISO", "泡泡玛特"],
     years: 3, annual: "¥450 万", risk: "低", contact: "销售对接人 · 132****4455",
-    suggest: "MINISO 体系，IP 类项目优先"
+    suggest: "MINISO 体系，IP 类项目优先",
+    audits: [{ scheme: "Disney FAMA", grade: "通过", valid: "2027-06", status: "有效" }],
+    caps: [{ id: "CAP-03", src: "测试", issue: "EN71-3 铅含量临界值预警，更换色粉供应商", sev: "Minor", due: "07-10", status: "已关闭" }]
   },
   {
     id: "SUP-008", name: "供应商 H", status: "qualified", source: { type: "own" },
@@ -426,7 +436,12 @@ const suppliers = [
     capacity: 45000, price: 78, quality: 92, onTime: 89, lead: 48, sample: 9,
     certs: ["LFGB", "FSC"], served: ["HEMA"],
     years: 2, annual: "¥270 万", risk: "低", contact: "销售对接人 · 131****6677",
-    suggest: "家居类稳定，产能偏小"
+    suggest: "家居类稳定，产能偏小",
+    audits: [{ scheme: "BSCI", grade: "C", valid: "2026-09", status: "即将到期" }],
+    caps: [
+      { id: "CAP-01", src: "验厂", issue: "消防通道堆物、工时记录不完整", sev: "Minor", due: "08-25", status: "整改中" },
+      { id: "CAP-05", src: "验货", issue: "REQ-T2 首单验货 Major 4 处（合模线毛刺），全检返工", sev: "Major", due: "08-18", status: "待复审" }
+    ]
   },
   {
     id: "SUP-009", name: "供应商 I", status: "suspended", source: { type: "own" },
@@ -434,7 +449,9 @@ const suppliers = [
     capacity: 70000, price: 83, quality: 78, onTime: 76, lead: 44, sample: 11,
     certs: ["BSCI（过期）"], served: ["HEMA（历史）"],
     years: 3, annual: "¥190 万", risk: "高", contact: "销售对接人 · 130****2200",
-    suggest: "CAP 整改未关闭，暂停新项目分配"
+    suggest: "CAP 整改未关闭，暂停新项目分配",
+    audits: [{ scheme: "BSCI", grade: "D", valid: "已失效", status: "已过期" }],
+    caps: [{ id: "CAP-02", src: "验厂", issue: "未申报分包 + 应急出口锁闭", sev: "Critical", due: "07-31", status: "逾期" }]
   },
   {
     id: "SUP-010", name: "供应商 J", status: "eliminated", source: { type: "own" },
@@ -458,7 +475,9 @@ const suppliers = [
     capacity: 120000, price: 76, quality: 96, onTime: 96, lead: 28, sample: 5,
     certs: ["FSC", "BSCI", "ISO9001", "REACH", "EN71"], served: ["HEMA", "Tesco", "MINISO"],
     years: 6, annual: "¥1,150 万", risk: "低", contact: "孙杰 · 138****9900",
-    suggest: "关联自有工厂，质量交期最稳"
+    suggest: "关联自有工厂，质量交期最稳",
+    audits: [{ scheme: "BSCI", grade: "A", valid: "2027-05", status: "有效" }, { scheme: "Disney FAMA", grade: "通过", valid: "2026-11", status: "有效" }],
+    caps: [{ id: "CAP-04", src: "测试", issue: "XM-101 邻苯二甲酸盐超标，更换软胶料并复测", sev: "Major", due: "08-20", status: "整改中" }]
   }
 ];
 
@@ -582,9 +601,13 @@ const packages = [
     status: "sampling", shortlist: ["SUP-005", "SUP-008"], confirmed: [], suggestSup: null, returnNote: null,
     skuList: [
       { id: "BTS-301", name: "运动水壶 550ml", spec: "Tritan 瓶身 · 丝印 logo", qty: "2.2 万/月", price: "€2.8", status: "打样中",
-        design: "V1 定稿", sample: "打样评审中", test: "待送测", next: "比样定商" },
+        design: "V1 定稿", sample: "打样评审中", test: "待送测", next: "比样定商",
+        tests: [{ std: "LFGB §30/31", status: "待送测" }, { std: "感官测试", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: true, 验货报告: false } },
       { id: "BTS-302", name: "儿童保温杯 350ml", spec: "316 内胆 · 吸管盖", qty: "1.8 万/月", price: "€4.0", status: "打样中",
-        design: "V1 定稿", sample: "候选打样中", test: "待送测", next: "比样定商" }
+        design: "V1 定稿", sample: "候选打样中", test: "待送测", next: "比样定商",
+        tests: [{ std: "LFGB §30/31", status: "待送测" }, { std: "EU 10/2011 迁移", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } }
     ]
   },
   {
@@ -605,11 +628,17 @@ const packages = [
     status: "confirmed", shortlist: ["SUP-005"], confirmed: ["SUP-005"], suggestSup: "SUP-005", returnNote: null,
     skuList: [
       { id: "AW-201", name: "保温杯 500ml · 燕麦色", spec: "304 内胆 · 粉体涂装", qty: "1.0 万/月", price: "€9.5", status: "已确认",
-        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）",
+        tests: [{ std: "LFGB §30/31", status: "通过" }, { std: "EU 10/2011 迁移", status: "通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: true, 样品记录: true, 验货报告: false } },
       { id: "AW-202", name: "保温杯 350ml · 藏蓝", spec: "304 内胆 · 粉体涂装", qty: "0.8 万/月", price: "€8.0", status: "已确认",
-        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）",
+        tests: [{ std: "LFGB §30/31", status: "通过" }, { std: "EU 10/2011 迁移", status: "通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: true, 样品记录: true, 验货报告: false } },
       { id: "AW-203", name: "儿童吸管杯 300ml", spec: "Tritan · 防漏吸管盖", qty: "0.7 万/月", price: "€6.5", status: "已确认",
-        design: "V1 定稿", sample: "二次修样确认", test: "送测中", next: "测试通过后下单" }
+        design: "V1 定稿", sample: "二次修样确认", test: "送测中", next: "测试通过后下单",
+        tests: [{ std: "LFGB §30/31", status: "通过" }, { std: "感官测试", status: "测试中" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: true, 验货报告: false } }
     ]
   },
   {
@@ -619,9 +648,13 @@ const packages = [
     status: "confirmed", shortlist: ["SUP-005"], confirmed: ["SUP-005"], suggestSup: "SUP-005", returnNote: null,
     skuList: [
       { id: "TK-101", name: "密封收纳盒 1.2L", spec: "PP 食品级 · 四扣密封", qty: "1.8 万/月", price: "£2.8", status: "已确认",
-        design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+        design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）",
+        tests: [{ std: "LFGB §30/31", status: "通过" }, { std: "EU 10/2011 迁移", status: "通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: true, 样品记录: true, 验货报告: true } },
       { id: "TK-102", name: "密封收纳盒 2.4L", spec: "PP 食品级 · 四扣密封", qty: "1.4 万/月", price: "£4.2", status: "已确认",
-        design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" }
+        design: "V2 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）",
+        tests: [{ std: "LFGB §30/31", status: "通过" }, { std: "EU 10/2011 迁移", status: "通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: true, 样品记录: true, 验货报告: true } }
     ]
   },
   {
@@ -631,9 +664,13 @@ const packages = [
     status: "confirmed", shortlist: ["SUP-008"], confirmed: ["SUP-008"], suggestSup: "SUP-008", returnNote: null,
     skuList: [
       { id: "TK-201", name: "沥水置物架", spec: "PP + 竹纤维托盘", qty: "1.2 万/月", price: "£5.5", status: "已确认",
-        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" },
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）",
+        tests: [{ std: "LFGB §30/31", status: "通过" }, { std: "竹纤维迁移测试", status: "通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: true, 样品记录: true, 验货报告: false } },
       { id: "TK-202", name: "调料收纳罐 4 件套", spec: "PET 罐身 · 模压盖", qty: "1.0 万/月", price: "£6.8", status: "已确认",
-        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）" }
+        design: "V1 定稿", sample: "金样确认", test: "LFGB 通过", next: "大货下单（P2）",
+        tests: [{ std: "LFGB §30/31", status: "通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: true, 样品记录: true, 验货报告: false } }
     ]
   },
   {
@@ -642,10 +679,18 @@ const packages = [
     procs: ["印刷", "组装"], certs: ["EN71", "Disney FAMA"], leadLimit: 40,
     status: "sampling", shortlist: ["SUP-007", "SUP-012"], confirmed: [], suggestSup: null, returnNote: null,
     skuList: [
-      { id: "XM-101", name: "IP 盲盒挂件 · 6 款", spec: "PVC 软胶 · 独立彩盒", qty: "3.5 万/月", price: "¥19", status: "打样中" },
-      { id: "XM-102", name: "圣诞马克杯礼盒", spec: "陶瓷 · 烫金印刷礼盒", qty: "2.0 万/月", price: "¥39", status: "打样中" },
-      { id: "XM-103", name: "IP 拼图 500 片", spec: "FSC 灰板 · 哑膜", qty: "1.5 万/月", price: "¥45", status: "打样中" },
-      { id: "XM-104", name: "节日袜礼品套装", spec: "针织 + 卡头组装", qty: "1.0 万/月", price: "¥15", status: "打样中" }
+      { id: "XM-101", name: "IP 盲盒挂件 · 6 款", spec: "PVC 软胶 · 独立彩盒", qty: "3.5 万/月", price: "¥19", status: "打样中",
+        tests: [{ std: "EN71-3", status: "通过" }, { std: "邻苯二甲酸盐", status: "不通过" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: true, 验货报告: false } },
+      { id: "XM-102", name: "圣诞马克杯礼盒", spec: "陶瓷 · 烫金印刷礼盒", qty: "2.0 万/月", price: "¥39", status: "打样中",
+        tests: [{ std: "铅镉迁移（FDA/LFGB）", status: "测试中" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: true, 验货报告: false } },
+      { id: "XM-103", name: "IP 拼图 500 片", spec: "FSC 灰板 · 哑膜", qty: "1.5 万/月", price: "¥45", status: "打样中",
+        tests: [{ std: "EN71-1/2/3", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: false, 测试报告: false, 样品记录: true, 验货报告: false } },
+      { id: "XM-104", name: "节日袜礼品套装", spec: "针织 + 卡头组装", qty: "1.0 万/月", price: "¥15", status: "打样中",
+        tests: [{ std: "EN71 + AZO", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: false, 测试报告: false, 样品记录: false, 验货报告: false } }
     ]
   }
 ];
@@ -709,6 +754,14 @@ const samples = [
 ];
 const samplesOf = pkgId => samples.filter(s => s.pkg === pkgId);
 
+/* 验货计划与结果（已确认合作的需求包；首单必验，AQL Ⅱ 级标准来自客户合规档案） */
+const inspections = [
+  { id: "INS-01", pkg: "REQ-T1", supplier: "SUP-005", type: "首单 AQL Ⅱ（Major 2.5 / Minor 4.0）", date: "08-06", status: "通过", by: "Eastlink QC" },
+  { id: "INS-02", pkg: "REQ-H2", supplier: "SUP-005", type: "首单 AQL Ⅱ（Major 2.5 / Minor 4.0）", date: "08-15", status: "待录入", by: "Eastlink QC" },
+  { id: "INS-03", pkg: "REQ-T2", supplier: "SUP-008", type: "首单 AQL Ⅱ（Major 2.5 / Minor 4.0）", date: "07-28", status: "不通过", by: "第三方（客户指定）", note: "Major 4 处：合模线毛刺 → 已开 CAP-05 整改" },
+  { id: "INS-04", pkg: "REQ-T2", supplier: "SUP-008", type: "整改后复验 AQL Ⅱ", date: "待排期", status: "待排期", by: "Eastlink QC" }
+];
+
 /* ---------------- 动态 / 历史 ---------------- */
 
 const feed = [
@@ -754,19 +807,19 @@ const ROLES = {
     banner: "业务员视角 · 项目 Owner",
     cls: "",
     hint: "负责 Brief 拆解、供应商匹配、内审与对客提交。",
-    nav: ["dashboard", "projects", "matching", "clients", "suppliers", "thinking"]
+    nav: ["dashboard", "projects", "matching", "clients", "suppliers", "quality", "thinking"]
   },
   management: {
     banner: "管理层视角 · 全局只读",
     cls: "",
     hint: "查看所有项目健康度、审核积压与供应商风险，不直接操作。",
-    nav: ["dashboard", "projects", "clients", "suppliers", "thinking"]
+    nav: ["dashboard", "projects", "clients", "suppliers", "quality", "thinking"]
   },
   client: {
     banner: "客户视角 · HEMA（模拟客户登录）",
     cls: "client",
     hint: "仅可见自己的项目、待确认事项，以及自己体系的供应商；看不到内部打分与落选者。",
-    nav: ["dashboard", "projects", "suppliers"],
+    nav: ["dashboard", "projects", "suppliers", "quality"],
     clientId: "CLI-001"
   },
   supplier: {
@@ -941,6 +994,11 @@ function reasons(s, p, sc) {
     const ok = comp.auditCerts.some(a => s.certs.some(x => x.includes(a)));
     if (!ok) red.push(`${sc._clientName} 验厂红线：缺 ${comp.auditCerts.join(" / ")}，下单前须完成验厂`);
   }
+  (s.audits || []).forEach(a => {
+    if (a.status === "即将到期") warn.push(`${a.scheme} 即将到期（${a.valid}，复审排期中）`);
+    if (a.status === "已过期") red.push(`${a.scheme} 已过期，重审前不可下单`);
+  });
+  if ((s.caps || []).some(c => c.status === "逾期")) red.push(`CAP 逾期未关闭（详见质量控制塔）`);
   return { good: good.slice(0, 4), warn, red };
 }
 
@@ -998,6 +1056,7 @@ const TITLES = {
   matching: ["Matching Workbench", "匹配工作台"],
   clients: ["Clients", "客户管理"],
   suppliers: ["Supplier Pool", "供应商管理"],
+  quality: ["Quality Tower", "质量控制塔"],
   thinking: ["Platform Thinking", "平台思路"]
 };
 
@@ -1203,6 +1262,15 @@ function dashSupplier() {
       <div class="panel-head"><div><p class="label">My SKUs</p><h3>我的合作 SKU 明细</h3></div></div>
       ${myPkgs.some(pk => pk.skuList && pk.skuList.length) ? myPkgs.map(skuTable).join("") : `<div class="empty">暂无 SKU 明细</div>`}
       <p class="muted tight">P2 规划：供应商门户支持在线接任务、报价、上传打样与出货资料，SKU 状态实时同步。</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Quality & CAP</p><h3>质量与整改</h3></div></div>
+      <div class="chip-row">${(me.audits || []).length ? me.audits.map(a => `<span class="chip ${AUDIT_CHIP[a.status] || ""}">${a.scheme} ${a.grade} · ${a.status}${a.valid !== "—" ? ` · 有效期 ${a.valid}` : ""}</span>`).join("") : `<span class="chip outline">暂无验厂记录</span>`}</div>
+      ${(me.caps || []).filter(c => c.status !== "已关闭").length
+        ? `<div style="margin-top:8px">${me.caps.filter(c => c.status !== "已关闭").map(c => `<div class="ri-line"><b>${c.id} · ${c.src}（${c.sev}）</b><span class="muted">${c.status} · 截止 ${c.due}</span></div>`).join("")}</div>`
+        : `<p class="muted tight">当前无开放整改项</p>`}
+      <p class="muted tight">验货/测试/验厂发现将生成 CAP 并要求限期整改；P2 供应商门户支持在线提交整改证据。</p>
     </section>`;
 }
 
@@ -1715,7 +1783,8 @@ function renderClients() {
         <div class="sec"><b>环保与可持续</b><span>${c.compliance.env}</span></div>
         <div class="sec"><b>一票否决红线</b>
           <div class="chip-row" style="margin-top:4px">${c.compliance.redlines.map(r => `<span class="chip red">⛔ ${r}</span>`).join("")}</div>
-          <span style="margin-top:6px">红线在匹配工作台自动校验：候选供应商触碰红线时亮红色警示。</span></div>
+          <span style="margin-top:6px">红线在匹配工作台自动校验：候选供应商触碰红线时亮红色警示。</span>
+          <span style="margin-top:4px">该标准在「质量控制塔」逐供应商 / 逐 SKU 落地执行：验厂到期预警、测试与 TCF 建档、验货与 CAP 整改闭环。</span></div>
       </div>
       <div class="table-wrap" style="margin-top:12px">
         <table class="data-table">
@@ -1856,6 +1925,11 @@ function supplierDetailHtml(s) {
       <div class="sec"><b>来源与准入</b>
         <span>${s.source.type === "client" ? `客户提供 · ${client(s.source.client)?.name}移交` : "Eastlink 自主开发"}</span>
         <span>准入状态：<strong>${SUP_STATUS[s.status].label}</strong></span></div>
+      <div class="sec"><b>验厂与整改（质量控制塔同步）</b>
+        ${(s.audits || []).length ? s.audits.map(a => `<span>${a.scheme} · ${a.grade} · 有效期 ${a.valid} <span class="chip ${AUDIT_CHIP[a.status] || ""}">${a.status}</span></span>`).join("") : `<span>暂无验厂记录</span>`}
+        ${(s.caps || []).filter(c => c.status !== "已关闭").length
+          ? `<span>开放 CAP：${s.caps.filter(c => c.status !== "已关闭").map(c => `${c.id}（${c.src} ${c.sev} · ${c.status}）`).join("；")}</span>`
+          : `<span>无开放 CAP</span>`}</div>
       <div class="sec"><b>系统建议</b><span>${s.suggest}</span></div>
     </div>`;
 }
@@ -2111,6 +2185,176 @@ function reviewDesignItem(it) {
    动作 & 事件
    ============================================================ */
 
+/* ---------- 质量控制塔：TCF · 测试 · 验货 · 验厂 · CAP ---------- */
+
+const AUDIT_CHIP = { "有效": "green", "即将到期": "amber", "审核中": "skyc", "待排期": "outline", "已过期": "red" };
+const CAP_CHIP = { "整改中": "amber", "待复审": "skyc", "已关闭": "green", "逾期": "red" };
+const TEST_CHIP = { "通过": "green", "测试中": "skyc", "待送测": "outline", "不通过": "red" };
+const INSP_CHIP = { "通过": "green", "不通过": "red", "待录入": "amber", "待排期": "outline" };
+
+const tcfPct = t => t ? Math.round(Object.values(t).filter(Boolean).length / Object.keys(t).length * 100) : 0;
+
+/* 质量数据聚合（业务员/管理层全量） */
+function qaData() {
+  const audits = suppliers.flatMap(s => (s.audits || []).map(a => ({ s, a })));
+  const caps = suppliers.flatMap(s => (s.caps || []).map(cp => ({ s, cp })));
+  const skuRows = packages.flatMap(p => (p.skuList || []).filter(k => k.tests).map(k => ({
+    p, k, su: p.confirmed.length ? sup(p.confirmed[0]) : p.suggestSup ? sup(p.suggestSup) : null
+  })));
+  return { audits, caps, skuRows };
+}
+
+function qaReadiness(p) {
+  const su = sup(p.confirmed[0]);
+  const auditOk = su && (su.audits || []).some(a => a.status === "有效") ? "ok"
+    : su && (su.audits || []).some(a => a.status === "即将到期") ? "warn" : "bad";
+  const skus = (p.skuList || []).filter(k => k.tests);
+  const testOk = skus.length && skus.every(k => k.tests.every(t => t.status === "通过")) ? "ok"
+    : skus.some(k => k.tests.some(t => t.status === "不通过")) ? "bad" : "warn";
+  const tcfAvg = skus.length ? Math.round(skus.reduce((a, k) => a + tcfPct(k.tcf), 0) / skus.length) : 0;
+  const ins = inspections.filter(i => i.pkg === p.id);
+  const last = ins[ins.length - 1];
+  const inspOk = !last ? "warn" : last.status === "通过" ? "ok" : last.status === "不通过" ? "bad" : "warn";
+  const ready = auditOk === "ok" && testOk === "ok" && tcfAvg === 100 && inspOk === "ok";
+  return { su, auditOk, testOk, tcfAvg, inspOk, ready };
+}
+
+function renderQuality() {
+  const el = $("view-quality");
+  if (state.role === "client") { renderQualityClient(el); return; }
+  const isSales = state.role === "sales";
+  const { audits, caps, skuRows } = qaData();
+
+  const auditValid = audits.filter(x => x.a.status === "有效").length;
+  const auditWarn = audits.filter(x => ["即将到期", "待排期", "已过期"].includes(x.a.status)).length;
+  const capOpen = caps.filter(x => x.cp.status !== "已关闭").length;
+  const capLate = caps.filter(x => x.cp.status === "逾期").length;
+  const allTests = skuRows.flatMap(r => r.k.tests);
+  const testPass = Math.round(allTests.filter(t => t.status === "通过").length / (allTests.length || 1) * 100);
+  const inspPending = inspections.filter(i => ["待录入", "待排期"].includes(i.status)).length;
+  const tcfAvgAll = skuRows.length ? Math.round(skuRows.reduce((a, r) => a + tcfPct(r.k.tcf), 0) / skuRows.length) : 0;
+
+  const stChip = (map, v) => `<span class="chip ${map[v] || ""}">${v}</span>`;
+  const mark = v => v === "ok" ? `<span class="chip green">✓</span>` : v === "warn" ? `<span class="chip amber">⚠</span>` : `<span class="chip red">✗</span>`;
+
+  el.innerHTML = `
+    <div class="tile-grid" style="grid-template-columns:repeat(6,1fr)">
+      <div class="tile"><span>验厂有效</span><b>${auditValid}/${audits.length}</b><div class="bar good"><i style="--p:${Math.round(auditValid / (audits.length || 1) * 100)}%"></i></div><p>到期 / 待排期 ${auditWarn}</p></div>
+      <div class="tile ${capLate ? "warn" : ""}"><span>CAP 开放</span><b>${capOpen}</b><div class="bar"><i style="--p:${capOpen * 20}%"></i></div><p>${capLate ? `逾期 ${capLate} 项` : "无逾期"}</p></div>
+      <div class="tile"><span>测试通过率</span><b>${testPass}%</b><div class="bar ${testPass >= 80 ? "good" : ""}"><i style="--p:${testPass}%"></i></div><p>${allTests.filter(t => t.status === "不通过").length} 项不通过</p></div>
+      <div class="tile"><span>待验货</span><b>${inspPending}</b><div class="bar soft"><i style="--p:${inspPending * 25}%"></i></div><p>首单必验 · AQL Ⅱ</p></div>
+      <div class="tile"><span>TCF 齐备率</span><b>${tcfAvgAll}%</b><div class="bar ${tcfAvgAll === 100 ? "good" : ""}"><i style="--p:${tcfAvgAll}%"></i></div><p>按 SKU 建档</p></div>
+      <div class="tile"><span>质量口径</span><b style="font-size:15px">客户合规标准</b><p>红线在匹配拦截，塔内闭环执行</p></div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Factory Audits</p><h3>验厂看板（体系 / 等级 / 有效期）</h3></div>
+        <span class="chip outline">到期前 90 天自动提醒复审排期</span></div>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>供应商</th><th>体系</th><th>等级</th><th>有效期</th><th>状态</th><th>下一步</th></tr></thead>
+        <tbody>${audits.map(({ s, a }) => `<tr class="${["已过期"].includes(a.status) ? "row-bad" : ""}">
+          <td><b>${s.name}</b></td><td>${a.scheme}</td><td>${a.grade}</td><td>${a.valid}</td>
+          <td>${stChip(AUDIT_CHIP, a.status)}</td>
+          <td class="dim">${a.status === "即将到期" ? "复审排期中（到期前完成）" : a.status === "待排期" ? "准入流程内安排初审" : a.status === "已过期" ? "暂停分配，整改后重审" : "—"}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">CAP Tracking</p><h3>CAP 整改跟踪（验厂 / 验货 / 测试发现）</h3></div>
+        <span class="chip red">逾期 ${capLate} 项</span></div>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>编号</th><th>供应商</th><th>来源</th><th>问题与整改</th><th>严重度</th><th>截止</th><th>状态</th><th></th></tr></thead>
+        <tbody>${caps.map(({ s, cp }) => `<tr class="${cp.status === "逾期" ? "row-bad" : ""}">
+          <td><b>${cp.id}</b></td><td>${s.name}</td><td>${cp.src}</td><td>${cp.issue}</td>
+          <td><span class="chip ${cp.sev === "Critical" ? "red" : cp.sev === "Major" ? "amber" : ""}">${cp.sev}</span></td>
+          <td>${cp.due}</td><td>${stChip(CAP_CHIP, cp.status)}</td>
+          <td>${isSales && ["整改中", "待复审", "逾期"].includes(cp.status) ? `<button class="ghost mini" data-action="cap-close" data-sup="${s.id}" data-cap="${cp.id}">复审通过 → 关闭</button>` : ""}</td></tr>`).join("")}</tbody>
+      </table></div>
+      <p class="muted tight">验货不通过、测试不通过、验厂发现项都会生成 CAP 并挂到供应商档案；逾期未关闭自动暂停新项目分配（如 ${sup("SUP-009").name}）。</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">SKU Quality File</p><h3>SKU 质量档案（测试 × TCF）</h3></div>
+        <span class="chip outline">测试项按客户分品类标准生成</span></div>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>SKU</th><th>需求包</th><th>供应商</th><th>测试项</th><th style="min-width:150px">TCF 完整度</th></tr></thead>
+        <tbody>${skuRows.map(({ p, k, su }) => {
+          const pct = tcfPct(k.tcf);
+          const missing = Object.entries(k.tcf).filter(([, v]) => !v).map(([n]) => n);
+          return `<tr>
+            <td><b>${k.id}</b><br><span class="dim" style="font-size:11px">${k.name}</span></td>
+            <td>${p.name}</td><td>${su ? su.name : "比样中"}</td>
+            <td><div class="chip-row">${k.tests.map(t => `<span class="chip ${TEST_CHIP[t.status] || ""}">${t.std} · ${t.status}</span>`).join("")}</div></td>
+            <td><div class="score-line"><div class="bar ${pct === 100 ? "good" : ""}"><i style="--p:${pct}%"></i></div><strong>${pct}%</strong></div>
+              ${missing.length ? `<span class="dim" style="font-size:10.5px">缺：${missing.join(" / ")}</span>` : `<span class="chip green" style="font-size:10px">TCF 齐备</span>`}</td></tr>`;
+        }).join("")}</tbody>
+      </table></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Inspections</p><h3>验货计划与结果</h3></div>
+        <span class="chip outline">首单必验 · AQL 标准来自客户合规档案</span></div>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>编号</th><th>需求包</th><th>供应商</th><th>类型</th><th>日期</th><th>执行方</th><th>结果</th><th></th></tr></thead>
+        <tbody>${inspections.map(i => `<tr class="${i.status === "不通过" ? "row-bad" : ""}">
+          <td><b>${i.id}</b></td><td>${pkg(i.pkg).name}</td><td>${sup(i.supplier).name}</td>
+          <td>${i.type}</td><td>${i.date}</td><td>${i.by}</td>
+          <td>${stChip(INSP_CHIP, i.status)}${i.note ? `<br><span class="dim" style="font-size:11px">${i.note}</span>` : ""}</td>
+          <td>${isSales && i.status === "待录入" ? `<button class="primary mini" data-action="insp-result" data-insp="${i.id}">录入结果（演示）</button>` : ""}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Order Readiness</p><h3>大货下单就绪度（P2 下单动作的前置门）</h3></div></div>
+      ${packages.filter(p => p.status === "confirmed").map(p => {
+        const r = qaReadiness(p);
+        return `<div class="qa-ready">
+          <b>${p.name}</b><span class="dim">${r.su ? r.su.name : ""}</span>
+          <span class="chip-row">
+            ${mark(r.auditOk)} 验厂有效
+            ${mark(r.testOk)} 测试全通过
+            ${mark(r.tcfAvg === 100 ? "ok" : "warn")} TCF ${r.tcfAvg}%
+            ${mark(r.inspOk)} 验货通过
+          </span>
+          <span class="tag ${r.ready ? "st-confirmed" : "st-internal"}">${r.ready ? "可下单" : "未就绪"}</span>
+        </div>`;
+      }).join("")}
+      <p class="muted tight">四项全绿才可进入大货下单（P2）；数据口径来自客户合规标准（客户管理 · 合规页签），红线在匹配拦截，塔内跟踪执行闭环。</p>
+    </section>`;
+}
+
+/* 客户视角：仅自己项目的质量保障汇总（不暴露 CAP 明细与严重度） */
+function renderQualityClient(el) {
+  const cid = ROLES.client.clientId;
+  const myPkgs = packages.filter(p => prj(p.prj)?.client === cid && (p.skuList || []).some(k => k.tests));
+  el.innerHTML = `
+    <section class="panel">
+      <div class="panel-head"><div><p class="label">Quality Assurance</p><h3>质量保障（您的项目）</h3></div>
+        <span class="chip skyc">Eastlink 质量控制塔实时同步</span></div>
+      ${myPkgs.length ? myPkgs.map(p => {
+        const su = p.confirmed.length ? sup(p.confirmed[0]) : null;
+        const skus = (p.skuList || []).filter(k => k.tests);
+        const tcfAvg = skus.length ? Math.round(skus.reduce((a, k) => a + tcfPct(k.tcf), 0) / skus.length) : 0;
+        const testAll = skus.every(k => k.tests.every(t => t.status === "通过"));
+        const ins = inspections.filter(i => i.pkg === p.id);
+        const last = ins[ins.length - 1];
+        const audit = su && (su.audits || []).find(a => a.status === "有效");
+        const closed = su ? (su.caps || []).filter(c => c.status === "已关闭").length : 0;
+        return `<div class="qa-ready">
+          <b>${p.name}</b><span class="dim">${su ? `合作：${su.name}` : "比样定商中"}</span>
+          <span class="chip-row">
+            ${audit ? `<span class="chip green">验厂 ${audit.scheme} 有效</span>` : `<span class="chip amber">验厂跟进中</span>`}
+            <span class="chip ${testAll ? "green" : "skyc"}">${testAll ? "测试全通过" : "测试进行中"}</span>
+            <span class="chip ${last && last.status === "通过" ? "green" : "outline"}">${last ? `验货${last.status === "待录入" ? "已排期" : last.status}` : "验货待排期"}</span>
+            <span class="chip ${tcfAvg === 100 ? "green" : "outline"}">TCF ${tcfAvg}%</span>
+            ${closed ? `<span class="chip green">闭环整改 ${closed} 项</span>` : ""}
+          </span>
+        </div>`;
+      }).join("") : `<div class="empty">暂无进入打样/合作阶段的需求包</div>`}
+      <p class="muted tight">TCF 按 SKU 建档（设计定稿 / 材料声明 / 测试报告 / 样品记录 / 验货报告）；测试与验货标准执行您的合规档案，问题整改由 Eastlink 闭环后同步结果。</p>
+    </section>`;
+}
+
 /* ---------- 右栏：随左侧导航上下文切换（业务员/管理层） ---------- */
 
 function setRailHead(label, title, tabsOn) {
@@ -2138,6 +2382,7 @@ function renderRail() {
   }
   if (state.view === "clients") { setRailHead("Client Intel", "客户情报", false); railClient(); return; }
   if (state.view === "suppliers") { setRailHead("Supplier Intel", "供应商情报", false); railSupplier(); return; }
+  if (state.view === "quality") { setRailHead("Quality Alerts", "质量预警", false); railQuality(); return; }
   if (state.view === "thinking") { setRailHead("Demo Flow", "演示动线", false); railDemo(); return; }
   setRailHead("Review Center", "审核中心", true);
   renderReview();
@@ -2186,6 +2431,7 @@ function railSupplier() {
     <div class="r-item">
       <div class="r-top"><span class="tag ${st.tag}">${st.label}</span>${sourceTag(s)}</div>
       <p class="muted">${s.type} · ${s.region} · 主营 ${s.cats[0]}</p>
+      ${(s.audits || []).length ? `<div class="chip-row" style="margin-top:6px">${s.audits.map(a => `<span class="chip ${AUDIT_CHIP[a.status] || ""}">${a.scheme} ${a.grade} · ${a.status}</span>`).join("")}${(s.caps || []).filter(c => c.status !== "已关闭").length ? `<span class="chip amber">CAP 开放 ${s.caps.filter(c => c.status !== "已关闭").length}</span>` : ""}</div>` : ""}
       ${s.status === "onboarding" ? `<p class="muted" style="margin-top:6px">准入待办：资料补充 + 验厂排期，完成前不参与候选（漏斗中透明展示原因）</p>` : ""}
     </div>
     <div class="r-item">
@@ -2210,8 +2456,26 @@ const DEMO_STEPS = [
   { k: "sampling", n: 5, t: "打样与比样", d: "寄样 → 按 SKU 评分 → 定商建议" },
   { k: "client", n: 6, t: "切客户视角", d: "定稿确认 + 定商确认（切回用左下角色框）" },
   { k: "supplier", n: 7, t: "切供应商视角", d: "打样任务 + SKU 明细（切回用左下角色框）" },
-  { k: "brand", n: 8, t: "品牌档案与合规", d: "客户管理页签：智能档案 + 验厂红线" }
+  { k: "brand", n: 8, t: "品牌档案与合规", d: "客户管理页签：智能档案 + 验厂红线" },
+  { k: "quality", n: 9, t: "质量控制塔", d: "验厂 / CAP / 测试 / TCF / 验货一屏闭环" }
 ];
+
+function railQuality() {
+  $("reviewCount").textContent = deriveReviews().length;
+  const { audits, caps, skuRows } = qaData();
+  const alerts = [
+    ...caps.filter(x => x.cp.status === "逾期").map(x => ({ c: "red", t: `CAP 逾期：${x.s.name} · ${x.cp.id}（${x.cp.src} ${x.cp.sev}）`, d: `截止 ${x.cp.due} 已过` })),
+    ...skuRows.flatMap(r => r.k.tests.filter(t => t.status === "不通过").map(t => ({ c: "red", t: `测试不通过：${r.k.id} · ${t.std}`, d: `${r.p.name} · 整改复测中` }))),
+    ...audits.filter(x => x.a.status === "已过期").map(x => ({ c: "red", t: `验厂过期：${x.s.name} · ${x.a.scheme}`, d: "暂停分配，整改后重审" })),
+    ...audits.filter(x => x.a.status === "即将到期").map(x => ({ c: "amber", t: `验厂即将到期：${x.s.name} · ${x.a.scheme} ${x.a.grade}`, d: `有效期至 ${x.a.valid} · 复审排期中` })),
+    ...inspections.filter(i => i.status === "待录入").map(i => ({ c: "amber", t: `验货待录入：${pkg(i.pkg).name}`, d: `${i.date} · ${i.by}` })),
+    ...caps.filter(x => x.cp.status === "待复审").map(x => ({ c: "skyc", t: `CAP 待复审：${x.s.name} · ${x.cp.id}`, d: `截止 ${x.cp.due}` })),
+    ...inspections.filter(i => i.status === "待排期").map(i => ({ c: "outline", t: `验货待排期：${pkg(i.pkg).name}`, d: i.type }))
+  ];
+  $("reviewList").innerHTML = `
+    <div class="rail-sub"><span>按风险优先级排列 · ${alerts.length} 条</span></div>
+    ${alerts.map(a => `<div class="r-done"><b><span class="chip ${a.c}" style="margin-right:6px">${a.c === "red" ? "高" : a.c === "amber" ? "中" : "低"}</span>${a.t}</b>${a.d}</div>`).join("") || `<div class="empty">暂无质量预警</div>`}`;
+}
 
 function railDemo() {
   $("reviewCount").textContent = deriveReviews().length;
@@ -2232,6 +2496,7 @@ function renderView() {
     matching: renderMatching,
     clients: renderClients,
     suppliers: renderSuppliers,
+    quality: renderQuality,
     thinking: () => { renderMap(); setupMapInteractions(); }
   }[state.view])();
   renderRail();
@@ -3384,6 +3649,34 @@ document.addEventListener("click", e => {
     else if (k === "client") setRole("client");
     else if (k === "supplier") setRole("supplier");
     else if (k === "brand") { state.clientSel = "CLI-001"; state.clientTab = "brand"; setView("clients"); }
+    else if (k === "quality") { setView("quality"); toast("演示：录入验货结果 → 自动生成 CAP → 复审关闭"); }
+  }
+  else if (a === "insp-result") {
+    const ins = inspections.find(i => i.id === btn.dataset.insp);
+    if (ins && ins.status === "待录入") {
+      ins.status = "不通过";
+      ins.note = "Major 3 处：印刷色差 ΔE 超标（对照客户色卡）→ 已开 CAP 整改";
+      const su = sup(ins.supplier);
+      if (su) {
+        su.caps = su.caps || [];
+        const capId = `CAP-${String(suppliers.reduce((a, s) => a + (s.caps || []).length, 0) + 1).padStart(2, "0")}`;
+        su.caps.push({ id: capId, src: "验货", issue: `${pkg(ins.pkg).name} 首单验货 Major 3 处（印刷色差 ΔE 超标），返工后复验`, sev: "Major", due: "09-01", status: "整改中" });
+        ins.note += `（${capId}）`;
+        log(`${pkg(ins.pkg).name} 首单验货不通过，已生成 ${capId} 挂 ${su.name}，复验前不可下大货`, pkg(ins.pkg).prj);
+        toast(`验货不通过 → 已自动生成 ${capId}（${su.name}）`);
+      }
+      renderView();
+    }
+  }
+  else if (a === "cap-close") {
+    const su = sup(btn.dataset.sup);
+    const cp = su && (su.caps || []).find(x => x.id === btn.dataset.cap);
+    if (cp) {
+      cp.status = "已关闭";
+      log(`${su.name} 的 ${cp.id}（${cp.src}）复审通过，整改闭环`, null);
+      toast(`${cp.id} 已关闭（复审通过）`);
+      renderView();
+    }
   }
   else if (a === "nb-pick") pickFile("", f => {
     state.nbFile = f;

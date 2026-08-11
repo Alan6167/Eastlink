@@ -26,7 +26,8 @@
         <button class="nav-btn" data-view="matching"><span>03</span>匹配工作台</button>
         <button class="nav-btn" data-view="clients"><span>04</span>客户管理</button>
         <button class="nav-btn" data-view="suppliers"><span>05</span>供应商管理</button>
-        <button class="nav-btn" data-view="thinking"><span>06</span>平台思路</button>
+        <button class="nav-btn" data-view="quality"><span>06</span>质量控制</button>
+        <button class="nav-btn" data-view="thinking"><span>07</span>平台思路</button>
       </nav>
 
       <div class="role-box">
@@ -62,6 +63,8 @@
 
       <section id="view-suppliers" class="view"></section>
 
+      <section id="view-quality" class="view"></section>
+
       <section id="view-thinking" class="view">
         <div class="think-hero panel">
           <p class="label">Platform Thinking</p>
@@ -83,6 +86,7 @@
             <div><b>需求包状态机</b><span>设计中 → 待选打样候选 → 打样名单内审 → 打样中 → 定商建议内审 → 待客户定商 → 已确认合作；设计定稿自动进入匹配，客户可换选 / 加打样（记录原因）。需求包内拆到 SKU，设计与打样都细化到 SKU 跟踪。</span></div>
             <div><b>为什么先设计后打样</b><span>设计定稿是打样前提——候选按同一套定稿出样，比样才公平；客户确认的是"设计稿"和"比样后的定商建议"两个节点。设计版本内逐 SKU 跟踪出稿覆盖，全出稿才可提交内审。</span></div>
             <div><b>打样比样</b><span>候选各自出样，质量 / 工艺还原 / 报价<b>按 SKU 逐项评分</b>，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常透明可见，依据全程留痕。</span></div>
+            <div><b>质量控制塔</b><span>TCF 按 SKU 建档（设计定稿 / 材料声明 / 测试报告 / 样品记录 / 验货报告）；验厂到期预警、测试与验货结果、CAP 整改在塔内闭环——<b>客户合规标准是口径，红线在匹配拦截，塔内跟踪执行</b>；四项就绪门全绿才可进入大货下单（P2）。</span></div>
           </div>
         </section>
 
