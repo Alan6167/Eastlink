@@ -607,6 +607,13 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 
 .map-savestate { color: var(--faint); font-size: 11px; }
 
+/* 匹配门槛面板 */
+.gate-box { border: 1px dashed var(--line); border-radius: 10px; padding: 10px 12px; background: #FBFCFF; }
+.gate-title { font-size: 11px; letter-spacing: .06em; color: var(--faint); font-weight: 700; margin-bottom: 6px; }
+.gate-row { font-size: 12px; color: var(--muted); padding: 3px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gate-row.fixed { color: var(--green-ink); font-weight: 600; }
+.gate-hint { font-size: 11px; color: var(--faint); font-weight: 400; }
+
 /* 客户详情页签 */
 .c-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
 .c-tabs button {

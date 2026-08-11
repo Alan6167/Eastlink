@@ -56,14 +56,13 @@ const STAGE_TAG = {
 
 const DIMS = [
   { key: "category",  name: "品类专精", w: 20 },
-  { key: "process",   name: "工艺覆盖", w: 15 },
-  { key: "cert",      name: "认证覆盖", w: 15 },
-  { key: "quality",   name: "质量表现", w: 12 },
-  { key: "delivery",  name: "交付可靠", w: 10 },
-  { key: "price",     name: "价格竞争力", w: 10 },
-  { key: "capacity",  name: "产能匹配", w: 8 },
-  { key: "clientExp", name: "客户经验", w: 5 },
-  { key: "risk",      name: "风险等级", w: 5 }
+  { key: "cert",      name: "认证覆盖", w: 17 },
+  { key: "quality",   name: "质量表现", w: 15 },
+  { key: "delivery",  name: "交付可靠", w: 12 },
+  { key: "price",     name: "价格竞争力", w: 12 },
+  { key: "capacity",  name: "产能匹配", w: 9 },
+  { key: "clientExp", name: "客户经验", w: 8 },
+  { key: "risk",      name: "风险等级", w: 7 }
 ];
 
 /* ---------------- Mock：客户 ---------------- */
@@ -330,7 +329,7 @@ const suppliers = [
   },
   {
     id: "SUP-005", name: "供应商 E", status: "active", source: { type: "own" },
-    type: "工厂", region: "台州", cats: ["水具", "家居"], procs: ["注塑", "丝印", "电镀"],
+    type: "工厂", region: "台州", cats: ["水具", "家居"], procs: ["注塑", "丝印", "模压", "电镀"],
     capacity: 60000, price: 82, quality: 91, onTime: 92, lead: 45, sample: 8,
     certs: ["LFGB", "FDA", "ISO9001", "BSCI"], served: ["Tesco", "HEMA"],
     years: 4, annual: "¥640 万", risk: "低", contact: "销售对接人 · 135****3311",
@@ -354,7 +353,7 @@ const suppliers = [
   },
   {
     id: "SUP-008", name: "供应商 H", status: "qualified", source: { type: "own" },
-    type: "工厂", region: "苏州", cats: ["家居", "水具"], procs: ["注塑", "模压"],
+    type: "工厂", region: "苏州", cats: ["家居", "水具"], procs: ["注塑", "模压", "丝印"],
     capacity: 45000, price: 78, quality: 92, onTime: 89, lead: 48, sample: 9,
     certs: ["LFGB", "FSC"], served: ["HEMA"],
     years: 2, annual: "¥270 万", risk: "低", contact: "销售对接人 · 131****6677",
@@ -386,7 +385,7 @@ const suppliers = [
   },
   {
     id: "SUP-012", name: "供应商 L", status: "active", source: { type: "own" },
-    type: "自有工厂", region: "宁波", cats: ["文具", "包袋"], procs: ["印刷", "缝纫", "模切"],
+    type: "自有工厂", region: "宁波", cats: ["文具", "包袋"], procs: ["印刷", "缝纫", "模切", "组装"],
     capacity: 120000, price: 76, quality: 96, onTime: 96, lead: 28, sample: 5,
     certs: ["FSC", "BSCI", "ISO9001", "REACH", "EN71"], served: ["HEMA", "Tesco", "MINISO"],
     years: 6, annual: "¥1,150 万", risk: "低", contact: "孙杰 · 138****9900",
@@ -509,7 +508,7 @@ const packages = [
   {
     id: "REQ-H1", prj: "PRJ-2602", name: "布艺收纳需求包", cat: "家居", sku: 12,
     monthly: 30000, qtyLabel: "3 万件/月", priceBand: "€3.0 – 8.0",
-    procs: ["缝纫", "模压"], certs: ["FSC", "BSCI"], leadLimit: 45,
+    procs: ["模压"], certs: ["FSC", "BSCI"], leadLimit: 45,
     status: "final_internal", shortlist: ["SUP-008", "SUP-005"], confirmed: [], suggestSup: "SUP-008", returnNote: null
   },
   {
@@ -542,7 +541,7 @@ const packages = [
   {
     id: "REQ-M1", prj: "PRJ-2604", name: "圣诞 IP 礼品需求包", cat: "礼品", sku: 18,
     monthly: 80000, qtyLabel: "8 万件/月", priceBand: "¥15 – 69",
-    procs: ["印刷", "注塑", "组装"], certs: ["EN71", "Disney FAMA"], leadLimit: 40,
+    procs: ["印刷", "组装"], certs: ["EN71", "Disney FAMA"], leadLimit: 40,
     status: "sampling", shortlist: ["SUP-007", "SUP-012"], confirmed: [], suggestSup: null, returnNote: null
   }
 ];
@@ -611,6 +610,7 @@ const state = {
   prjOpen: null,
   pkgSel: "REQ-01",
   weights: Object.fromEntries(DIMS.map(d => [d.key, d.w])),
+  gates: { cert: false, redline: false },
   pinClient: true,
   reasonFor: null,          // { t: 'pkg-internal-return'|'pkg-swap'|'design-return'|'design-changes', id }
   clientSel: "CLI-001",
@@ -721,15 +721,36 @@ function sourceTag(s) {
 
 function hardFilter(p) {
   const pass = [], out = [];
+  const projClient = client(prj(p.prj)?.client);
+  const auditCerts = (projClient && projClient.compliance && projClient.compliance.auditCerts) || [];
   suppliers.forEach(s => {
     if (!["active", "qualified"].includes(s.status)) {
       const why = { onboarding: "准入未完成", potential: "未准入 · 信息收集中", suspended: "已暂停 · CAP 未关闭", eliminated: "已淘汰" }[s.status];
-      out.push({ s, why });
+      out.push({ s, why, gate: "status" });
       return;
     }
     if (!s.cats.includes(p.cat)) {
-      out.push({ s, why: `品类不匹配（主营 ${s.cats[0]}）` });
+      out.push({ s, why: `品类不匹配（主营 ${s.cats[0]}）`, gate: "cat" });
       return;
+    }
+    const missProcs = p.procs.filter(x => !s.procs.includes(x));
+    if (missProcs.length) {
+      out.push({ s, why: `缺工艺：${missProcs.join(" / ")}`, gate: "proc" });
+      return;
+    }
+    if (state.gates.cert) {
+      const missCerts = p.certs.filter(x => !s.certs.includes(x));
+      if (missCerts.length) {
+        out.push({ s, why: `缺认证：${missCerts.join(" / ")}（认证门槛已开）`, gate: "cert" });
+        return;
+      }
+    }
+    if (state.gates.redline && auditCerts.length) {
+      const ok = auditCerts.some(a => s.certs.some(x => x.includes(a)));
+      if (!ok) {
+        out.push({ s, why: `客户验厂红线：缺 ${auditCerts.join(" / ")}（红线门槛已开）`, gate: "redline" });
+        return;
+      }
     }
     pass.push(s);
   });
@@ -741,7 +762,6 @@ function dimScores(s, p) {
   const clientName = projClient ? projClient.name : null;
 
   const category = s.cats[0] === p.cat ? 100 : 82;
-  const process = Math.round(p.procs.filter(x => s.procs.includes(x)).length / p.procs.length * 100);
   const certHit = p.certs.filter(x => s.certs.includes(x));
   const cert = Math.round(certHit.length / p.certs.length * 100);
   const quality = s.quality ?? 0;
@@ -753,7 +773,7 @@ function dimScores(s, p) {
   const clientExp = clientName && s.served.some(x => x.startsWith(clientName)) ? 100 : (s.served.length ? 65 : 40);
   const risk = RISK[s.risk].score;
 
-  return { category, process, cert, quality, delivery, price, capacity, clientExp, risk,
+  return { category, cert, quality, delivery, price, capacity, clientExp, risk,
     _missCerts: p.certs.filter(x => !s.certs.includes(x)), _ratio: ratio, _clientName: clientName,
     _comp: projClient ? projClient.compliance : null };
 }
@@ -1268,7 +1288,7 @@ function renderMatching() {
           <div class="kv"><span>SKU 数</span><b>${cur.sku}</b></div>
           <div class="kv"><span>需求量</span><b>${cur.qtyLabel}</b></div>
           <div class="kv"><span>目标价格带</span><b>${cur.priceBand}</b></div>
-          <div class="kv"><span>工艺要求</span><b>${cur.procs.join(" / ")}</b></div>
+          <div class="kv"><span>工艺要求（硬性门槛）</span><b>${cur.procs.join(" / ")}</b></div>
           <div class="kv"><span>认证要求</span><b>${cur.certs.join(" / ")}</b></div>
           <div class="kv"><span>交期上限</span><b>${cur.leadLimit} 天</b></div>
           ${c && c.compliance ? `<div class="kv"><span>客户验厂红线</span><b>${c.compliance.auditCerts.join(" / ")}</b></div>` : `<div class="kv"><span>需求包状态</span><b>${PKG_STATUS[cur.status].label}</b></div>`}
@@ -1276,8 +1296,17 @@ function renderMatching() {
       </section>
 
       <section class="panel" style="margin-bottom:0">
-        <div class="panel-head"><div><p class="label">Weights</p><h3>匹配维度权重（可调 · 实时重排）</h3></div>
-          <button class="ghost mini" data-action="w-reset">恢复默认</button></div>
+        <div class="panel-head"><div><p class="label">Gates & Weights</p><h3>硬性门槛 + 加权排序</h3></div>
+          <button class="ghost mini" data-action="w-reset">恢复默认权重</button></div>
+        <div class="gate-box">
+          <p class="gate-title">硬性门槛 —— 过不了直接进排除名单，不参与打分</p>
+          <div class="gate-row fixed">✓ 准入状态：已准入 / 合作中</div>
+          <div class="gate-row fixed">✓ 品类覆盖：主营或兼营覆盖需求品类</div>
+          <div class="gate-row fixed">✓ 工艺全覆盖：缺任一需求工艺即排除（做不了就是做不了）</div>
+          <label class="toggle-row gate-row"><input type="checkbox" data-action="gate-toggle" data-gate="cert" ${state.gates.cert ? "checked" : ""}>认证全齐设为硬性 <span class="gate-hint">默认走评分——打样期间可补办认证</span></label>
+          <label class="toggle-row gate-row"><input type="checkbox" data-action="gate-toggle" data-gate="redline" ${state.gates.redline ? "checked" : ""}>客户验厂红线设为硬性 <span class="gate-hint">默认红色警示——打样可并行补审，下单前须完成</span></label>
+        </div>
+        <p class="gate-title" style="margin:12px 0 6px">加权排序（8 维 · 在过了门槛的候选里比高低）</p>
         ${DIMS.map(d => `
           <div class="w-row">
             <label>${d.name}</label>
@@ -1313,15 +1342,24 @@ function renderCandidates() {
 
   const funnel = $("funnelBox");
   if (funnel) {
-    const statusOut = out.filter(o => !["active", "qualified"].includes(o.s.status));
-    const catOut = out.filter(o => ["active", "qualified"].includes(o.s.status));
+    const nStatus = out.filter(o => o.gate === "status").length;
+    const nCat = out.filter(o => o.gate === "cat").length;
+    const nProc = out.filter(o => o.gate === "proc").length;
+    const nGate = out.filter(o => o.gate === "cert" || o.gate === "redline").length;
+    const afterStatus = suppliers.length - nStatus;
+    const afterCat = afterStatus - nCat;
+    const afterProc = afterCat - nProc;
     funnel.innerHTML = `
       <div class="funnel">
         <div class="fstep"><span>供应商池</span><b>${suppliers.length}</b><em>全部来源</em></div>
         <div class="farrow">→</div>
-        <div class="fstep"><span>准入合格</span><b>${suppliers.length - statusOut.length}</b><em>排除 ${statusOut.length} 家</em></div>
+        <div class="fstep"><span>准入合格</span><b>${afterStatus}</b><em>排除 ${nStatus}</em></div>
         <div class="farrow">→</div>
-        <div class="fstep"><span>品类匹配</span><b>${list.length}</b><em>排除 ${catOut.length} 家</em></div>
+        <div class="fstep"><span>品类匹配</span><b>${afterCat}</b><em>排除 ${nCat}</em></div>
+        <div class="farrow">→</div>
+        <div class="fstep"><span>工艺达标</span><b>${afterProc}</b><em>排除 ${nProc} · 硬门槛</em></div>
+        <div class="farrow">→</div>
+        <div class="fstep"><span>候选排序</span><b>${list.length}</b><em>${nGate ? `门槛开关排除 ${nGate}` : "8 维加权"}</em></div>
         <div class="farrow">→</div>
         <div class="fstep hot"><span>已选打样候选</span><b>${cur.shortlist.length}</b><em>人工勾选</em></div>
       </div>
@@ -2085,8 +2123,8 @@ const MAP_INIT = [
     desc: "一个 Brief 拆 N 个需求包，各自独立走完设计、打样和定商；项目状态由需求包汇总得出。", hi: ["m-parse", "m-design"] },
   { id: "m-design", x: 463,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "版本 + 客户定稿",
     desc: "先设计：设计稿内审 → 客户确认 → 定稿；修改意见记录原文。设计定稿是打样的前提——候选按同一套定稿出样，比样才公平。", hi: ["r-client", "d-log"] },
-  { id: "m-match",  x: 610,  y: 250, w: 112, h: 58, band: "main", label: "多维度匹配", sub: "硬过滤+9维选候选",
-    desc: "设计定稿后，从供应商池按维度打分选 2–3 家打样候选；权重可调、漏斗透明、客户验厂红线自动校验；名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
+  { id: "m-match",  x: 610,  y: 250, w: 112, h: 58, band: "main", label: "多维度匹配", sub: "硬门槛 + 8 维排序",
+    desc: "设计定稿后先过硬性门槛（准入 / 品类 / 工艺全覆盖，认证与验厂红线可切为硬性），再按 8 维加权排序选 2–3 家打样候选；漏斗全程透明，名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
   { id: "m-sample", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "打样比样", sub: "候选出样 · 三项评分",
     desc: "候选各自按定稿设计打样：质量 / 工艺还原 / 报价三项评分；全部评分后按综合分生成定商建议。", hi: ["r-sup", "d-log"] },
   { id: "m-decide", x: 904,  y: 250, w: 112, h: 58, band: "main", label: "定商确认", sub: "内审 + 客户确认",
@@ -2805,6 +2843,11 @@ document.addEventListener("change", e => {
   if (el.dataset.action === "pin-toggle") {
     state.pinClient = el.checked;
     renderCandidates();
+  }
+  if (el.dataset.action === "gate-toggle") {
+    state.gates[el.dataset.gate] = el.checked;
+    renderCandidates();
+    toast(el.checked ? "已设为硬性门槛：不满足的候选已移入排除名单" : "已恢复为评分/警示模式");
   }
 });
 

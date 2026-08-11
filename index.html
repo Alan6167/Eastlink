@@ -109,27 +109,38 @@
         </section>
 
         <section class="panel">
-          <div class="panel-head"><div><p class="label">Matching Model</p><h3>匹配模型：先硬过滤，再 9 维度加权打分</h3></div></div>
+          <div class="panel-head"><div><p class="label">Matching Model</p><h3>匹配模型：硬性门槛 + 加权排序两层</h3></div></div>
           <div class="table-wrap">
             <table class="data-table">
-              <thead><tr><th>维度</th><th>默认权重</th><th>数据来源</th><th>计算口径</th></tr></thead>
+              <thead><tr><th style="width:130px">硬性门槛</th><th style="width:150px">档位</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><b>准入状态</b></td><td>固定硬性</td><td>必须"已准入 / 合作中"，否则不进入候选</td></tr>
+                <tr><td><b>品类覆盖</b></td><td>固定硬性</td><td>主营或兼营须覆盖需求品类</td></tr>
+                <tr><td><b>工艺全覆盖</b></td><td>固定硬性</td><td>缺任一需求工艺即排除——做不了就是做不了，不存在"工艺 60 分"</td></tr>
+                <tr><td><b>认证全齐</b></td><td>可切换（默认评分）</td><td>打样期间可补办认证；对严格需求可一键切为硬性排除</td></tr>
+                <tr><td><b>客户验厂红线</b></td><td>可切换（默认警示）</td><td>打样可并行补审、下单前须完成；可切为硬性排除。正式版按需求包字段级配置</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-wrap" style="margin-top:10px">
+            <table class="data-table">
+              <thead><tr><th>加权排序维度（8 维）</th><th>默认权重</th><th>数据来源</th><th>计算口径</th></tr></thead>
               <tbody>
                 <tr><td><b>品类专精</b></td><td>20</td><td>主营 / 兼营品类</td><td>主营 100，兼营 82</td></tr>
-                <tr><td><b>工艺覆盖</b></td><td>15</td><td>工艺能力标签</td><td>需求工艺覆盖率 ×100</td></tr>
-                <tr><td><b>认证覆盖</b></td><td>15</td><td>资质证书</td><td>需求认证覆盖率，缺项列入风险提示</td></tr>
-                <tr><td><b>质量表现</b></td><td>12</td><td>质量通过率</td><td>直接取值</td></tr>
-                <tr><td><b>交付可靠</b></td><td>10</td><td>准时率 + 平均交期</td><td>准时率 60% + 交期达标 40%</td></tr>
-                <tr><td><b>价格竞争力</b></td><td>10</td><td>报价竞争力指数</td><td>直接取值</td></tr>
-                <tr><td><b>产能匹配</b></td><td>8</td><td>月产能 vs 需求量</td><td>富余 1.5 倍满分，不足按比例扣</td></tr>
-                <tr><td><b>客户经验</b></td><td>5</td><td>服务过的客户</td><td>服务过该客户 100 / 有出口经验 65 / 无 40</td></tr>
-                <tr><td><b>风险等级</b></td><td>5</td><td>风险评级</td><td>低 100 / 中 60 / 高 25</td></tr>
+                <tr><td><b>认证覆盖</b></td><td>17</td><td>资质证书</td><td>需求认证覆盖率，缺项列入风险提示</td></tr>
+                <tr><td><b>质量表现</b></td><td>15</td><td>质量通过率</td><td>直接取值</td></tr>
+                <tr><td><b>交付可靠</b></td><td>12</td><td>准时率 + 平均交期</td><td>准时率 60% + 交期达标 40%</td></tr>
+                <tr><td><b>价格竞争力</b></td><td>12</td><td>报价竞争力指数</td><td>直接取值</td></tr>
+                <tr><td><b>产能匹配</b></td><td>9</td><td>月产能 vs 需求量</td><td>富余 1.5 倍满分，不足按比例扣</td></tr>
+                <tr><td><b>客户经验</b></td><td>8</td><td>服务过的客户</td><td>服务过该客户 100 / 有出口经验 65 / 无 40</td></tr>
+                <tr><td><b>风险等级</b></td><td>7</td><td>风险评级</td><td>低 100 / 中 60 / 高 25</td></tr>
               </tbody>
             </table>
           </div>
           <div class="flow-note">
-            <div><b>硬性过滤</b><span>准入状态必须"已准入 / 合作中"；品类必须覆盖。被排除者在漏斗里透明可见（谁、为什么）。</span></div>
-            <div><b>权重可调</b><span>匹配工作台里拖滑杆实时重排——演示"匹配是按维度算出来的，权重变了排序就变"。默认权重待业务员校准。</span></div>
-            <div><b>输出</b><span>总分 + 维度得分条 + 自动推荐理由 + 风险提示（缺认证 / 产能缺口 / 交期超限）。最终由人勾选，系统记录依据。</span></div>
+            <div><b>为什么分两层</b><span>工艺这类是"能不能做"的问题，属于门槛；质量价格交期是"谁做得更好"的问题，属于排序。混在一起打分会把"做不了"的供应商排进名单。</span></div>
+            <div><b>门槛开关</b><span>认证与验厂红线支持现场切换硬性/评分档位，候选实时掉入漏斗排除名单——访谈时直接演示两种口径的差别。</span></div>
+            <div><b>输出</b><span>漏斗全程透明（每一步排除了谁、为什么）+ 总分 + 维度得分条 + 推荐理由与风险提示；最终由人勾选，系统记录依据。</span></div>
           </div>
         </section>
 
