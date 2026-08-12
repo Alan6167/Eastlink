@@ -66,26 +66,30 @@
       <section id="view-quality" class="view"></section>
 
       <section id="view-thinking" class="view">
-        <div class="think-hero panel">
-          <p class="label">Platform Thinking</p>
-          <h2>客户定义方向与标准，Eastlink 负责开发与执行落地</h2>
-          <p class="muted"><b>客户从做执行细节，变成只做关键决策：方向 → 标准 → 确认。</b>下面这一屏是讨论用的框架骨架；细节都收在折叠区里，需要时再展开。</p>
-        </div>
-
         <section class="panel frame-sheet">
           <div class="panel-head">
-            <div><p class="label">Framework On One Page</p><h3>框架一页纸（讨论用）</h3></div>
+            <div>
+              <p class="label">Framework On One Page</p>
+              <h3>框架一页纸（讨论用）</h3>
+              <p class="fs-sub">客户定义方向与标准，Eastlink 负责开发与执行落地</p>
+            </div>
             <button class="ghost mini" data-action="fold-all">展开全部细节</button>
           </div>
 
-          <p class="fs-cap">① 一条主线</p>
-          <div class="fs-flow">Brief 接收 → 结构化拆解 → <b>需求包 · SKU 清单</b> → 产品提案（结构验证）→ <b>设计定稿</b> → <b>规格与质量 PSF + PPA</b> → 匹配 · 打样 · 比价 → 比样定商 → 确认合作 → 交付与包装（P2）</div>
+          <p class="fs-cap">① 一条主线 · 四个阶段</p>
+          <div class="stage-line">
+            <div class="stg"><b>Stage 1</b><span>Brief → 设计定稿</span><small>Brief 接收 → 结构化拆解 → 需求包 · SKU 清单 → 产品提案（成熟结构复用 / 新结构验证）→ 设计协同</small><em>交付物：SKU 开发清单 + 定稿设计</em></div><i></i>
+            <div class="stg hot"><b>Stage 2</b><span>规格 + 质量前置</span><small>规格与质量：每 SKU 一份 PSF 规格书 + PPA 测试要求，与定稿同步完成</small><em>交付物：可投产规格</em></div><i></i>
+            <div class="stg"><b>Stage 3</b><span>打样 → 比价 → 定商</span><small>多维度匹配 → 打样 → 比价（同规格同口径）→ 比样定商 → 确认合作</small><em>交付物：确认的合作供应商与基准样</em></div><i></i>
+            <div class="stg"><b>Stage 4</b><span>交付与包装</span><small>金样 / FS 确认 → 包装结构与刀线 → 四项就绪门全绿放行</small><em>交付物：可投产的完整交付包（P2）</em></div>
+          </div>
 
           <p class="fs-cap">② 一句分工</p>
           <div class="fs-two">
             <div><b>客户</b>提出 Brief 需求 · 提供品牌规范细则 · 确认设计稿定稿</div>
             <div><b>Eastlink</b>拆解 · 设计 · 规格与质量 · 匹配打样 · 比价定商 · 质量放行</div>
           </div>
+          <p class="muted tight">变化点：以前客户要出设计稿、写规格、定测试要求、逐轮提意见；现在只做方向、标准、确认三件事，中间的执行性工作整体前移到平台。</p>
 
           <p class="fs-cap">③ 三条边界</p>
           <ul class="fs-list">
@@ -102,6 +106,7 @@
             <li><b>质量前置</b>测试要求真能与设计定稿同步定义吗？（这是本方案最强的主张）</li>
             <li><b>内审归属</b>谁审——业务员还是主管？定商结果以什么形式同步客户？</li>
           </ol>
+          <p class="muted tight"><b>分期</b>：P1（本 Demo）三份主数据 + 拆解 + 匹配 + 设计协同 + 质量控制塔 + 角色权限；P2 真实后端与客户 / 供应商门户、订单跟进；P3 匹配模型自学习与 AI 拆解。</p>
           <p class="muted tight">以下为细节备料，讨论时按需展开；框架层面只看上面这一屏。</p>
         </section>
 
@@ -116,53 +121,13 @@
             <div class="pain"><b>⑥ 人员变动知识断层</b><span>新人加入 / 休假 / 离职后，项目知识与判断标准无法延续。</span><em class="chip blue">组织知识库：标准与档案沉淀，不依赖个人</em></div>
           </div>
           <p class="muted tight"><b>问题不在于投入不够，而在于太多执行性工作压在客户侧</b>——而设计、规格、测试、打样恰恰需要大量产品 / 材料 / 工艺 / 制造知识，这正是平台方最擅长的。Right Work, Right Team.</p>
-        </details>
-
-        <details class="fold">
-          <summary><span class="label">From Creating To Approving</span><b>从"客户执行" 到 "客户确认"</b><em>分工变化与四阶段流程（含每阶段交付物）</em></summary>
-          <div class="tf-grid">
-            <div class="tf today"><p class="label">现在</p>
-              <p><b>客户</b>：出设计稿 → 写规格 → 定质量与测试要求 → 逐轮提意见 → 给包装信息</p>
-              <p><b>平台方</b>：执行 → 打样 → 修改 → 再执行</p></div>
-            <div class="tf future"><p class="label">未来（本 Demo 实现）</p>
-              <p><b>客户</b>：方向 → 标准 → 确认</p>
-              <p><b>Eastlink</b>：开发 → 规格（PSF）→ 质量前置（PPA）→ 结构验证 → 打样比样 → 优化交付</p></div>
-          </div>
-          <div class="stage-line">
-            <div class="stg"><b>Stage 1</b><span>Brief → 设计定稿</span><small>Brief 接收 → 结构化拆解 → 需求包 · SKU 清单 → 产品提案（成熟结构复用 / 新结构验证）→ 设计协同</small><em>交付物：SKU 开发清单 + 定稿设计</em></div><i></i>
-            <div class="stg hot"><b>Stage 2</b><span>规格 + 质量前置</span><small>规格与质量：每 SKU 一份 PSF 规格书 + PPA 测试要求，与定稿同步完成</small><em>交付物：可投产规格</em></div><i></i>
-            <div class="stg"><b>Stage 3</b><span>打样 → 比价 → 定商</span><small>多维度匹配 → 打样 → 比价（同规格同口径）→ 比样定商 → 确认合作</small><em>交付物：确认的合作供应商与基准样</em></div><i></i>
-            <div class="stg"><b>Stage 4</b><span>交付与包装</span><small>金样 / FS 确认 → 包装结构与刀线 → 四项就绪门全绿放行</small><em>交付物：可投产的完整交付包（P2）</em></div>
-          </div>
-          <p class="muted tight">故事线：客户想更快 → 现有环节返工太多 → 卡点在哪我们清楚 → 把产品专业能力前移 → 客户定方向 → 平台担执行 → 工具与知识库支撑每个项目 → <b>更少工作 · 更少返工 · 更快交付</b>。</p>
-        </details>
-
-        <details class="fold">
-          <summary><span class="label">Knowledge System</span><b>个人知识 → 组织知识</b><em>知识沉淀在平台而不是某个人身上</em></summary>
+          <p class="fs-cap" style="margin-top:14px">对应第 ⑥ 条：知识沉淀在平台而不是个人</p>
           <div class="chip-row">
             <span class="chip blue">品牌智能档案</span><span class="chip blue">材料与色彩资产库</span>
             <span class="chip blue">合规验厂标准</span><span class="chip blue">PSF / PPA 标准模板</span>
             <span class="chip blue">SKU 结构沉淀（刀线库 P2）</span><span class="chip blue">审核与流转全程留痕</span>
           </div>
-          <p class="muted tight">项目知识和判断标准沉淀在平台而不是某个人身上——人员变动不再带走项目知识，新人接手即有完整上下文。</p>
-        </details>
-
-        <details class="fold">
-          <summary><span class="label">Main Flow</span><b>业务主线：流转的最小单位是"需求包"</b><em>需求包状态机与 SKU 跟踪规则</em></summary>
-          <div class="flow-line">
-            <div class="f done">Brief 接收</div><i></i>
-            <div class="f done">拆解中</div><i></i>
-            <div class="f now">设计中</div><i></i>
-            <div class="f">匹配与打样</div><i></i>
-            <div class="f">比样定商</div><i></i>
-            <div class="f">已确认合作</div>
-          </div>
-          <div class="flow-note">
-            <div><b>需求包状态机</b><span>设计中 → 待选打样候选 → 打样名单内审 → 打样中 → 定商建议内审 → 已确认合作（结果同步客户）；设计定稿自动进入匹配，内审可退回比样 / 换选（记录原因）。需求包内拆到 SKU，设计与打样都细化到 SKU 跟踪；<b>测试与质量要求（PPA）在设计定稿阶段即定义，新结构 SKU 先出结构样验证再全开发</b>。</span></div>
-            <div><b>客户只做三件事</b><span>提出 Brief 需求、<b>确认设计稿定稿</b>（唯一确认节点）、提供品牌规范细则（视觉 / 材料色彩 / 合规标准）——定商由 Eastlink 依据打样比样内部确定并同步结果，客户无需二次确认。设计版本内逐 SKU 跟踪出稿覆盖，全出稿才可提交内审。</span></div>
-            <div><b>打样比样</b><span>候选各自出样，质量 / 工艺还原 / 报价<b>按 SKU 逐项评分</b>，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常透明可见，依据全程留痕。</span></div>
-            <div><b>质量控制塔</b><span>TCF 按 SKU 建档（设计定稿 / 材料声明 / 测试报告 / 样品记录 / 验货报告）；验厂到期预警、测试与验货结果、CAP 整改在塔内闭环——<b>客户合规标准是口径，红线在匹配拦截，塔内跟踪执行</b>；四项就绪门全绿才可进入大货下单（P2）。</span></div>
-          </div>
+          <p class="muted tight">人员变动不再带走项目知识，新人接手即有完整上下文。</p>
         </details>
 
         <details class="fold" id="foldMap">
@@ -186,6 +151,7 @@
             <svg id="platformMap" viewBox="0 0 1180 620" role="img" aria-label="Eastlink 平台全景导图：上层为四个角色；中层业务主线分两行——上行 Stage 1 到 2 为 Brief 接收、结构化拆解、需求包与 SKU 清单、产品提案、设计协同、规格与质量前置，下行 Stage 3 到 4 为多维度匹配、打样、比价、比样定商、确认合作、金样与包装；下层为客户档案、供应商池、质量控制塔、项目库与流转记录五类组织知识，连线标注了流转、退回与数据供给关系"></svg>
           </div>
           <div class="map-detail" id="mapDetail"></div>
+          <p class="muted tight"><b>需求包状态机</b>（导图主线在系统里的实际状态）：设计中 → 待选打样候选 → 打样名单内审 → 打样中 → 定商建议内审 → 已确认合作（结果同步客户）；设计定稿自动进入匹配，内审可退回比样 / 换选并记录原因。需求包内拆到 SKU：设计出稿、规格书、打样评分、质量档案都按 SKU 跟踪。</p>
         </details>
 
         <details class="fold">
@@ -202,25 +168,11 @@
               </tbody>
             </table>
           </div>
-          <div class="table-wrap" style="margin-top:10px">
-            <table class="data-table">
-              <thead><tr><th>加权排序维度（8 维）</th><th>默认权重</th><th>数据来源</th><th>计算口径</th></tr></thead>
-              <tbody>
-                <tr><td><b>品类专精</b></td><td>20</td><td>主营 / 兼营品类</td><td>主营 100，兼营 82</td></tr>
-                <tr><td><b>认证覆盖</b></td><td>17</td><td>资质证书</td><td>需求认证覆盖率，缺项列入风险提示</td></tr>
-                <tr><td><b>质量表现</b></td><td>15</td><td>质量通过率</td><td>直接取值</td></tr>
-                <tr><td><b>交付可靠</b></td><td>12</td><td>准时率 + 平均交期</td><td>准时率 60% + 交期达标 40%</td></tr>
-                <tr><td><b>价格竞争力</b></td><td>12</td><td>报价竞争力指数</td><td>直接取值</td></tr>
-                <tr><td><b>产能匹配</b></td><td>9</td><td>月产能 vs 需求量</td><td>富余 1.5 倍满分，不足按比例扣</td></tr>
-                <tr><td><b>客户经验</b></td><td>8</td><td>服务过的客户</td><td>服务过该客户 100 / 有出口经验 65 / 无 40</td></tr>
-                <tr><td><b>风险等级</b></td><td>7</td><td>风险评级</td><td>低 100 / 中 60 / 高 25</td></tr>
-              </tbody>
-            </table>
-          </div>
+          <p class="muted tight"><b>过了门槛之后按 8 维加权排序</b>：品类专精 20 / 认证覆盖 17 / 质量表现 15 / 交付可靠 12 / 价格竞争力 12 / 产能匹配 9 / 客户经验 8 / 风险等级 7 —— 数据全部取自供应商档案字段，权重可拖滑杆实时重排（详见匹配工作台）。</p>
           <div class="flow-note">
             <div><b>为什么分两层</b><span>工艺这类是"能不能做"的问题，属于门槛；质量价格交期是"谁做得更好"的问题，属于排序。混在一起打分会把"做不了"的供应商排进名单。</span></div>
-            <div><b>门槛开关</b><span>认证与验厂红线支持现场切换硬性/评分档位，候选实时掉入漏斗排除名单——访谈时直接演示两种口径的差别。</span></div>
-            <div><b>输出</b><span>漏斗全程透明（每一步排除了谁、为什么）+ 总分 + 维度得分条 + 推荐理由与风险提示；最终由人勾选，系统记录依据。</span></div>
+            <div><b>门槛开关</b><span>认证与验厂红线支持现场切换硬性 / 评分档位，候选实时掉入漏斗排除名单——可当场演示两种口径的差别。</span></div>
+            <div><b>比价与比样</b><span>候选按同一份定稿与规格出样并报价；质量 / 工艺还原 / 报价<b>按 SKU 逐项评分</b>，综合分为各 SKU 均值 → 生成定商建议。同规格同口径，价格才有可比性。</span></div>
           </div>
         </details>
 
@@ -254,14 +206,6 @@
           </div>
         </details>
 
-        <details class="fold">
-          <summary><span class="label">Roadmap</span><b>分期规划</b><em>P1 本 Demo 范围 / P2 系统化协同 / P3 智能化</em></summary>
-          <div class="phase-grid">
-            <div class="now"><b>P1 · 本 Demo 范围</b><span>三份主数据 + Brief 拆解 + 需求包匹配（多维度打分）+ 内审流（含定商）/ 设计稿客户确认 + 质量控制塔 + 角色权限。</span></div>
-            <div><b>P2 · 系统化协同</b><span>真实后端与账号体系、客户在线门户、供应商门户（接任务/报价）、打样与订单跟进、绩效数据沉淀。</span></div>
-            <div><b>P3 · 智能化</b><span>匹配模型基于历史成交自学习、AI 拆解 Brief、AI 推荐供应商与风险预警。</span></div>
-          </div>
-        </details>
       </section>
     </main>
 

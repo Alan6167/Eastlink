@@ -519,17 +519,7 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .r-done time { display: block; font-size: 10.5px; color: var(--faint); margin-top: 3px; }
 
 /* ============ 平台思路 ============ */
-.think-hero h2 { font-size: 18px; margin: 4px 0 8px; line-height: 1.45; }
 
-.flow-line { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-.flow-line .f {
-  border: 1px solid var(--line); border-radius: 999px;
-  padding: 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--muted); background: #fff;
-}
-.flow-line .f.done { background: var(--green-soft); border-color: #C4EFDB; color: var(--green-ink); }
-.flow-line .f.now { background: var(--brand); border-color: var(--brand); color: #fff; }
-.flow-line i { color: var(--faint); font-style: normal; }
-.flow-line i::before { content: "→"; }
 
 .flow-note { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
 .flow-note > div { border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; }
@@ -554,11 +544,6 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
 .check-grid b { display: block; font-size: 13px; margin-bottom: 4px; color: var(--brand-deep); }
 .check-grid span { font-size: 12px; color: var(--muted); line-height: 1.65; }
 
-.phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.phase-grid > div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-.phase-grid > div.now { border-color: var(--brand); background: var(--brand-050); }
-.phase-grid b { display: block; font-size: 13px; margin-bottom: 4px; }
-.phase-grid span { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
 /* ============ 平台全景导图 ============ */
 .map-legend { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
@@ -698,11 +683,6 @@ select, input, textarea { font-family: inherit; font-size: 13px; color: var(--in
   color: var(--brand-deep); margin: 15px 0 7px;
 }
 .fs-cap:first-of-type { margin-top: 2px; }
-.fs-flow {
-  background: #fff; border: 1px solid var(--line); border-radius: 10px;
-  padding: 11px 14px; font-size: 13px; line-height: 2; color: var(--muted);
-}
-.fs-flow b { color: var(--ink); }
 .fs-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .fs-two div {
   background: #fff; border: 1px solid var(--line); border-radius: 10px;
@@ -757,13 +737,6 @@ details.fold[open] { padding-bottom: 16px; }
 .pain span { font-size: 11.5px; color: var(--muted); line-height: 1.55; flex: 1; }
 .pain em { font-style: normal; align-self: flex-start; }
 
-.tf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-@media (max-width: 900px) { .tf-grid { grid-template-columns: 1fr; } }
-.tf { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
-.tf p { font-size: 12.5px; margin-top: 6px; line-height: 1.6; color: var(--muted); }
-.tf p b { color: var(--ink); }
-.tf.future { border-color: var(--brand-100); background: var(--brand-050); }
-.tf.future .label { color: var(--brand-deep); }
 
 .stage-line { display: flex; align-items: stretch; gap: 0; margin: 4px 0 10px; }
 .stage-line i { flex: 0 0 18px; align-self: center; height: 2px; background: var(--line); }
@@ -948,8 +921,7 @@ tr.sku-row > td { background: #F8FAFE; padding: 10px 12px 12px; }
   .dash-grid, .match-grid { grid-template-columns: 1fr; }
   .dash-grid .span-2 { grid-column: span 1; }
   .kv-grid, .client-grid { grid-template-columns: repeat(2, 1fr); }
-  .sec-grid, .flow-note, .phase-grid { grid-template-columns: 1fr 1fr; }
-}
+  .sec-grid, .flow-note, }
 @media (max-width: 1080px) {
   .app { grid-template-columns: 1fr; }
   .side, .review { position: static; height: auto; }
