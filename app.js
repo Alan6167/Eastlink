@@ -2472,12 +2472,12 @@ function railQuality() {
 function railDemo() {
   $("reviewCount").textContent = deriveReviews().length;
   $("reviewList").innerHTML = `
-    <div class="rail-sub"><span>拿着 Demo 讲给别人听 · 点击直达</span></div>
+    <div class="rail-sub"><span>演示路线 · 点击直达对应页面</span></div>
     ${DEMO_STEPS.map(s => `
       <button class="demo-step" data-action="demo-jump" data-step="${s.k}">
         <i>${s.n}</i><span><b>${s.t}</b><small>${s.d}</small></span>
       </button>`).join("")}
-    <p class="muted tight">访谈时业务员的修正当场画到左侧画板上，导出 JSON 汇总。</p>`;
+    <p class="muted tight">沟通中的修正可当场画到左侧画板上，导出 JSON 汇总。</p>`;
 }
 
 function renderView() {
