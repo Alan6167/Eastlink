@@ -2724,22 +2724,33 @@ const MAP_INIT = [
     desc: "作为打样候选按定稿设计出样、寄样；定商后收到合作通知，看到自己的 SKU 明细、任务与质量整改项。永远看不到竞争候选与评分对比。",
     hi: ["m-sample", "m-coop", "d-pool"] },
 
-  { id: "m-brief",  x: 22,   y: 250, w: 112, h: 58, band: "main", label: "Brief 接收", sub: "文件/邮件/微信/口头",
-    desc: "任何形式的 Brief 都先进系统登记并生成版本。「新建项目」向导支持现场录入并直接拆包。", hi: ["r-client", "d-client"] },
-  { id: "m-parse",  x: 169,  y: 250, w: 112, h: 58, band: "main", label: "结构化拆解", sub: "字段 + 需求包",
-    desc: "把原始 Brief 拆成结构化字段并按品类拆出需求包；品牌档案的模板与价格带自动带入。", hi: ["r-sales", "m-pkg"] },
-  { id: "m-pkg",    x: 316,  y: 250, w: 112, h: 58, band: "hot",  label: "需求包", sub: "最小单位 · SKU 清单",
-    desc: "一个 Brief 拆 N 个需求包，各自独立走完设计、打样和定商；需求包内拆到 SKU 开发清单（编号/规格/结构/目标价/状态），项目状态由需求包汇总得出。", hi: ["m-parse", "m-design"] },
-  { id: "m-design", x: 463,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "逐 SKU 出稿 · PSF/PPA 前置",
-    desc: "先设计：版本内逐 SKU 跟踪出稿覆盖，全出稿才可内审 → 客户确认 → 定稿；修改意见记录原文并标记受影响 SKU。定稿同时完成规格书 PSF 与测试要求 PPA（前置，不等打样）；新结构 SKU 先出结构样验证。候选按同一套定稿出样，比样才公平。", hi: ["r-client", "d-quality", "d-log"] },
-  { id: "m-match",  x: 610,  y: 250, w: 112, h: 58, band: "main", label: "多维度匹配", sub: "硬门槛 + 8 维排序",
-    desc: "设计定稿后先过硬性门槛（准入 / 品类 / 工艺全覆盖，认证与验厂红线可切为硬性），再按 8 维加权排序选 2–3 家打样候选；漏斗全程透明，名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
-  { id: "m-sample", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "打样比样", sub: "按 SKU 评分 · 综合比样",
-    desc: "候选各自按定稿设计打样：质量 / 工艺还原 / 报价按 SKU 逐项评分，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常在比样表中透明可见。", hi: ["r-sup", "d-log"] },
-  { id: "m-decide", x: 904,  y: 250, w: 112, h: 58, band: "main", label: "比样定商", sub: "内审确认 · 同步客户",
-    desc: "定商建议内审通过即确认合作供应商（依据打样比样评分，内部决策），结果同步客户——客户无需二次确认；内审也可退回比样 / 换选。", hi: ["d-log"] },
-  { id: "m-coop",   x: 1051, y: 250, w: 112, h: 58, band: "main", label: "确认合作", sub: "通知供应商 · P2 大货",
-    desc: "定商内审通过即确认合作——无需客户确认，结果同步客户、合作通知发给供应商；P2 延伸大货订单跟进与供应商绩效沉淀，反哺匹配打分。", hi: ["d-prj", "r-sup"] },
+  /* 第一行 · Stage 1–2：Brief → 设计定稿 → 规格与质量前置 */
+  { id: "m-brief",  x: 28,  y: 248, w: 150, h: 54, band: "main", label: "Brief 接收", sub: "文件/邮件/微信/口头",
+    desc: "Stage 1。任何形式的 Brief 都先进系统登记并生成版本。「新建项目」向导支持现场录入并直接拆包。", hi: ["r-client", "d-client"] },
+  { id: "m-parse",  x: 216, y: 248, w: 150, h: 54, band: "main", label: "结构化拆解", sub: "字段 + 需求包",
+    desc: "Stage 1。把原始 Brief 拆成结构化字段并按品类拆出需求包；品牌档案的模板与价格带自动带入。", hi: ["r-sales", "m-pkg"] },
+  { id: "m-pkg",    x: 404, y: 248, w: 150, h: 54, band: "hot",  label: "需求包 · SKU 清单", sub: "流转最小单位",
+    desc: "Stage 1。一个 Brief 拆 N 个需求包；包内继续拆到 SKU 开发清单（编号 / 规格材质 / 结构 / 数量 / 目标单价 / 状态），后续设计、规格、打样、质量全部按 SKU 跟踪。项目状态由需求包汇总得出。", hi: ["m-parse", "m-propose"] },
+  { id: "m-propose", x: 592, y: 248, w: 150, h: 54, band: "main", label: "产品提案", sub: "成熟结构复用 / 新结构验证",
+    desc: "Stage 1。逐 SKU 判定成熟结构还是新结构：成熟结构直接复用已有方案进入开发；新结构先出结构样 / 3D 样验证结构，验证通过再投入全开发——避免在没验证的结构上做完整开发。", hi: ["r-sales", "m-design"] },
+  { id: "m-design", x: 780, y: 248, w: 150, h: 54, band: "main", label: "设计协同", sub: "逐 SKU 出稿 · 客户定稿",
+    desc: "Stage 1。版本内逐 SKU 跟踪出稿覆盖，全出稿才可内审 → 客户确认 → 定稿；修改意见记录原文并标记受影响 SKU。设计定稿是客户唯一的确认节点，也是打样的前提——候选按同一套定稿出样，比样才公平。", hi: ["r-client", "m-spec", "d-log"] },
+  { id: "m-spec",   x: 968, y: 248, w: 150, h: 54, band: "hot",  label: "规格与质量", sub: "PSF + PPA 前置",
+    desc: "Stage 2（本方案的关键变化）。定稿同时产出可投产规格：每个 SKU 一份规格书 PSF（规格 / 材质 / 结构 / 工艺 / 认证 / 色彩基线），以及质量与测试要求 PPA——都由平台整理、客户确认，不再等样品出来才补定义，从源头消除后期改规格的返工。", hi: ["r-client", "r-sales", "d-quality", "d-client"] },
+
+  /* 第二行 · Stage 3–4：匹配打样 → 比价比样定商 → 合作与交付 */
+  { id: "m-match",  x: 28,  y: 352, w: 150, h: 54, band: "main", label: "多维度匹配", sub: "硬门槛 + 8 维排序",
+    desc: "Stage 3。带着定稿与规格进入匹配：先过硬性门槛（准入 / 品类 / 工艺全覆盖，认证与验厂红线可切为硬性），再按 8 维加权排序选 2–3 家打样候选；漏斗全程透明，名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
+  { id: "m-sample", x: 216, y: 352, w: 150, h: 54, band: "main", label: "打样", sub: "候选按定稿出样",
+    desc: "Stage 3。候选各自按同一套定稿设计与 PSF 出样、寄样；质量 / 工艺还原按 SKU 逐项评分。", hi: ["r-sup", "d-log"] },
+  { id: "m-tender", x: 404, y: 352, w: 150, h: 54, band: "main", label: "比价", sub: "报价对比 · 成本优化",
+    desc: "Stage 3。各候选基于同一份规格报价，报价与质量、工艺还原并列为按 SKU 评分的三项之一；同规格同口径比价，避免用不同方案报出的价格互相比较。", hi: ["r-sup", "m-decide"] },
+  { id: "m-decide", x: 592, y: 352, w: 150, h: 54, band: "main", label: "比样定商", sub: "综合评分 · 内审确认",
+    desc: "Stage 3。综合分 = 各 SKU 均值，据此生成定商建议并内审；内审通过即确认合作供应商（内部决策，客户无需二次确认），也可退回比样 / 换选。", hi: ["d-log"] },
+  { id: "m-coop",   x: 780, y: 352, w: 150, h: 54, band: "main", label: "确认合作", sub: "通知供应商",
+    desc: "Stage 3 收口。确认结果同步客户、合作通知发给供应商；需求包进入交付准备，项目资产沉淀入库。", hi: ["d-prj", "r-sup", "m-deliver"] },
+  { id: "m-deliver", x: 968, y: 352, w: 150, h: 54, band: "main", label: "金样与包装", sub: "FS 确认 · 刀线（P2）",
+    desc: "Stage 4。金样 / 最终样确认（FS）与包装结构、刀线、装箱信息准备；质量控制塔的四项就绪门（验厂有效 + 测试全通过 + TCF 齐备 + 验货通过）全绿才可进入大货下单。包装与刀线库属 P2 建设范围。", hi: ["d-quality", "d-prj"] },
 
   { id: "d-client", x: 60,  y: 480, w: 178, h: 54, band: "asset", label: "客户档案", sub: "品牌智能 · 材料色彩 · 合规",
     desc: "品牌智能档案（定位/视觉/价格带/决策链/Brief 模板）、材料与色彩资产库（Pantone/ΔE/认可禁用材料）与合规验厂标准，为拆解、设计和匹配提供背景与红线——客户提供规范，平台按此执行。", hi: ["m-brief", "r-client"] },
@@ -2754,30 +2765,45 @@ const MAP_INIT = [
 ];
 
 const MAP_EDGES = [
-  { from: "m-brief",  to: "m-parse",  label: "结构化",     type: "main" },
-  { from: "m-parse",  to: "m-pkg",    label: "拆包",       type: "main" },
-  { from: "m-pkg",    to: "m-design", label: "逐包设计",   type: "main" },
-  { from: "m-design", to: "m-match",  label: "定稿后匹配", type: "main" },
-  { from: "m-match",  to: "m-sample", label: "发出打样",   type: "main" },
-  { from: "m-sample", to: "m-decide", label: "定商建议",   type: "main" },
-  { from: "m-decide", to: "m-coop",   label: "内审确认",   type: "main" },
-  { from: "m-decide", to: "m-match",  label: "换选 / 加打样", type: "back", dip: 52 },
-  { from: "d-pool",   to: "m-match",  label: "供给候选",   type: "asset" },
-  { from: "m-coop",   to: "d-prj",    label: "沉淀复用",   type: "asset", vert: true },
-  { from: "m-design", to: "d-quality", label: "PPA 前置",  type: "asset", sel: true, vert: true },
-  { from: "d-quality", to: "m-coop",  label: "就绪门",     type: "asset", vert: true },
-  { from: "r-client", to: "m-brief",  label: "提交 Brief", type: "role" },
-  { from: "r-client", to: "m-design", label: "确认设计稿", type: "role", vert: true },
-  { from: "m-decide", to: "r-client", label: "结果同步", type: "role", vert: true },
-  { from: "r-sales",  to: "m-parse",  label: "拆解",       type: "role", sel: true },
-  { from: "r-sales",  to: "m-match",  label: "选打样候选", type: "role", sel: true, vert: true },
-  { from: "r-sales",  to: "m-sample", label: "评分比样",   type: "role", sel: true, vert: true },
-  { from: "r-sup",    to: "m-sample", label: "按定稿出样", type: "role", sel: true },
-  { from: "m-coop",   to: "r-sup",    label: "合作通知",   type: "role", vert: true },
-  { from: "d-client", to: "m-brief",  label: "背景输入",   type: "asset", sel: true },
-  { from: "m-design", to: "d-log",    label: "意见留痕",   type: "asset", sel: true, vert: true },
-  { from: "m-sample", to: "d-log",    label: "评分留痕",   type: "asset", sel: true, vert: true },
-  { from: "m-decide", to: "d-log",    label: "确认留痕",   type: "asset", sel: true, vert: true }
+  /* 主线 Stage 1–2（第一行） */
+  { from: "m-brief",   to: "m-parse",   label: "结构化",       type: "main" },
+  { from: "m-parse",   to: "m-pkg",     label: "拆包",         type: "main" },
+  { from: "m-pkg",     to: "m-propose", label: "定结构",  type: "main" },
+  { from: "m-propose", to: "m-design",  label: "出设计",     type: "main" },
+  { from: "m-design",  to: "m-spec",    label: "定稿",     type: "main" },
+  /* 换行：规格就绪后进入 Stage 3 */
+  { from: "m-spec",    to: "m-match",   label: "可投产规格 → 进入匹配", type: "main", vert: true },
+  /* 主线 Stage 3–4（第二行） */
+  { from: "m-match",   to: "m-sample",  label: "发打样",     type: "main" },
+  { from: "m-sample",  to: "m-tender",  label: "报价",  type: "main" },
+  { from: "m-tender",  to: "m-decide",  label: "比样",   type: "main" },
+  { from: "m-decide",  to: "m-coop",    label: "确认",     type: "main" },
+  { from: "m-coop",    to: "m-deliver", label: "交付",     type: "main" },
+  { from: "m-decide",  to: "m-match",   label: "换选 / 加打样", type: "back", dip: 34 },
+  /* 知识与数据 */
+  { from: "d-pool",    to: "m-match",   label: "供给候选",     type: "asset" },
+  { from: "m-coop",    to: "d-prj",     label: "沉淀复用",     type: "asset", vert: true },
+  { from: "m-spec",    to: "d-quality", label: "PPA 前置",     type: "asset", sel: true, vert: true },
+  { from: "d-quality", to: "m-deliver", label: "四项就绪门",   type: "asset", vert: true },
+  { from: "d-client",  to: "m-brief",   label: "背景输入",     type: "asset", sel: true },
+  { from: "d-client",  to: "m-spec",    label: "规范输入",     type: "asset", sel: true, vert: true },
+  /* 角色动作 */
+  { from: "r-client",  to: "m-brief",   label: "提交 Brief",   type: "role" },
+  { from: "r-client",  to: "m-design",  label: "确认设计稿",   type: "role", vert: true },
+  { from: "r-client",  to: "m-spec",    label: "确认规格",     type: "role", sel: true, vert: true },
+  { from: "m-decide",  to: "r-client",  label: "结果同步",     type: "role", vert: true },
+  { from: "r-sales",   to: "m-parse",   label: "拆解",         type: "role", sel: true },
+  { from: "r-sales",   to: "m-propose", label: "结构方案",     type: "role", sel: true, vert: true },
+  { from: "r-sales",   to: "m-spec",    label: "出 PSF / PPA", type: "role", sel: true, vert: true },
+  { from: "r-sales",   to: "m-match",   label: "选打样候选",   type: "role", sel: true, vert: true },
+  { from: "r-sales",   to: "m-tender",  label: "评分比样",     type: "role", sel: true, vert: true },
+  { from: "r-sup",     to: "m-sample",  label: "按定稿出样",   type: "role", sel: true, vert: true },
+  { from: "r-sup",     to: "m-tender",  label: "报价",         type: "role", sel: true, vert: true },
+  { from: "m-coop",    to: "r-sup",     label: "合作通知",     type: "role", vert: true },
+  /* 留痕 */
+  { from: "m-design",  to: "d-log",     label: "意见留痕",     type: "asset", sel: true, vert: true },
+  { from: "m-tender",  to: "d-log",     label: "评分留痕",     type: "asset", sel: true, vert: true },
+  { from: "m-decide",  to: "d-log",     label: "确认留痕",     type: "asset", sel: true, vert: true }
 ];
 
 
@@ -2908,7 +2934,7 @@ function renderMap() {
     </defs>
     <g class="map-band">
       <rect x="10" y="18" width="1160" height="78" rx="12"></rect><text x="24" y="34">角色 ROLES</text>
-      <rect x="10" y="232" width="1160" height="94" rx="12"></rect><text x="24" y="248">业务主线 MAIN FLOW</text>
+      <rect x="10" y="222" width="1160" height="204" rx="12"></rect><text x="24" y="238">业务主线 MAIN FLOW（Stage 1–2 上行：设计与规格前置 ｜ Stage 3–4 下行：打样定商与交付）</text>
       <rect x="10" y="462" width="1160" height="90" rx="12"></rect><text x="24" y="478">组织知识 KNOWLEDGE（个人知识 → 组织知识）</text>
     </g>
     <g id="mapEdgeLayer">${mapEdgesHtml()}</g>
