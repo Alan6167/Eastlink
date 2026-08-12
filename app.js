@@ -2728,10 +2728,10 @@ const MAP_INIT = [
     desc: "任何形式的 Brief 都先进系统登记并生成版本。「新建项目」向导支持现场录入并直接拆包。", hi: ["r-client", "d-client"] },
   { id: "m-parse",  x: 169,  y: 250, w: 112, h: 58, band: "main", label: "结构化拆解", sub: "字段 + 需求包",
     desc: "把原始 Brief 拆成结构化字段并按品类拆出需求包；品牌档案的模板与价格带自动带入。", hi: ["r-sales", "m-pkg"] },
-  { id: "m-pkg",    x: 316,  y: 250, w: 112, h: 58, band: "hot",  label: "需求包", sub: "流转最小单位",
-    desc: "一个 Brief 拆 N 个需求包，各自独立走完设计、打样和定商；项目状态由需求包汇总得出。", hi: ["m-parse", "m-design"] },
-  { id: "m-design", x: 463,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "版本内逐 SKU 出稿",
-    desc: "先设计：版本内逐 SKU 跟踪出稿覆盖，全出稿才可内审 → 客户确认 → 定稿；修改意见记录原文并标记受影响 SKU。设计定稿是打样的前提——候选按同一套定稿出样，比样才公平。", hi: ["r-client", "d-log"] },
+  { id: "m-pkg",    x: 316,  y: 250, w: 112, h: 58, band: "hot",  label: "需求包", sub: "最小单位 · SKU 清单",
+    desc: "一个 Brief 拆 N 个需求包，各自独立走完设计、打样和定商；需求包内拆到 SKU 开发清单（编号/规格/结构/目标价/状态），项目状态由需求包汇总得出。", hi: ["m-parse", "m-design"] },
+  { id: "m-design", x: 463,  y: 250, w: 112, h: 58, band: "main", label: "设计协同", sub: "逐 SKU 出稿 · PSF/PPA 前置",
+    desc: "先设计：版本内逐 SKU 跟踪出稿覆盖，全出稿才可内审 → 客户确认 → 定稿；修改意见记录原文并标记受影响 SKU。定稿同时完成规格书 PSF 与测试要求 PPA（前置，不等打样）；新结构 SKU 先出结构样验证。候选按同一套定稿出样，比样才公平。", hi: ["r-client", "d-quality", "d-log"] },
   { id: "m-match",  x: 610,  y: 250, w: 112, h: 58, band: "main", label: "多维度匹配", sub: "硬门槛 + 8 维排序",
     desc: "设计定稿后先过硬性门槛（准入 / 品类 / 工艺全覆盖，认证与验厂红线可切为硬性），再按 8 维加权排序选 2–3 家打样候选；漏斗全程透明，名单内审通过即发打样邀请。", hi: ["d-pool", "r-sales"] },
   { id: "m-sample", x: 757,  y: 250, w: 112, h: 58, band: "main", label: "打样比样", sub: "按 SKU 评分 · 综合比样",
@@ -2741,13 +2741,15 @@ const MAP_INIT = [
   { id: "m-coop",   x: 1051, y: 250, w: 112, h: 58, band: "main", label: "确认合作", sub: "通知供应商 · P2 大货",
     desc: "定商内审通过即确认合作——无需客户确认，结果同步客户、合作通知发给供应商；P2 延伸大货订单跟进与供应商绩效沉淀，反哺匹配打分。", hi: ["d-prj", "r-sup"] },
 
-  { id: "d-client", x: 60,  y: 480, w: 178, h: 54, band: "asset", label: "客户档案", sub: "品牌智能 · 合规标准",
-    desc: "品牌智能档案（定位/视觉/价格带/决策链/Brief 模板）与合规验厂标准，为拆解、设计和匹配提供背景与红线。", hi: ["m-brief", "r-client"] },
-  { id: "d-pool",   x: 356, y: 480, w: 232, h: 54, band: "asset", label: "供应商池", sub: "客户提供 / 自主开发 · 六状态",
+  { id: "d-client", x: 60,  y: 480, w: 178, h: 54, band: "asset", label: "客户档案", sub: "品牌智能 · 材料色彩 · 合规",
+    desc: "品牌智能档案（定位/视觉/价格带/决策链/Brief 模板）、材料与色彩资产库（Pantone/ΔE/认可禁用材料）与合规验厂标准，为拆解、设计和匹配提供背景与红线——客户提供规范，平台按此执行。", hi: ["m-brief", "r-client"] },
+  { id: "d-pool",   x: 290, y: 480, w: 200, h: 54, band: "asset", label: "供应商池", sub: "客户提供 / 自主开发 · 六状态",
     desc: "全量供应商资源库：来源标签 + 六种准入状态 + 能力标签。是匹配打分的数据地基；客户提供的供应商对该客户全量可见。", hi: ["m-match", "r-client", "r-sup"] },
-  { id: "d-prj",    x: 700, y: 480, w: 170, h: 54, band: "asset", label: "项目库", sub: "历史沉淀 · 复用",
+  { id: "d-quality", x: 540, y: 480, w: 190, h: 54, band: "hot", label: "质量控制塔", sub: "TCF·测试·验厂·验货·CAP",
+    desc: "PPA 测试要求随设计定稿前置定义；TCF 按 SKU 建档；验厂到期预警、验货与 CAP 整改闭环；验厂有效 + 测试全通过 + TCF 齐备 + 验货通过四项就绪门全绿才可下大货（P2）。质量数据回流供应商档案与匹配风险提示。", hi: ["m-design", "m-coop", "d-pool"] },
+  { id: "d-prj",    x: 780, y: 480, w: 150, h: 54, band: "asset", label: "项目库", sub: "历史沉淀 · 复用",
     desc: "完结项目沉淀为可复用资产：需求包结构、定稿设计、打样评分与定商记录；P3 供匹配模型自学习。", hi: ["m-coop"] },
-  { id: "d-log",    x: 940, y: 480, w: 190, h: 54, band: "asset", label: "审核与流转记录", sub: "每一步留痕",
+  { id: "d-log",    x: 980, y: 480, w: 180, h: 54, band: "asset", label: "审核与流转记录", sub: "每一步留痕",
     desc: "设计意见、打样评分、定商依据、换选原因全部记录原文与时间线——对客户透明、对内可复盘。", hi: ["m-design", "m-sample", "m-decide"] }
 ];
 
@@ -2762,6 +2764,8 @@ const MAP_EDGES = [
   { from: "m-decide", to: "m-match",  label: "换选 / 加打样", type: "back", dip: 52 },
   { from: "d-pool",   to: "m-match",  label: "供给候选",   type: "asset" },
   { from: "m-coop",   to: "d-prj",    label: "沉淀复用",   type: "asset", vert: true },
+  { from: "m-design", to: "d-quality", label: "PPA 前置",  type: "asset", sel: true, vert: true },
+  { from: "d-quality", to: "m-coop",  label: "就绪门",     type: "asset", vert: true },
   { from: "r-client", to: "m-brief",  label: "提交 Brief", type: "role" },
   { from: "r-client", to: "m-design", label: "确认设计稿", type: "role", vert: true },
   { from: "m-decide", to: "r-client", label: "结果同步", type: "role", vert: true },
@@ -2905,7 +2909,7 @@ function renderMap() {
     <g class="map-band">
       <rect x="10" y="18" width="1160" height="78" rx="12"></rect><text x="24" y="34">角色 ROLES</text>
       <rect x="10" y="232" width="1160" height="94" rx="12"></rect><text x="24" y="248">业务主线 MAIN FLOW</text>
-      <rect x="10" y="462" width="1160" height="90" rx="12"></rect><text x="24" y="478">数据资产 DATA</text>
+      <rect x="10" y="462" width="1160" height="90" rx="12"></rect><text x="24" y="478">组织知识 KNOWLEDGE（个人知识 → 组织知识）</text>
     </g>
     <g id="mapEdgeLayer">${mapEdgesHtml()}</g>
     <g id="mapNodeLayer">${mapNodesHtml()}</g>`;
