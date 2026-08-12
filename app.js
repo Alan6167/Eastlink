@@ -576,10 +576,18 @@ const packages = [
     procs: ["印刷", "模切"], certs: ["FSC", "EN71", "REACH"], leadLimit: 40,
     status: "matching", shortlist: [], confirmed: [], suggestSup: null, returnNote: null,
     skuList: [
-      { id: "BTS-101", name: "A5 线圈笔记本 · 3 款封面", spec: "FSC 纸 80g · 60 页", qty: "3.2 万/月", price: "€1.5", status: "定稿" },
-      { id: "BTS-102", name: "12 色彩铅纸盒装", spec: "椴木杆 · FSC 纸盒", qty: "2.4 万/月", price: "€2.2", status: "定稿" },
-      { id: "BTS-103", name: "笔袋文具 5 件套", spec: "PP 磨砂盒 · 模切内衬", qty: "2.6 万/月", price: "€3.0", status: "定稿" },
-      { id: "BTS-104", name: "贴纸手账套装", spec: "铜版纸模切 · 环保覆膜", qty: "1.8 万/月", price: "€1.8", status: "定稿" }
+      { id: "BTS-101", name: "A5 线圈笔记本 · 3 款封面", spec: "FSC 纸 80g · 60 页", qty: "3.2 万/月", price: "€1.5", status: "定稿",
+        tests: [{ std: "EN71-3", status: "待送测" }, { std: "甲醛（纸品）", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } },
+      { id: "BTS-102", name: "12 色彩铅纸盒装", spec: "椴木杆 · FSC 纸盒", qty: "2.4 万/月", price: "€2.2", status: "定稿",
+        tests: [{ std: "EN71-1/2/3", status: "待送测" }, { std: "REACH 附录 XVII", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } },
+      { id: "BTS-103", name: "笔袋文具 5 件套", spec: "PP 磨砂盒 · 模切内衬", qty: "2.6 万/月", price: "€3.0", status: "定稿",
+        tests: [{ std: "EN71-3 + 邻苯", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } },
+      { id: "BTS-104", name: "贴纸手账套装", spec: "铜版纸模切 · 环保覆膜", qty: "1.8 万/月", price: "€1.8", status: "定稿",
+        tests: [{ std: "EN71-3", status: "待送测" }],
+        tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } }
     ]
   },
   {
@@ -588,9 +596,15 @@ const packages = [
     procs: ["缝纫", "印刷"], certs: ["BSCI", "REACH"], leadLimit: 45,
     status: "design", shortlist: [], confirmed: [], suggestSup: null, returnNote: null,
     skuList: [
-      { id: "BTS-201", name: "儿童双肩背包 · 主款", spec: "600D 再生涤纶 · 反光条", qty: "2.8 万/月", price: "€7.5", status: "设计中" },
-      { id: "BTS-202", name: "抽绳运动袋", spec: "210D 涤纶 · 单色印刷", qty: "2.0 万/月", price: "€4.0", status: "设计中" },
-      { id: "BTS-203", name: "拉链笔袋包", spec: "帆布 · 双头拉链", qty: "1.2 万/月", price: "€4.5", status: "设计中" }
+      { id: "BTS-201", name: "儿童双肩背包 · 主款", spec: "600D 再生涤纶 · 反光条", qty: "2.8 万/月", price: "€7.5", status: "设计中", struct: "新结构",
+        tests: [{ std: "REACH + AZO", status: "待送测" }, { std: "镍释放（金属件）", status: "待送测" }],
+        tcf: { 设计定稿: false, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } },
+      { id: "BTS-202", name: "抽绳运动袋", spec: "210D 涤纶 · 单色印刷", qty: "2.0 万/月", price: "€4.0", status: "设计中",
+        tests: [{ std: "REACH + AZO", status: "待送测" }],
+        tcf: { 设计定稿: false, 材料声明: true, 测试报告: false, 样品记录: false, 验货报告: false } },
+      { id: "BTS-203", name: "拉链笔袋包", spec: "帆布 · 双头拉链", qty: "1.2 万/月", price: "€4.5", status: "设计中",
+        tests: [{ std: "REACH", status: "待送测" }],
+        tcf: { 设计定稿: false, 材料声明: false, 测试报告: false, 样品记录: false, 验货报告: false } }
     ]
   },
   {
@@ -678,7 +692,7 @@ const packages = [
     procs: ["印刷", "组装"], certs: ["EN71", "Disney FAMA"], leadLimit: 40,
     status: "sampling", shortlist: ["SUP-007", "SUP-012"], confirmed: [], suggestSup: null, returnNote: null,
     skuList: [
-      { id: "XM-101", name: "IP 盲盒挂件 · 6 款", spec: "PVC 软胶 · 独立彩盒", qty: "3.5 万/月", price: "¥19", status: "打样中",
+      { id: "XM-101", name: "IP 盲盒挂件 · 6 款", spec: "PVC 软胶 · 独立彩盒", qty: "3.5 万/月", price: "¥19", status: "打样中", struct: "新结构",
         tests: [{ std: "EN71-3", status: "通过" }, { std: "邻苯二甲酸盐", status: "不通过" }],
         tcf: { 设计定稿: true, 材料声明: true, 测试报告: false, 样品记录: true, 验货报告: false } },
       { id: "XM-102", name: "圣诞马克杯礼盒", spec: "陶瓷 · 烫金印刷礼盒", qty: "2.0 万/月", price: "¥39", status: "打样中",
@@ -1365,10 +1379,13 @@ function projectDetail(prjId) {
             ? `<button class="text-link sku-btn" data-action="sku-toggle" data-pkg="${x.id}">${x.sku} 个 ${open ? "▴" : "▾"}</button>`
             : `${x.sku} 个`;
           const skuRow = open ? `<tr class="sku-row"><td colspan="8"><div class="sku-box">
-              <p class="sku-cap">SKU 明细 · 代表条目 ${x.skuList.length} 条（共 ${x.sku} 个 SKU，Demo 列举）</p>
-              <table><thead><tr><th>SKU 编号</th><th>名称</th><th>规格 / 材质</th><th>数量</th><th>目标单价</th><th>状态</th></tr></thead>
-              <tbody>${x.skuList.map(k => `<tr><td><b>${k.id}</b></td><td>${k.name}</td><td>${k.spec || "待补充"}</td><td>${k.qty || "待分配"}</td><td>${k.price || "见价格带"}</td>
-                <td><span class="chip ${{ "已确认": "green", "打样中": "skyc", "定稿": "blue", "设计中": "", "待设计": "outline" }[k.status] ?? ""}">${k.status || "—"}</span></td></tr>`).join("")}</tbody></table>
+              <p class="sku-cap">SKU 明细 · 代表条目 ${x.skuList.length} 条（共 ${x.sku} 个 SKU，Demo 列举）· 规格书 PSF 由平台生成、客户确认；质量要求 PPA 随定稿前置定义</p>
+              <table><thead><tr><th>SKU 编号</th><th>名称</th><th>规格 / 材质</th><th>结构</th><th>数量</th><th>目标单价</th><th>状态</th><th>PSF</th></tr></thead>
+              <tbody>${x.skuList.map((k, ki) => `<tr><td><b>${k.id}</b></td><td>${k.name}</td><td>${k.spec || "待补充"}</td>
+                <td>${k.struct === "新结构" ? `<span class="chip amber" title="先出结构样 / 3D 样验证结构，再投入全开发">新结构 · 结构样先行</span>` : k.struct === "待判定" ? `<span class="chip outline">待判定</span>` : `<span class="chip">成熟结构</span>`}</td>
+                <td>${k.qty || "待分配"}</td><td>${k.price || "见价格带"}</td>
+                <td><span class="chip ${{ "已确认": "green", "打样中": "skyc", "定稿": "blue", "设计中": "", "待设计": "outline" }[k.status] ?? ""}">${k.status || "—"}</span></td>
+                <td><button class="text-link" data-action="file-open" data-kind="psf" data-pkg="${x.id}" data-idx="${ki}" title="查看该 SKU 的产品规格书（PSF）">查看</button></td></tr>`).join("")}</tbody></table>
             </div></td></tr>` : "";
           return `<tr>
             <td><b>${x.name}</b>${x.returnNote ? `<br><span class="chip red">有退回意见</span>` : ""}</td>
@@ -2267,15 +2284,16 @@ function renderQuality() {
 
     <section class="panel">
       <div class="panel-head"><div><p class="label">SKU Quality File</p><h3>SKU 质量档案（测试 × TCF）</h3></div>
-        <span class="chip outline">测试项按客户分品类标准生成</span></div>
+        <span class="chip outline">PPA 前置：测试要求随设计定稿同步定义，不等打样</span></div>
       <div class="table-wrap"><table class="data-table">
         <thead><tr><th>SKU</th><th>需求包</th><th>供应商</th><th>测试项</th><th style="min-width:150px">TCF 完整度</th></tr></thead>
         <tbody>${skuRows.map(({ p, k, su }) => {
           const pct = tcfPct(k.tcf);
           const missing = Object.entries(k.tcf).filter(([, v]) => !v).map(([n]) => n);
+          const ki = p.skuList.indexOf(k);
           return `<tr>
-            <td><b>${k.id}</b><br><span class="dim" style="font-size:11px">${k.name}</span></td>
-            <td>${p.name}</td><td>${su ? su.name : "比样中"}</td>
+            <td><b>${k.id}</b> <button class="text-link" data-action="file-open" data-kind="psf" data-pkg="${p.id}" data-idx="${ki}" style="font-size:10.5px">PSF</button><br><span class="dim" style="font-size:11px">${k.name}</span></td>
+            <td>${p.name}</td><td>${su ? su.name : "定商前"}</td>
             <td><div class="chip-row">${k.tests.map(t => `<span class="chip ${TEST_CHIP[t.status] || ""}">${t.std} · ${t.status}</span>`).join("")}</div></td>
             <td><div class="score-line"><div class="bar ${pct === 100 ? "good" : ""}"><i style="--p:${pct}%"></i></div><strong>${pct}%</strong></div>
               ${missing.length ? `<span class="dim" style="font-size:10.5px">缺：${missing.join(" / ")}</span>` : `<span class="chip green" style="font-size:10px">TCF 齐备</span>`}</td></tr>`;
@@ -3292,7 +3310,7 @@ function briefCreate() {
       status: "design", shortlist: [], confirmed: [], suggestSup: null, returnNote: null,
       skuList: Array.from({ length: Math.min(p.sku, 4) }, (_, i) => ({
         id: `${catCode}-${String(i + 1).padStart(2, "0")}`, name: `${p.cat} SKU-${String(i + 1).padStart(2, "0")}（待细化）`,
-        spec: "待补充", qty: "待分配", price: "见价格带", status: "待设计"
+        spec: "待补充", qty: "待分配", price: "见价格带", status: "待设计", struct: "待判定"
       }))
     });
   });
@@ -3551,6 +3569,27 @@ function openFileView(kind, ref) {
     stage = svgDoc(m.name, [["规格", m.spec], ["适用品类", m.cats.join(" / ")], ["认证要求", m.cert], ["状态", m.status], ["用途", "打样与大货物料基线"]], c.brand.colors[0]);
     metas = [["材料", m.name], ["认证要求", m.cert], ["状态", m.status], ["所属", c.name]];
     hint = "材料卡为 Demo 生成示意；正式版挂接材料检测报告与供应商物料档案。";
+  }
+  else if (kind === "psf") {
+    const p = pkg(ref.pkg);
+    const k = p && p.skuList && p.skuList[+ref.idx];
+    if (!k) return;
+    const c = client(prj(p.prj)?.client);
+    const mainColor = c && c.brand && c.brand.matlib ? c.brand.matlib.colors[0] : null;
+    title = `${k.id} · 产品规格书（PSF）`;
+    stage = svgDoc(`${k.id} 产品规格书（PSF）`, [
+      ["SKU 名称", k.name],
+      ["规格 / 材质", k.spec || "待补充"],
+      ["结构", k.struct || "成熟结构"],
+      ["数量", k.qty || "待分配"],
+      ["目标单价", k.price || "见价格带"],
+      ["工艺（需求包）", p.procs.join(" / ")],
+      ["认证（需求包）", p.certs.join(" / ")],
+      ["测试要求 PPA", k.tests ? k.tests.map(t => t.std).join("、") : "随定稿定义"],
+      ["色彩基线", mainColor ? `${mainColor.name} ${mainColor.pantone}（${mainColor.tol}）` : "见品牌档案"]
+    ], c && c.brand ? c.brand.colors[0] : null);
+    metas = [["SKU", k.id], ["需求包", p.name], ["状态", k.status || "—"], ["口径", "平台生成 · 客户确认"]];
+    hint = "PSF 为 Demo 生成示意——规格 / 测试 / 色彩基线由平台按品牌规范整理，客户只需确认；正式版为可下载的标准规格文件。";
   }
   else return;
 
