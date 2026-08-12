@@ -69,11 +69,44 @@
         <div class="think-hero panel">
           <p class="label">Platform Thinking</p>
           <h2>客户定义方向与标准，Eastlink 负责开发与执行落地</h2>
-          <p class="muted"><b>客户从做执行细节，变成只做关键决策：方向 → 标准 → 确认。</b>客户提交 Brief → 拆解成需求包 → <b>先设计并定稿</b>（客户唯一确认节点）→ 按维度匹配打样候选 → <b>候选打样比样</b> → 内审定商（结果同步客户）→ 合作。所有需要人做判断的动作统一进右侧审核中心；所有资源沉淀在客户、供应商、项目三份主数据里。</p>
+          <p class="muted"><b>客户从做执行细节，变成只做关键决策：方向 → 标准 → 确认。</b>下面这一屏是讨论用的框架骨架；细节都收在折叠区里，需要时再展开。</p>
         </div>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">Why This Platform</p><h3>现状六个卡点 → 平台怎么接</h3></div></div>
+        <section class="panel frame-sheet">
+          <div class="panel-head">
+            <div><p class="label">Framework On One Page</p><h3>框架一页纸（讨论用）</h3></div>
+            <button class="ghost mini" data-action="fold-all">展开全部细节</button>
+          </div>
+
+          <p class="fs-cap">① 一条主线</p>
+          <div class="fs-flow">Brief 接收 → 结构化拆解 → <b>需求包 · SKU 清单</b> → 产品提案（结构验证）→ <b>设计定稿</b> → <b>规格与质量 PSF + PPA</b> → 匹配 · 打样 · 比价 → 比样定商 → 确认合作 → 交付与包装（P2）</div>
+
+          <p class="fs-cap">② 一句分工</p>
+          <div class="fs-two">
+            <div><b>客户</b>提出 Brief 需求 · 提供品牌规范细则 · 确认设计稿定稿</div>
+            <div><b>Eastlink</b>拆解 · 设计 · 规格与质量 · 匹配打样 · 比价定商 · 质量放行</div>
+          </div>
+
+          <p class="fs-cap">③ 三条边界</p>
+          <ul class="fs-list">
+            <li><b>流转最小单位是需求包</b>；SKU 是包内跟踪维度——设计出稿、规格书、打样评分、质量档案都到 SKU。</li>
+            <li><b>客户只确认一次：设计稿定稿</b>；定商由 Eastlink 内审确定后同步结果，不做二次确认。</li>
+            <li><b>平台管到定商与质量放行</b>；大货下单、订单跟进、包装刀线属 P2，不在本轮框架内。</li>
+          </ul>
+
+          <p class="fs-cap">④ 待业务拍板的五件事（框架级，其余都是实现细节）</p>
+          <ol class="fs-open">
+            <li><b>流转最小单位</b>需求包还是 SKU？有没有"一个需求包分给两家"的情况？</li>
+            <li><b>承接边界</b>定商即结束，还是要管到金样、包装、大货？</li>
+            <li><b>硬性门槛</b>一票否决项到底有哪些？（现假设：准入 / 品类 / 工艺三条固定）</li>
+            <li><b>质量前置</b>测试要求真能与设计定稿同步定义吗？（这是本方案最强的主张）</li>
+            <li><b>内审归属</b>谁审——业务员还是主管？定商结果以什么形式同步客户？</li>
+          </ol>
+          <p class="muted tight">以下为细节备料，讨论时按需展开；框架层面只看上面这一屏。</p>
+        </section>
+
+        <details class="fold">
+          <summary><span class="label">Why This Platform</span><b>现状六个卡点 → 平台怎么接</b><em>为什么要做这个平台：六个现状问题与对应解法</em></summary>
           <div class="pain-grid">
             <div class="pain"><b>① 设计稿不可直接投产</b><span>AI 稿 / 文字错误 / 结构与实际产品不符，供应商反复检查修改。</span><em class="chip blue">设计协同：逐 SKU 出稿 + 内审校验</em></div>
             <div class="pain"><b>② 设计与规格对不上</b><span>设计、尺寸、材质信息不一致，来回澄清。</span><em class="chip blue">标准 PSF：规格书由平台生成，客户只确认</em></div>
@@ -83,10 +116,10 @@
             <div class="pain"><b>⑥ 人员变动知识断层</b><span>新人加入 / 休假 / 离职后，项目知识与判断标准无法延续。</span><em class="chip blue">组织知识库：标准与档案沉淀，不依赖个人</em></div>
           </div>
           <p class="muted tight"><b>问题不在于投入不够，而在于太多执行性工作压在客户侧</b>——而设计、规格、测试、打样恰恰需要大量产品 / 材料 / 工艺 / 制造知识，这正是平台方最擅长的。Right Work, Right Team.</p>
-        </section>
+        </details>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">From Creating To Approving</p><h3>从"客户执行" 到 "客户确认"</h3></div></div>
+        <details class="fold">
+          <summary><span class="label">From Creating To Approving</span><b>从"客户执行" 到 "客户确认"</b><em>分工变化与四阶段流程（含每阶段交付物）</em></summary>
           <div class="tf-grid">
             <div class="tf today"><p class="label">现在</p>
               <p><b>客户</b>：出设计稿 → 写规格 → 定质量与测试要求 → 逐轮提意见 → 给包装信息</p>
@@ -102,20 +135,20 @@
             <div class="stg"><b>Stage 4</b><span>交付与包装</span><small>金样 / FS 确认 → 包装结构与刀线 → 四项就绪门全绿放行</small><em>交付物：可投产的完整交付包（P2）</em></div>
           </div>
           <p class="muted tight">故事线：客户想更快 → 现有环节返工太多 → 卡点在哪我们清楚 → 把产品专业能力前移 → 客户定方向 → 平台担执行 → 工具与知识库支撑每个项目 → <b>更少工作 · 更少返工 · 更快交付</b>。</p>
-        </section>
+        </details>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">Knowledge System</p><h3>个人知识 → 组织知识</h3></div></div>
+        <details class="fold">
+          <summary><span class="label">Knowledge System</span><b>个人知识 → 组织知识</b><em>知识沉淀在平台而不是某个人身上</em></summary>
           <div class="chip-row">
             <span class="chip blue">品牌智能档案</span><span class="chip blue">材料与色彩资产库</span>
             <span class="chip blue">合规验厂标准</span><span class="chip blue">PSF / PPA 标准模板</span>
             <span class="chip blue">SKU 结构沉淀（刀线库 P2）</span><span class="chip blue">审核与流转全程留痕</span>
           </div>
           <p class="muted tight">项目知识和判断标准沉淀在平台而不是某个人身上——人员变动不再带走项目知识，新人接手即有完整上下文。</p>
-        </section>
+        </details>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">Main Flow</p><h3>业务主线：流转的最小单位是"需求包"</h3></div></div>
+        <details class="fold">
+          <summary><span class="label">Main Flow</span><b>业务主线：流转的最小单位是"需求包"</b><em>需求包状态机与 SKU 跟踪规则</em></summary>
           <div class="flow-line">
             <div class="f done">Brief 接收</div><i></i>
             <div class="f done">拆解中</div><i></i>
@@ -130,9 +163,10 @@
             <div><b>打样比样</b><span>候选各自出样，质量 / 工艺还原 / 报价<b>按 SKU 逐项评分</b>，综合分为各 SKU 均值；全部评分后按综合分生成定商建议，单 SKU 异常透明可见，依据全程留痕。</span></div>
             <div><b>质量控制塔</b><span>TCF 按 SKU 建档（设计定稿 / 材料声明 / 测试报告 / 样品记录 / 验货报告）；验厂到期预警、测试与验货结果、CAP 整改在塔内闭环——<b>客户合规标准是口径，红线在匹配拦截，塔内跟踪执行</b>；四项就绪门全绿才可进入大货下单（P2）。</span></div>
           </div>
-        </section>
+        </details>
 
-        <section class="panel">
+        <details class="fold" id="foldMap">
+          <summary><span class="label">Platform Map</span><b>平台全景导图</b><em>可编辑画板：节点与连线可当场改，支持导出 JSON</em></summary>
           <div class="panel-head">
             <div><p class="label">Platform Map</p><h3>平台全景导图（可编辑画板 · 点选 / 拖动 / 双击编辑）</h3></div>
             <div class="map-legend">
@@ -152,10 +186,10 @@
             <svg id="platformMap" viewBox="0 0 1180 620" role="img" aria-label="Eastlink 平台全景导图：上层为四个角色；中层业务主线分两行——上行 Stage 1 到 2 为 Brief 接收、结构化拆解、需求包与 SKU 清单、产品提案、设计协同、规格与质量前置，下行 Stage 3 到 4 为多维度匹配、打样、比价、比样定商、确认合作、金样与包装；下层为客户档案、供应商池、质量控制塔、项目库与流转记录五类组织知识，连线标注了流转、退回与数据供给关系"></svg>
           </div>
           <div class="map-detail" id="mapDetail"></div>
-        </section>
+        </details>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">Matching Model</p><h3>匹配模型：硬性门槛 + 加权排序两层</h3></div></div>
+        <details class="fold">
+          <summary><span class="label">Matching Model</span><b>匹配模型：硬性门槛 + 加权排序两层</b><em>三条固定门槛 + 两个可切换档位 + 8 维权重</em></summary>
           <div class="table-wrap">
             <table class="data-table">
               <thead><tr><th style="width:130px">硬性门槛</th><th style="width:150px">档位</th><th>说明</th></tr></thead>
@@ -188,10 +222,10 @@
             <div><b>门槛开关</b><span>认证与验厂红线支持现场切换硬性/评分档位，候选实时掉入漏斗排除名单——访谈时直接演示两种口径的差别。</span></div>
             <div><b>输出</b><span>漏斗全程透明（每一步排除了谁、为什么）+ 总分 + 维度得分条 + 推荐理由与风险提示；最终由人勾选，系统记录依据。</span></div>
           </div>
-        </section>
+        </details>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">Roles</p><h3>角色权限矩阵</h3></div></div>
+        <details class="fold">
+          <summary><span class="label">Roles</span><b>角色权限矩阵</b><em>四个角色各看到什么、能做什么</em></summary>
           <div class="table-wrap">
             <table class="data-table">
               <thead><tr><th></th><th>业务员</th><th>管理层</th><th>客户</th><th>供应商</th></tr></thead>
@@ -206,10 +240,10 @@
             </table>
           </div>
           <p class="muted tight">原则：客户看不到供应商池全貌、内部打分与落选者；供应商看不到竞争对手。内部角色是否再拆"业务员 / 采购"两条线，见下方确认清单第 ⑤ 条。</p>
-        </section>
+        </details>
 
-        <section class="panel checklist">
-          <div class="panel-head"><div><p class="label">Open Questions</p><h3>业务待确认清单</h3></div></div>
+        <details class="fold checklist">
+          <summary><span class="label">Open Questions</span><b>业务待确认清单（完整版）</b><em>六组开放问题；其中框架级的五条已提到上方一页纸</em></summary>
           <div class="check-grid">
             <div><b>① Brief 承接与拆解</b><span>实际 Brief 长什么样（正式文件还是微信几句话）？拆解谁在做、按什么习惯拆？有没有一个需求包拆给两家分单的情况？</span></div>
             <div><b>② 匹配维度校准</b><span>选供应商最看重的前三个因素？有没有一票否决项（指定认证、必须验厂）？客户提供的供应商是"必须优先"还是"仅供参考"？维度数据现在记在哪？</span></div>
@@ -218,16 +252,16 @@
             <div><b>⑤ 内部角色分工</b><span>谁接 Brief、谁拆解、谁选供应商、谁对客户？要不要拆成业务员 / 采购两条线？一个业务员同时跟几个项目？</span></div>
             <div><b>⑥ 现状痛点</b><span>整个流程最耗时、最容易出错的是哪一步？现在靠什么在管（Excel/微信/邮件）？最想被系统替代的是哪部分？</span></div>
           </div>
-        </section>
+        </details>
 
-        <section class="panel">
-          <div class="panel-head"><div><p class="label">Roadmap</p><h3>分期规划</h3></div></div>
+        <details class="fold">
+          <summary><span class="label">Roadmap</span><b>分期规划</b><em>P1 本 Demo 范围 / P2 系统化协同 / P3 智能化</em></summary>
           <div class="phase-grid">
             <div class="now"><b>P1 · 本 Demo 范围</b><span>三份主数据 + Brief 拆解 + 需求包匹配（多维度打分）+ 内审流（含定商）/ 设计稿客户确认 + 质量控制塔 + 角色权限。</span></div>
             <div><b>P2 · 系统化协同</b><span>真实后端与账号体系、客户在线门户、供应商门户（接任务/报价）、打样与订单跟进、绩效数据沉淀。</span></div>
             <div><b>P3 · 智能化</b><span>匹配模型基于历史成交自学习、AI 拆解 Brief、AI 推荐供应商与风险预警。</span></div>
           </div>
-        </section>
+        </details>
       </section>
     </main>
 

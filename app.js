@@ -3680,12 +3680,23 @@ document.addEventListener("click", e => {
   else if (a === "upload-version") { const pk = btn.dataset.pkg; pickFile("image/*,application/pdf", f => uploadVersion(pk, f)); }
   else if (a === "file-open") openFileView(btn.dataset.kind, btn.dataset);
   else if (a === "file-close") closeFileView();
+  else if (a === "fold-all") {
+    const folds = [...document.querySelectorAll("details.fold")];
+    const openAll = !folds.every(d => d.open);
+    folds.forEach(d => { d.open = openAll; });
+    btn.textContent = openAll ? "收起全部细节" : "展开全部细节";
+  }
   else if (a === "sku-toggle") { state.skuOpen[btn.dataset.pkg] = !state.skuOpen[btn.dataset.pkg]; renderView(); }
   else if (a === "samp-sku-toggle") { state.sampSku[btn.dataset.sample] = !state.sampSku[btn.dataset.sample]; renderView(); }
   else if (a === "rail-all-toggle") { state.railAll = !state.railAll; renderRail(); }
   else if (a === "demo-jump") {
     const k = btn.dataset.step;
-    if (k === "map") { setView("thinking"); toast("开场：用左侧全景导图讲 2 分钟全局"); }
+    if (k === "map") {
+      setView("thinking");
+      const fm = $("foldMap");
+      if (fm) { fm.open = true; fm.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      toast("开场：先讲「框架一页纸」，再用全景导图展开全局");
+    }
     else if (k === "brief") openBriefModal();
     else if (k === "design") { state.prjOpen = "PRJ-2601"; setView("projects"); toast("设计稿区演示：内审 → 客户意见 → V2 → 定稿"); }
     else if (k === "match") { state.pkgSel = "REQ-01"; setView("matching"); toast("演示门槛开关与漏斗，勾 2 家提交内审"); }
