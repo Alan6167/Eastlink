@@ -498,7 +498,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
   <section class="section" id="flow">
     <div class="sec-head">
       <p class="sec-eyebrow">Core Workflow</p>
-      <h2>核心工作流：三大阶段 · 九个节点</h2>
+      <h2>核心工作流：三大阶段 · 十二个节点</h2>
       <p class="sub">先看三大阶段，再逐节点展开。每个节点下方挂载对应的平台需求，标签标注提出人：<span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><span class="chip chip-team">共识</span></p>
     </div>
 
@@ -689,13 +689,32 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         <div class="node-card">
           <div class="node-head">
             <span class="code">PO</span>
-            <h3>包材与产前样</h3>
+            <h3>PO · 包材确认</h3>
           </div>
-          <p class="node-desc">PO 发放后进入产前：包材确认 → PP Sample 产前样确认（会反复修改）。中期同时推进包材设计、测试、报价、验厂、MSDS 等事项。</p>
-          <p class="node-out"><b>产出</b>正式 PO · 已确认包材稿与刀模文件 · 验厂 / MSDS 完成项 · 获批 PP Sample</p>
+          <p class="node-desc">FS 确认后 HEMA 正式发放 PO，进入产前。我们提供包材刀模线 / 封模线，HEMA 在半个月到一个月内交齐整个项目的包材设计稿，逐款确认。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>发放 PO，交齐各款包材设计稿</div>
+            <div><b>赛龙</b>提供刀模线 / 封模线，跟踪包材版本与确认状态</div>
+          </div>
+          <p class="node-out"><b>产出</b>正式 PO · 已确认包材稿与刀模文件</p>
           <ul class="req">
-            <li><span class="chip chip-zoe">ZOE</span><strong>第三方直连</strong> —— 验厂 / 验货由 TUV 主导，平台直接链接第三方，不在内部重复建设。</li>
             <li><span class="chip chip-irene">IRENE</span><strong>次要环节做成清单</strong> —— 暂不急于做重功能的环节，先做成 checklist 提醒（几个要点逐项打勾），保证流程不漏项。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">09</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">PP Sample</span>
+            <h3>产前样确认</h3>
+          </div>
+          <p class="node-desc">PP Sample 产前样打样与确认，常会反复修改；同期并行推进测试、验厂、MSDS 等中期事项，全部完成才放行大货。</p>
+          <p class="node-out"><b>产出</b>获批 PP Sample · 验厂 / MSDS 完成项 · 大货前放行</p>
+          <ul class="req">
+            <li><span class="chip chip-zoe">ZOE</span><strong>第三方直连</strong> —— 验厂 / 验货由 TUV 主导，平台直接链接第三方；HSCC 报告为外包审核，流程中单列。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>PP comments 留痕</strong> —— 客户的 PP comments 单独留档，作为对样与后续追责的证据链。</li>
           </ul>
         </div>
       </div>
@@ -703,17 +722,43 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
       <p class="flow-phase p-mint">尾期阶段 Production &amp; Shipment</p>
 
       <div class="node">
-        <span class="node-num" aria-hidden="true">09</span>
+        <span class="node-num" aria-hidden="true">10</span>
         <div class="node-card">
           <div class="node-head">
-            <span class="code">Ship</span>
-            <h3>大货 · 验货 · 出运</h3>
+            <span class="code">Bulk</span>
+            <h3>大货 · 签样</h3>
           </div>
-          <p class="node-desc">产前样确认后依次为：大货样确认 → 大货完成、大货签样 → 验货 → 放单出货（出运）；出运后项目归档，形成闭环。</p>
-          <p class="node-out"><b>产出</b>验货结果与异常闭环记录 · 放单出货 · 项目归档与复盘</p>
+          <p class="node-desc">按锁定的规格、包材与 PP Sample 组织大货生产：大货样确认 → 大货完成 → 大货签样，形成待验货清单；生产中的变更与偏差记录回对应产品。</p>
+          <p class="node-out"><b>产出</b>大货完成状态 · 大货签样 · 待验货清单</p>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">11</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Inspection</span>
+            <h3>验货</h3>
+          </div>
+          <p class="node-desc">依据最终规格、品质要求与签样标准验货，异常整改闭环后形成放单依据。</p>
+          <p class="node-out"><b>产出</b>验货结果 · 异常与整改闭环记录 · 放单依据</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>验货模块联动</strong> —— 现在质量板块里只有供应商信息，缺验厂、验货两块，必须补齐并与项目管理流程联动。</li>
             <li><span class="chip chip-zoe">ZOE</span><strong>对接 FE Quality Team</strong> —— 验货环节对接 HEMA FE 的 QA / QC 团队与 TUV，平台内明确各方职责与培训链路。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">12</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Ship</span>
+            <h3>出运 · 归档</h3>
+          </div>
+          <p class="node-desc">验货通过后放单出货（出运）；出运后归档 Final PSF、稿件、FS、样品、质量与供应商记录，完成项目复盘，流程闭环。</p>
+          <p class="node-out"><b>产出</b>放单出货 · 已归档项目 · 可检索的历史产品库与可复用规格</p>
+          <ul class="req">
             <li><span class="chip chip-zoe">ZOE</span><span class="chip chip-irene">IRENE</span><strong>归档与复盘入库</strong> —— 项目结束后统一上传最终版资料并附复盘，进入客户过往产品库，按年份 / 项目可检索、规格可复用。</li>
           </ul>
         </div>
