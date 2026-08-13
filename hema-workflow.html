@@ -164,43 +164,70 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 }
 .consensus p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.72; }
 
-/* ---------- phases ---------- */
-.phases {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: clamp(34px, 5vw, 52px);
-}
-.phase {
+/* ---------- flowmap (hero) ---------- */
+.flowmap {
+  margin-top: 30px;
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--brand);
-  border-radius: 12px;
-  padding: 16px 18px 18px;
-  box-shadow: var(--shadow);
+  border-radius: 16px;
+  padding: 18px 20px 8px;
+  box-shadow: 0 18px 44px -18px rgba(4, 42, 110, 0.45);
 }
-.phase:nth-child(2) { border-top-color: var(--sky); }
-.phase:nth-child(3) { border-top-color: var(--mint); }
-.phase h3 { margin: 0; font-size: 15.5px; font-weight: 700; }
-.phase .en {
-  display: block;
-  font: 550 11px/1.6 var(--mono);
+.fm-cap {
+  margin: 0 0 4px;
+  font: 600 10.5px/1.5 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fm-lane { padding: 13px 0; }
+.fm-lane + .fm-lane { border-top: 1px dashed var(--line-dash); }
+.fm-tag {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ink);
+}
+.fm-tag i { width: 10px; height: 10px; border-radius: 2.5px; display: block; }
+.fm-lane.l-dev .fm-tag i { background: var(--brand); }
+.fm-lane.l-mid .fm-tag i { background: var(--sky); }
+.fm-lane.l-end .fm-tag i { background: var(--mint); }
+.fm-tag span {
+  font: 550 10px/1 var(--mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 10px;
 }
-.phase-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.phase-chips b {
-  font: 550 11.5px/1 var(--mono);
-  letter-spacing: 0.04em;
-  color: var(--ink);
+.fm-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 5px; }
+.fm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 5px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
   background: var(--surface-2);
-  border-radius: 6px;
-  padding: 5px 8px;
+  color: var(--ink);
+  font-size: 12.5px;
   font-weight: 550;
+  text-decoration: none;
 }
-.phase-note { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+.fm-chip:hover { border-color: var(--brand); text-decoration: none; }
+.fm-chip b {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 6px;
+  font: 650 10.5px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.l-dev .fm-chip b { background: var(--brand); color: #FFFFFF; }
+.l-mid .fm-chip b { background: var(--sky); color: #08405F; }
+.l-end .fm-chip b { background: var(--mint); color: #06331F; }
+.fm-arr { color: var(--muted); font: 600 11px/1 var(--mono); }
 
 /* ---------- flow / timeline ---------- */
 .flow { position: relative; margin-top: 8px; }
@@ -235,7 +262,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 .flow-phase.p-sky::before { background: var(--sky); }
 .flow-phase.p-mint { color: var(--mint-text); }
 .flow-phase.p-mint::before { background: var(--mint); }
-.node { position: relative; padding: 18px 0 0 56px; }
+.node { position: relative; padding: 18px 0 0 56px; scroll-margin-top: 18px; }
 .node-num {
   position: absolute;
   left: 0;
@@ -458,7 +485,9 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 .flow-note b { color: var(--brand-ink); }
 
 @media (max-width: 760px) {
-  .consensus, .phases, .model, .modules { grid-template-columns: 1fr; }
+  .consensus, .model, .modules { grid-template-columns: 1fr; }
+  .flowmap { padding-inline: 14px; }
+  .fm-arr { display: none; }
   .flow-note { margin-left: 0; }
   .node-split { grid-template-columns: 1fr; }
   .auto-row { grid-template-columns: 1fr; }
@@ -467,7 +496,8 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
   .module.wide { grid-column: auto; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .consensus article, .node-card, .module, .auto-row { transition: border-color 0.18s ease; }
+  html { scroll-behavior: smooth; }
+  .consensus article, .node-card, .module, .auto-row, .fm-chip { transition: border-color 0.18s ease; }
   .consensus article:hover, .module:hover { border-color: var(--brand); }
 }
 </style>
@@ -479,6 +509,46 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
     <p class="hero-eyebrow">Eastlink 平台 · 需求整理 · 2026-08-13</p>
     <h1>HEMA 核心工作流</h1>
     <p class="hero-lede">以 HEMA「从 Brief 到出运」的开发全流程为主线，整理 Irene 与 Zoe 提出的平台需求：项目管理按工作流分板块，PSF 规格书作为底层数据源，每个节点有 deadline、负责人与线上审批。</p>
+
+    <div class="flowmap">
+      <p class="fm-cap">HEMA 全流程图 · 三大阶段 · 12 节点 · 点击节点跳转详情</p>
+      <div class="fm-lane l-dev">
+        <div class="fm-tag"><i></i>开发阶段<span>Development</span></div>
+        <div class="fm-chips">
+          <a class="fm-chip" href="#n01"><b>01</b>Brief 需求简报</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n02"><b>02</b>Artwork 设计稿</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n03"><b>03</b>PSF 规格书</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n04"><b>04</b>PPA 测试标准</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n05"><b>05</b>Tender 一轮报价</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n06"><b>06</b>Benchmark 竞价</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n07"><b>07</b>FS 最终确认</a>
+        </div>
+      </div>
+      <div class="fm-lane l-mid">
+        <div class="fm-tag"><i></i>中期 · 产前阶段<span>Pre-production</span></div>
+        <div class="fm-chips">
+          <a class="fm-chip" href="#n08"><b>08</b>PO · 包材确认</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n09"><b>09</b>产前样确认</a>
+        </div>
+      </div>
+      <div class="fm-lane l-end">
+        <div class="fm-tag"><i></i>尾期阶段<span>Production &amp; Shipment</span></div>
+        <div class="fm-chips">
+          <a class="fm-chip" href="#n10"><b>10</b>大货 · 签样</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n11"><b>11</b>验货</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n12"><b>12</b>出运 · 归档</a>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -499,40 +569,13 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
     <div class="sec-head">
       <p class="sec-eyebrow">Core Workflow</p>
       <h2>核心工作流：三大阶段 · 十二个节点</h2>
-      <p class="sub">先看三大阶段，再逐节点展开。每个节点下方挂载对应的平台需求，标签标注提出人：<span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><span class="chip chip-team">共识</span></p>
-    </div>
-
-    <div class="phases">
-      <div class="phase">
-        <h3>开发阶段</h3>
-        <span class="en">Development · Brief → FS</span>
-        <div class="phase-chips">
-          <b>BRIEF</b><b>ARTWORK</b><b>PSF</b><b>PPA</b><b>TENDER</b><b>BENCHMARK</b><b>FS</b>
-        </div>
-        <p class="phase-note">从接需求到确认订单的全部前端工作，也是本次流程改造的重心。</p>
-      </div>
-      <div class="phase">
-        <h3>中期 · 产前阶段</h3>
-        <span class="en">Pre-production</span>
-        <div class="phase-chips">
-          <b>PO</b><b>包材确认</b><b>验厂</b><b>MSDS</b><b>PP SAMPLE</b>
-        </div>
-        <p class="phase-note">FS 确认即发 PO；包材设计、测试、验厂、MSDS 集中在此阶段（MSDS 需前置）。</p>
-      </div>
-      <div class="phase">
-        <h3>尾期阶段</h3>
-        <span class="en">Production &amp; Shipment</span>
-        <div class="phase-chips">
-          <b>大货样</b><b>大货签样</b><b>验货</b><b>出运</b><b>归档</b>
-        </div>
-        <p class="phase-note">大货完成后验货放单；出运后归档复盘、沉淀进过往产品库。验货对接 HEMA FE Quality Team 与 TUV。</p>
-      </div>
+      <p class="sub">与首屏流程图一一对应，逐节点展开。每个节点下方挂载对应的平台需求，标签标注提出人：<span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><span class="chip chip-team">共识</span></p>
     </div>
 
     <div class="flow">
       <p class="flow-phase">开发阶段 Development</p>
 
-      <div class="node">
+      <div class="node" id="n01">
         <span class="node-num" aria-hidden="true">01</span>
         <div class="node-card">
           <div class="node-head">
@@ -554,7 +597,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n02">
         <span class="node-num" aria-hidden="true">02</span>
         <div class="node-card">
           <div class="node-head">
@@ -575,7 +618,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n03">
         <span class="node-num" aria-hidden="true">03</span>
         <div class="node-card core">
           <div class="node-head">
@@ -600,7 +643,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n04">
         <span class="node-num" aria-hidden="true">04</span>
         <div class="node-card">
           <div class="node-head">
@@ -621,7 +664,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n05">
         <span class="node-num" aria-hidden="true">05</span>
         <div class="node-card">
           <div class="node-head">
@@ -644,7 +687,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n06">
         <span class="node-num" aria-hidden="true">06</span>
         <div class="node-card">
           <div class="node-head">
@@ -660,7 +703,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n07">
         <span class="node-num" aria-hidden="true">07</span>
         <div class="node-card">
           <div class="node-head">
@@ -684,7 +727,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 
       <p class="flow-phase p-sky">中期 · 产前阶段 Pre-production</p>
 
-      <div class="node">
+      <div class="node" id="n08">
         <span class="node-num" aria-hidden="true">08</span>
         <div class="node-card">
           <div class="node-head">
@@ -703,7 +746,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n09">
         <span class="node-num" aria-hidden="true">09</span>
         <div class="node-card">
           <div class="node-head">
@@ -721,7 +764,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 
       <p class="flow-phase p-mint">尾期阶段 Production &amp; Shipment</p>
 
-      <div class="node">
+      <div class="node" id="n10">
         <span class="node-num" aria-hidden="true">10</span>
         <div class="node-card">
           <div class="node-head">
@@ -733,7 +776,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n11">
         <span class="node-num" aria-hidden="true">11</span>
         <div class="node-card">
           <div class="node-head">
@@ -749,7 +792,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node">
+      <div class="node" id="n12">
         <span class="node-num" aria-hidden="true">12</span>
         <div class="node-card">
           <div class="node-head">
