@@ -438,29 +438,28 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 }
 .auto-label i { font-style: normal; }
 .auto-label i:last-child { color: var(--mint-text); }
-.quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
-.quotes blockquote {
-  margin: 0;
-  background: var(--surface-2);
+.node-out { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.node-out b {
+  font: 650 10.5px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
+  margin-right: 8px;
+}
+.flow-note {
+  margin: 26px 0 0 56px;
+  background: var(--brand-soft);
   border-radius: 12px;
-  padding: 16px 18px;
-  font-size: 14px;
+  padding: 14px 18px;
+  font-size: 13.5px;
   line-height: 1.7;
   color: var(--ink);
 }
-.quotes cite {
-  display: block;
-  margin-top: 8px;
-  font: 600 11px/1 var(--mono);
-  letter-spacing: 0.1em;
-  font-style: normal;
-  color: var(--muted);
-}
-.quotes blockquote.q-irene cite { color: var(--sky-text); }
-.quotes blockquote.q-zoe cite { color: var(--mint-text); }
+.flow-note b { color: var(--brand-ink); }
 
 @media (max-width: 760px) {
-  .consensus, .phases, .model, .modules, .quotes { grid-template-columns: 1fr; }
+  .consensus, .phases, .model, .modules { grid-template-columns: 1fr; }
+  .flow-note { margin-left: 0; }
   .node-split { grid-template-columns: 1fr; }
   .auto-row { grid-template-columns: 1fr; }
   .auto-row .arr { display: none; }
@@ -524,9 +523,9 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         <h3>尾期阶段</h3>
         <span class="en">Production &amp; Shipment</span>
         <div class="phase-chips">
-          <b>大货样</b><b>大货签样</b><b>验货</b><b>出运</b>
+          <b>大货样</b><b>大货签样</b><b>验货</b><b>出运</b><b>归档</b>
         </div>
-        <p class="phase-note">大货完成后验货放单；验货对接 HEMA FE Quality Team 与 TUV 第三方。</p>
+        <p class="phase-note">大货完成后验货放单；出运后归档复盘、沉淀进过往产品库。验货对接 HEMA FE Quality Team 与 TUV。</p>
       </div>
     </div>
 
@@ -545,10 +544,12 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <div><b>HEMA</b>给方向、标准与预算区间</div>
             <div><b>赛龙</b>输出产品推荐与整体方案</div>
           </div>
+          <p class="node-out"><b>产出</b>已确认 Brief · SKU / 货号清单 · 倒排时间轴</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>建项目即倒推排期</strong> —— 按客户交期倒推生成整条时间线，Brief 下的每个动作都挂 deadline。</li>
             <li><span class="chip chip-zoe">ZOE</span><strong>自动倒计时</strong> —— Brief 一接收，对应角色自动开始计时（如设计师 5 个工作日），可与绩效挂钩。</li>
             <li><span class="chip chip-irene">IRENE</span><strong>数据化总览</strong> —— 项目主页只放工作流拆解线与完成度（如「100 款已完成 98 款」），点进节点才看明细；「需求包拆解」这类内容下沉到 Brief 详情页，不占主页面。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>货号与品类编号建档</strong> —— Brief 内产品按货号、品类编号统一建档，「筛选编号，品类就出来了」，为后续供应商匹配与老品检索打基础。</li>
           </ul>
         </div>
       </div>
@@ -565,9 +566,11 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <div><b>HEMA</b>确认稿件或给修改意见</div>
             <div><b>赛龙</b>基于 Brief 与规格书产出标准化稿件</div>
           </div>
+          <p class="node-out"><b>产出</b>标准化设计稿 / 打样稿 · 客户确认与修改记录</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>流程化审批</strong> —— 不是简单的文件共享，而是整条链路的流程化审批：稿件上传 → HEMA 在平台内确认或回填修改意见。</li>
             <li><span class="chip chip-zoe">ZOE</span><strong>规格书驱动稿件</strong> —— 把规格书内容直接提取到稿件上、稿件全部标准化；「规格书正确了，稿件有与无都可以」。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>修改与版本留痕</strong> —— 客户在样品 comments 阶段会改稿件并出 revised PSF；稿件版本、确认记录须留痕，并与规格书同步更新，避免两边对不上。</li>
           </ul>
         </div>
       </div>
@@ -585,6 +588,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <div><b>HEMA</b>确认规格书最终版</div>
             <div><b>赛龙</b>编写双语 PSF，同步生成报价单</div>
           </div>
+          <p class="node-out"><b>产出</b>双语规格书（工厂中文版 / 客户英文版）· 报价单 · 产品描述、构件与包装清单</p>
           <ul class="req">
             <li><span class="chip chip-zoe">ZOE</span><strong>PSF 一键导入</strong> —— 客户 PSF 结构固定，导入后自动按产品规格、包材等分类，直接生成中文工厂版。现在光下载 artwork 就要半天，翻译全靠手搓，新人还看不懂客户的语言体系。</li>
             <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>中英双语一键切换</strong> —— 中文录入，一键导出英文。</li>
@@ -608,6 +612,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <div><b>HEMA</b>给测试标准，确认落地方案</div>
             <div><b>赛龙</b>编写测试要求并送审</div>
           </div>
+          <p class="node-out"><b>产出</b>测试要求清单 · 高风险点提示 · 审核 comments</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>负责人 + 审核</strong> —— PPA 板块设置对应负责人（如汪月明）线上审核、写 comments，标注需重点注意的产品。</li>
             <li><span class="chip chip-zoe">ZOE</span><strong>质量文件核验</strong> —— 打样前核对 QBP / PPA 等 quality 文件是否齐全，缺什么当场向客人索取。</li>
@@ -628,6 +633,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <div><b>HEMA</b>确认样品与价格</div>
             <div><b>赛龙</b>匹配供应商、完成报价并寄样</div>
           </div>
+          <p class="node-out"><b>产出</b>供应商匹配结果 · 分供应商报价单 · 样品、评估记录与客户 comments</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>供应商匹配并入项目</strong> —— 取消独立「匹配工作台」：项目内每款产品（如 A5 线胶本）加一个「供应商匹配」选项，按品类自动筛出可做的工厂（如 100 家中筛出 3 家）。</li>
             <li><span class="chip chip-irene">IRENE</span><strong>按供应商导出报价单</strong> —— 匹配完成后一键导出：A 供应商 5 款、B 供应商 20 款、C 供应商 100 款；多家都能做的款式同时出现在各家报价单里。</li>
@@ -646,6 +652,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <h3>第二轮竞价</h3>
           </div>
           <p class="node-desc">HEMA 给出目标价和修改 comments，最终敲定哪些款下给我们、哪些给竞争对手。</p>
+          <p class="node-out"><b>产出</b>最终定款范围（我方 / 竞对）· 按 comments 更新后的价格与规格</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>与 Tender 合并简化</strong> —— 新模式预算前置（Brief 时已给价格区间），无需真正的二轮竞价，「三、四、五变成一步」，HEMA 只做确认动作。</li>
             <li><span class="chip chip-team">共识</span><strong>一二轮报价同节点管理</strong> —— 大报价、小报价都归在报价节点内，不再单独拆板块。</li>
@@ -665,10 +672,12 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <div><b>HEMA</b>确认 FS、发放 PO、提供包材设计稿</div>
             <div><b>赛龙</b>填报工厂信息、供应链表格</div>
           </div>
+          <p class="node-out"><b>产出</b>Final FS（权威版本）· 最终供应商名单 · 发放 PO 的依据</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>供应商信息自动带入</strong> —— Tender 阶段的匹配结果直接填入 FS 的工厂字段，不再手填。</li>
             <li><span class="chip chip-team">共识</span><strong>客户视角只见名单</strong> —— HEMA 只能看到 FS 里的最终供应商名单；明细报价与成本仅赛龙内部可见。</li>
             <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>验厂挂接</strong> —— 验厂发生在 FS 阶段，节点与供应商管理板块联动（同一份数据，两处入口）。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>权威版本锁定</strong> —— 「他们都以 FS 为准，但 FS 改来改去，改得不正确了」：FS 须有版本记录与最终版锁定，每次改动留痕，追责时才有依据。</li>
           </ul>
         </div>
       </div>
@@ -683,6 +692,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <h3>包材与产前样</h3>
           </div>
           <p class="node-desc">PO 发放后进入产前：包材确认 → PP Sample 产前样确认（会反复修改）。中期同时推进包材设计、测试、报价、验厂、MSDS 等事项。</p>
+          <p class="node-out"><b>产出</b>正式 PO · 已确认包材稿与刀模文件 · 验厂 / MSDS 完成项 · 获批 PP Sample</p>
           <ul class="req">
             <li><span class="chip chip-zoe">ZOE</span><strong>第三方直连</strong> —— 验厂 / 验货由 TUV 主导，平台直接链接第三方，不在内部重复建设。</li>
             <li><span class="chip chip-irene">IRENE</span><strong>次要环节做成清单</strong> —— 暂不急于做重功能的环节，先做成 checklist 提醒（几个要点逐项打勾），保证流程不漏项。</li>
@@ -699,13 +709,17 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <span class="code">Ship</span>
             <h3>大货 · 验货 · 出运</h3>
           </div>
-          <p class="node-desc">产前样确认后依次为：大货样确认 → 大货完成、大货签样 → 验货 → 放单出货（出运）。</p>
+          <p class="node-desc">产前样确认后依次为：大货样确认 → 大货完成、大货签样 → 验货 → 放单出货（出运）；出运后项目归档，形成闭环。</p>
+          <p class="node-out"><b>产出</b>验货结果与异常闭环记录 · 放单出货 · 项目归档与复盘</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>验货模块联动</strong> —— 现在质量板块里只有供应商信息，缺验厂、验货两块，必须补齐并与项目管理流程联动。</li>
             <li><span class="chip chip-zoe">ZOE</span><strong>对接 FE Quality Team</strong> —— 验货环节对接 HEMA FE 的 QA / QC 团队与 TUV，平台内明确各方职责与培训链路。</li>
+            <li><span class="chip chip-zoe">ZOE</span><span class="chip chip-irene">IRENE</span><strong>归档与复盘入库</strong> —— 项目结束后统一上传最终版资料并附复盘，进入客户过往产品库，按年份 / 项目可检索、规格可复用。</li>
           </ul>
         </div>
       </div>
+
+      <p class="flow-note"><b>节点标配：</b>每个节点统一带七要素——deadline（倒推）、负责人、输入资料、待办清单、审批 / comments、版本记录、完成度数据（如「100 款完成 98 款」）；节点按规则自动流转、全程留痕。</p>
     </div>
   </section>
 
@@ -790,7 +804,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
           <li><strong>主页即总览表</strong> —— 显示当前有多少项目、各自进行到哪个节点；实际操作在子层级完成。</li>
           <li><strong>项目详情 = 工作流拆解线</strong> —— 点开项目直接看到 Brief → 出运 的节点条，每个节点显示完成度数据（如「100 款完成 98 款」）。</li>
           <li><strong>层级下沉</strong> —— 现在的页面「信息太多、抓不到重点」；详情、需求包等全部下沉到节点详情页，主页面保持简洁。</li>
-          <li><strong>节点四件套</strong> —— 每个节点固定带 deadline（倒推）、负责人、审批、文件四要素。</li>
+          <li><strong>节点标配</strong> —— 每个节点固定带 deadline（倒推）、负责人、输入资料、待办、审批 / comments、版本记录与完成度数据。</li>
           <li><strong>匹配内嵌</strong> —— 供应商匹配作为产品行上的一个操作，不再是独立板块。</li>
           <li><strong>客户定制 = 改名</strong> —— 底层逻辑全客户一致，大客户仅需改板块名称（如 PSF → Master File）、增删板块。</li>
         </ul>
@@ -826,6 +840,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         <ul>
           <li><strong>建设顺序</strong> —— 先做全赛龙内部视角，再开 HEMA 受限视角，未来加供应商视角（工厂自维护信息、接单式协作）。</li>
           <li><strong>账号切换</strong> —— 不同角色不同账号，可见范围由权限决定。</li>
+          <li><strong>管理者视角</strong> —— 汇总查看各项目进度、逾期与卡点分布，责任到人，不依赖人工催办。</li>
           <li><strong>红线</strong> —— HEMA 永远看不到内部明细报价与成本，只见结果与名单。</li>
         </ul>
       </div>
@@ -881,10 +896,6 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         <div class="arr" aria-hidden="true">→</div>
         <div class="to"><strong>节点自动提醒到人</strong>——「谁卡在哪一步，不用催都知道」（参照华服全线上模式）。</div>
       </div>
-    </div>
-    <div class="quotes">
-      <blockquote class="q-zoe">「先不管客人爽不爽，我想让我们业务员先爽起来。」<cite>—— Zoe</cite></blockquote>
-      <blockquote class="q-irene">「HEMA 只要走一个老业务员，就垮掉一个项目。上了系统，接手的人是很快的。」<cite>—— Irene</cite></blockquote>
     </div>
   </section>
 
