@@ -511,7 +511,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
     <p class="hero-lede">以 HEMA「从 Brief 到出运」的开发全流程为主线，整理 Irene 与 Zoe 提出的平台需求：项目管理按工作流分板块，PSF 规格书作为底层数据源，每个节点有 deadline、负责人与线上审批。</p>
 
     <div class="flowmap">
-      <p class="fm-cap">HEMA 全流程图 · 三大阶段 · 12 节点 · 点击节点跳转详情</p>
+      <p class="fm-cap">HEMA 全流程图 · 三大阶段 · 14 节点 · 点击节点跳转详情</p>
       <div class="fm-lane l-dev">
         <div class="fm-tag"><i></i>开发阶段<span>Development</span></div>
         <div class="fm-chips">
@@ -536,16 +536,20 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
           <a class="fm-chip" href="#n08"><b>08</b>PO · 包材确认</a>
           <span class="fm-arr" aria-hidden="true">→</span>
           <a class="fm-chip" href="#n09"><b>09</b>产前样确认</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n10"><b>10</b>验厂</a>
         </div>
       </div>
       <div class="fm-lane l-end">
         <div class="fm-tag"><i></i>尾期阶段<span>Production &amp; Shipment</span></div>
         <div class="fm-chips">
-          <a class="fm-chip" href="#n10"><b>10</b>大货 · 签样</a>
+          <a class="fm-chip" href="#n11"><b>11</b>大货 · 签样</a>
           <span class="fm-arr" aria-hidden="true">→</span>
-          <a class="fm-chip" href="#n11"><b>11</b>验货</a>
+          <a class="fm-chip" href="#n12"><b>12</b>中期验货</a>
           <span class="fm-arr" aria-hidden="true">→</span>
-          <a class="fm-chip" href="#n12"><b>12</b>出运 · 归档</a>
+          <a class="fm-chip" href="#n13"><b>13</b>大货验货</a>
+          <span class="fm-arr" aria-hidden="true">→</span>
+          <a class="fm-chip" href="#n14"><b>14</b>出运 · 归档</a>
         </div>
       </div>
     </div>
@@ -568,7 +572,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
   <section class="section" id="flow">
     <div class="sec-head">
       <p class="sec-eyebrow">Core Workflow</p>
-      <h2>核心工作流：三大阶段 · 十二个节点</h2>
+      <h2>核心工作流：三大阶段 · 十四个节点</h2>
       <p class="sub">与首屏流程图一一对应，逐节点展开。每个节点下方挂载对应的平台需求，标签标注提出人：<span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><span class="chip chip-team">共识</span></p>
     </div>
 
@@ -719,7 +723,7 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>供应商信息自动带入</strong> —— Tender 阶段的匹配结果直接填入 FS 的工厂字段，不再手填。</li>
             <li><span class="chip chip-team">共识</span><strong>客户视角只见名单</strong> —— HEMA 只能看到 FS 里的最终供应商名单；明细报价与成本仅赛龙内部可见。</li>
-            <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>验厂挂接</strong> —— 验厂发生在 FS 阶段，节点与供应商管理板块联动（同一份数据，两处入口）。</li>
+            <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>验厂挂接</strong> —— 验厂随 FS 确认启动、量产前完成（见节点 10），与供应商管理板块联动（同一份数据，两处入口）。</li>
             <li><span class="chip chip-zoe">ZOE</span><strong>权威版本锁定</strong> —— 「他们都以 FS 为准，但 FS 改来改去，改得不正确了」：FS 须有版本记录与最终版锁定，每次改动留痕，追责时才有依据。</li>
           </ul>
         </div>
@@ -753,37 +757,63 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
             <span class="code">PP Sample</span>
             <h3>产前样确认</h3>
           </div>
-          <p class="node-desc">PP Sample 产前样打样与确认，常会反复修改；同期并行推进测试、验厂、MSDS 等中期事项，全部完成才放行大货。</p>
-          <p class="node-out"><b>产出</b>获批 PP Sample · 验厂 / MSDS 完成项 · 大货前放行</p>
+          <p class="node-desc">PP Sample 产前样打样与确认，常会反复修改；同期并行推进测试、MSDS 等中期事项，完成后放行大货。</p>
+          <p class="node-out"><b>产出</b>获批 PP Sample · 测试 / MSDS 完成项 · 大货前放行</p>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>PP comments 留痕</strong> —— 客户的 PP comments 单独留档，作为对样与后续追责的证据链。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node" id="n10">
+        <span class="node-num" aria-hidden="true">10</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Audit</span>
+            <h3>验厂</h3>
+          </div>
+          <p class="node-desc">对最终确认的生产工厂进行审核，随 FS 确认启动、量产前完成；验厂档案与资质沉淀在供应商管理板块，与项目节点联动。</p>
+          <p class="node-out"><b>产出</b>验厂通过记录 · 工厂资质档案更新</p>
           <ul class="req">
             <li><span class="chip chip-zoe">ZOE</span><strong>第三方直连</strong> —— 验厂 / 验货由 TUV 主导，平台直接链接第三方；HSCC 报告为外包审核，流程中单列。</li>
-            <li><span class="chip chip-irene">IRENE</span><strong>PP comments 留痕</strong> —— 客户的 PP comments 单独留档，作为对样与后续追责的证据链。</li>
           </ul>
         </div>
       </div>
 
       <p class="flow-phase p-mint">尾期阶段 Production &amp; Shipment</p>
 
-      <div class="node" id="n10">
-        <span class="node-num" aria-hidden="true">10</span>
+      <div class="node" id="n11">
+        <span class="node-num" aria-hidden="true">11</span>
         <div class="node-card">
           <div class="node-head">
             <span class="code">Bulk</span>
             <h3>大货 · 签样</h3>
           </div>
-          <p class="node-desc">按锁定的规格、包材与 PP Sample 组织大货生产：大货样确认 → 大货完成 → 大货签样，形成待验货清单；生产中的变更与偏差记录回对应产品。</p>
-          <p class="node-out"><b>产出</b>大货完成状态 · 大货签样 · 待验货清单</p>
+          <p class="node-desc">按锁定的规格、包材与 PP Sample 上线大货生产：大货样确认 → 大货签样，作为后续验货的比对标准；生产中的变更与偏差记录回对应产品。</p>
+          <p class="node-out"><b>产出</b>已确认大货样 · 大货签样 · 生产进度状态</p>
         </div>
       </div>
 
-      <div class="node" id="n11">
-        <span class="node-num" aria-hidden="true">11</span>
+      <div class="node" id="n12">
+        <span class="node-num" aria-hidden="true">12</span>
         <div class="node-card">
           <div class="node-head">
-            <span class="code">Inspection</span>
-            <h3>验货</h3>
+            <span class="code">DUPRO</span>
+            <h3>中期验货</h3>
           </div>
-          <p class="node-desc">依据最终规格、品质要求与签样标准验货，异常整改闭环后形成放单依据。</p>
+          <p class="node-desc">大货完成约 10% 时进行中期验货，比对签样与规格，及早暴露批量性问题，避免整批做完才发现返工。</p>
+          <p class="node-out"><b>产出</b>中期验货报告 · 问题与整改项</p>
+        </div>
+      </div>
+
+      <div class="node" id="n13">
+        <span class="node-num" aria-hidden="true">13</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">FRI</span>
+            <h3>大货验货</h3>
+          </div>
+          <p class="node-desc">大货完成后，依据最终规格、品质要求与签样标准进行尾期验货，异常整改闭环后形成放单依据。</p>
           <p class="node-out"><b>产出</b>验货结果 · 异常与整改闭环记录 · 放单依据</p>
           <ul class="req">
             <li><span class="chip chip-irene">IRENE</span><strong>验货模块联动</strong> —— 现在质量板块里只有供应商信息，缺验厂、验货两块，必须补齐并与项目管理流程联动。</li>
@@ -792,8 +822,8 @@ main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
         </div>
       </div>
 
-      <div class="node" id="n12">
-        <span class="node-num" aria-hidden="true">12</span>
+      <div class="node" id="n14">
+        <span class="node-num" aria-hidden="true">14</span>
         <div class="node-card">
           <div class="node-head">
             <span class="code">Ship</span>
