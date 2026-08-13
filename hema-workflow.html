@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HEMA 核心工作流</title>
+<style>
+:root {
+  --bg: #F5F8FD;
+  --surface: #FFFFFF;
+  --surface-2: #EDF3FC;
+  --ink: #0D1E3A;
+  --muted: #51648A;
+  --line: #D9E3F3;
+  --line-dash: #C7D5EC;
+  --brand: #0567FF;
+  --brand-ink: #0356DB;
+  --brand-soft: #E3EDFF;
+  --sky: #57BEEF;
+  --sky-soft: #E3F4FD;
+  --sky-text: #0C6DA6;
+  --mint: #3CD68B;
+  --mint-soft: #DFF8EB;
+  --mint-text: #0C7A4A;
+  --hero-bg: #0567FF;
+  --hero-bg-2: #045BE4;
+  --hero-ink: #FFFFFF;
+  --hero-dim: #CFE2FF;
+  --hero-line: rgba(255, 255, 255, 0.30);
+  --shadow: 0 1px 2px rgba(13, 30, 58, 0.05), 0 10px 28px -14px rgba(13, 30, 58, 0.14);
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1226;
+    --surface: #111C38;
+    --surface-2: #182648;
+    --ink: #E9EFFB;
+    --muted: #97A8CA;
+    --line: #263A63;
+    --line-dash: #2E4573;
+    --brand: #3B84FF;
+    --brand-ink: #85B1FF;
+    --brand-soft: #142E5C;
+    --sky-soft: #0F3149;
+    --sky-text: #85D2F6;
+    --mint-soft: #0C3325;
+    --mint-text: #5AE2A4;
+    --hero-bg: #0455D6;
+    --hero-bg-2: #0349BC;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 12px 30px -14px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1226;
+  --surface: #111C38;
+  --surface-2: #182648;
+  --ink: #E9EFFB;
+  --muted: #97A8CA;
+  --line: #263A63;
+  --line-dash: #2E4573;
+  --brand: #3B84FF;
+  --brand-ink: #85B1FF;
+  --brand-soft: #142E5C;
+  --sky-soft: #0F3149;
+  --sky-text: #85D2F6;
+  --mint-soft: #0C3325;
+  --mint-text: #5AE2A4;
+  --hero-bg: #0455D6;
+  --hero-bg-2: #0349BC;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 12px 30px -14px rgba(0, 0, 0, 0.5);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15.5px/1.78 -apple-system, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+a { color: var(--brand-ink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+strong { font-weight: 650; }
+.wrap { max-width: 960px; margin-inline: auto; padding-inline: clamp(18px, 4vw, 36px); }
+
+/* ---------- hero ---------- */
+.hero {
+  background: linear-gradient(160deg, var(--hero-bg) 0%, var(--hero-bg-2) 100%);
+  color: var(--hero-ink);
+  padding: clamp(44px, 8vw, 84px) 0 clamp(36px, 6vw, 60px);
+}
+.hero-eyebrow {
+  font: 600 12px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-dim);
+}
+.mark { display: inline-flex; gap: 7px; margin: 22px 0 14px; }
+.mark i { width: 17px; height: 17px; border-radius: 3.5px; display: block; }
+.mark i.sq-sky { background: #57BEEF; }
+.mark i.sq-mint { background: #3CD68B; }
+.hero h1 {
+  margin: 0;
+  font-size: clamp(30px, 5.4vw, 46px);
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+.hero-lede {
+  margin: 16px 0 0;
+  max-width: 620px;
+  color: var(--hero-dim);
+  font-size: 15.5px;
+}
+.hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.hero-meta span {
+  font: 500 12px/1 var(--mono);
+  letter-spacing: 0.05em;
+  color: var(--hero-ink);
+  border: 1px solid var(--hero-line);
+  border-radius: 999px;
+  padding: 7px 12px;
+}
+.hero-meta span.cut { background: rgba(255, 255, 255, 0.14); border-color: transparent; }
+
+/* ---------- toc ---------- */
+.toc { border-bottom: 1px solid var(--line); background: var(--surface); }
+.toc-row { display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 13px 0; }
+.toc a {
+  font: 550 12.5px/1.8 var(--mono);
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.toc a:hover { color: var(--brand-ink); text-decoration: none; }
+
+/* ---------- sections ---------- */
+.section { margin-top: clamp(52px, 8vw, 84px); }
+.sec-head { margin-bottom: 24px; }
+.sec-mark { display: inline-flex; gap: 5px; margin-bottom: 10px; }
+.sec-mark i { width: 11px; height: 11px; border-radius: 2.5px; display: block; }
+.sec-mark i.sq-sky { background: var(--sky); }
+.sec-mark i.sq-mint { background: var(--mint); }
+.sec-eyebrow {
+  font: 600 11.5px/1.4 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
+  margin: 0 0 6px;
+}
+.sec-head h2 {
+  margin: 0;
+  font-size: clamp(21px, 3.2vw, 27px);
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+.sec-head p.sub { margin: 10px 0 0; color: var(--muted); max-width: 640px; }
+
+/* ---------- consensus ---------- */
+.consensus { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.consensus article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px 16px;
+  box-shadow: var(--shadow);
+}
+.consensus h3 { margin: 0 0 6px; font-size: 15.5px; font-weight: 650; }
+.consensus h3 b {
+  font: 650 12px/1 var(--mono);
+  color: var(--brand-ink);
+  letter-spacing: 0.08em;
+  margin-right: 8px;
+}
+.consensus p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.72; }
+
+/* ---------- phases ---------- */
+.phases { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.phase {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--brand);
+  border-radius: 12px;
+  padding: 16px 18px 18px;
+  box-shadow: var(--shadow);
+}
+.phase:nth-child(2) { border-top-color: var(--sky); }
+.phase:nth-child(3) { border-top-color: var(--mint); }
+.phase h3 { margin: 0; font-size: 15.5px; font-weight: 700; }
+.phase .en {
+  display: block;
+  font: 550 11px/1.6 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.phase-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.phase-chips b {
+  font: 550 11.5px/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--surface-2);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-weight: 550;
+}
+.phase-note { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+
+/* ---------- flow / timeline ---------- */
+.flow { position: relative; margin-top: 8px; }
+.flow::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 10px;
+  bottom: 26px;
+  width: 2px;
+  background: var(--line-dash);
+}
+.flow-phase {
+  position: relative;
+  padding: 26px 0 2px 56px;
+  font: 650 12px/1.4 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
+}
+.flow-phase::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 30px;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--brand);
+}
+.flow-phase.p-sky { color: var(--sky-text); }
+.flow-phase.p-sky::before { background: var(--sky); }
+.flow-phase.p-mint { color: var(--mint-text); }
+.flow-phase.p-mint::before { background: var(--mint); }
+.node { position: relative; padding: 18px 0 0 56px; }
+.node-num {
+  position: absolute;
+  left: 0;
+  top: 24px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: var(--brand);
+  color: #FFFFFF;
+  font: 650 14px/1 var(--mono);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 5px var(--bg);
+  font-variant-numeric: tabular-nums;
+}
+.node-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+  box-shadow: var(--shadow);
+}
+.node-card.core { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand), var(--shadow); }
+.node-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.node-head .code {
+  font: 700 12.5px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--brand-ink);
+  text-transform: uppercase;
+}
+.node-head h3 { margin: 0; font-size: 17.5px; font-weight: 700; }
+.tag-core {
+  font: 650 10.5px/1 var(--mono);
+  letter-spacing: 0.1em;
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+  border-radius: 999px;
+  padding: 5px 9px;
+}
+.node-desc { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
+.node-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.node-split div {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.node-split b {
+  display: block;
+  font: 650 10.5px/1.6 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.req {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px dashed var(--line-dash);
+  display: grid;
+  gap: 11px;
+}
+.req li { font-size: 14px; line-height: 1.72; color: var(--muted); }
+.req li strong { color: var(--ink); }
+.chip {
+  display: inline-block;
+  vertical-align: 1px;
+  font: 650 10.5px/1 var(--mono);
+  letter-spacing: 0.07em;
+  border-radius: 999px;
+  padding: 4px 8px;
+  margin-right: 7px;
+}
+.chip + .chip { margin-left: -3px; }
+.chip-irene { background: var(--sky-soft); color: var(--sky-text); }
+.chip-zoe { background: var(--mint-soft); color: var(--mint-text); }
+.chip-team { background: var(--surface-2); color: var(--muted); }
+
+/* ---------- model shift ---------- */
+.model { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.model article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.model article.new { border-top: 3px solid var(--mint); }
+.model article.old { border-top: 3px solid var(--line-dash); }
+.model h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+.model .who {
+  font: 600 11px/1.6 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 10px;
+}
+.model article.new .who { color: var(--mint-text); }
+.model ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.model li { font-size: 14px; line-height: 1.7; color: var(--muted); padding-left: 18px; position: relative; }
+.model li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--line-dash);
+}
+.model article.new li::before { background: var(--mint); }
+.model li strong { color: var(--ink); }
+.model-result {
+  margin-top: 14px;
+  background: var(--brand-soft);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.model-result b { color: var(--brand-ink); }
+
+/* ---------- modules ---------- */
+.modules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.module {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.module.wide { grid-column: 1 / -1; }
+.module h3 { margin: 0; font-size: 15.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.badge {
+  font: 650 10px/1 var(--mono);
+  letter-spacing: 0.1em;
+  border-radius: 999px;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+.badge-proj { background: var(--brand-soft); color: var(--brand-ink); }
+.badge-live { background: var(--mint-soft); color: var(--mint-text); }
+.badge-cut { background: var(--surface-2); color: var(--muted); }
+.module ul { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.module li { font-size: 13.5px; line-height: 1.68; color: var(--muted); padding-left: 16px; position: relative; }
+.module li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 8.5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--brand);
+  opacity: 0.55;
+}
+.module li strong { color: var(--ink); }
+.module.cutlist li::before { background: var(--muted); opacity: 0.4; }
+.module .quote { margin: 12px 0 0; font-size: 13px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
+
+/* ---------- automation ---------- */
+.auto { display: grid; gap: 10px; }
+.auto-row {
+  display: grid;
+  grid-template-columns: 1fr 34px 1.15fr;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.auto-row .from, .auto-row .to { padding: 13px 16px; font-size: 13.5px; line-height: 1.65; }
+.auto-row .from { color: var(--muted); }
+.auto-row .to { background: var(--mint-soft); color: var(--ink); }
+.auto-row .to strong { color: var(--mint-text); }
+.auto-row .arr {
+  display: grid;
+  place-items: center;
+  color: var(--brand-ink);
+  font: 650 14px/1 var(--mono);
+}
+.auto-label {
+  display: grid;
+  grid-template-columns: 1fr 34px 1.15fr;
+  font: 650 10.5px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 16px 4px;
+}
+.auto-label i { font-style: normal; }
+.auto-label i:last-child { color: var(--mint-text); }
+.quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+.quotes blockquote {
+  margin: 0;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.quotes cite {
+  display: block;
+  margin-top: 8px;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.1em;
+  font-style: normal;
+  color: var(--muted);
+}
+.quotes blockquote.q-irene cite { color: var(--sky-text); }
+.quotes blockquote.q-zoe cite { color: var(--mint-text); }
+
+/* ---------- actions ---------- */
+.actions { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: act; }
+.actions li {
+  counter-increment: act;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 18px 14px 56px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  box-shadow: var(--shadow);
+}
+.actions li::before {
+  content: counter(act, decimal-leading-zero);
+  position: absolute;
+  left: 14px;
+  top: 15px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  font: 650 12px/28px var(--mono);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.actions li strong { color: var(--ink); }
+.actions .owner {
+  display: inline-block;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+  border-radius: 999px;
+  padding: 4px 9px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
+/* ---------- footnote ---------- */
+.footnote {
+  margin-top: clamp(56px, 9vw, 96px);
+  border-top: 1px solid var(--line);
+  padding: 26px 0 56px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.9;
+}
+.footnote p { margin: 0 0 6px; max-width: 720px; }
+.footnote b { color: var(--ink); font-weight: 650; }
+
+@media (max-width: 760px) {
+  .consensus, .phases, .model, .modules, .quotes { grid-template-columns: 1fr; }
+  .node-split { grid-template-columns: 1fr; }
+  .auto-row { grid-template-columns: 1fr; }
+  .auto-row .arr { display: none; }
+  .auto-label { display: none; }
+  .module.wide { grid-column: auto; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .consensus article, .node-card, .module, .auto-row { transition: border-color 0.18s ease; }
+  .consensus article:hover, .module:hover { border-color: var(--brand); }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="hero-eyebrow">Eastlink 平台 · 需求会议纪要 · 2026-08-13</p>
+    <span class="mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+    <h1>HEMA 核心工作流</h1>
+    <p class="hero-lede">以 HEMA「从 Brief 到出运」的开发全流程为主线，重新组织 Irene 与 Zoe 在本次会议中提出的平台需求：项目管理按工作流分板块搭建，PSF 规格书作为底层数据源，每个节点有 deadline、负责人与线上审批。</p>
+    <div class="hero-meta">
+      <span>时长 82 分钟</span>
+      <span>Irene · Zoe · IT/产品</span>
+      <span class="cut">已剔除 SYLOON HUB 与 SAP 议题</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="页面目录">
+  <div class="wrap toc-row">
+    <a href="#consensus">核心共识</a>
+    <a href="#phases">阶段总览</a>
+    <a href="#flow">工作流九节点</a>
+    <a href="#model">模式转变</a>
+    <a href="#modules">平台板块</a>
+    <a href="#automation">自动化清单</a>
+    <a href="#actions">行动项</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ 核心共识 ============ -->
+  <section class="section" id="consensus">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Consensus</p>
+      <h2>会议核心共识</h2>
+      <p class="sub">六条贯穿全场讨论的结论，是后续所有节点需求的前提。</p>
+    </div>
+    <div class="consensus">
+      <article>
+        <h3><b>01</b>以工作流搭平台骨架</h3>
+        <p>项目管理是 Eastlink 的核心板块，直接按 HEMA 工作流拆分：Brief / Artwork / PSF / PPA / Tender / Benchmark / FS / PO……本阶段先搭大框架、把骨架立起来，细节功能后补。</p>
+      </article>
+      <article>
+        <h3><b>02</b>合作模式升级</h3>
+        <p>HEMA 只给 Brief、标准与预算；设计稿、PSF、PPA、报价全部由我们落地，HEMA 只做「确认」。Tender → Benchmark → FS 三步并成一步（参照 MILUS 已有模式）。</p>
+      </article>
+      <article>
+        <h3><b>03</b>PSF 规格书是底层逻辑</h3>
+        <p>规格书是唯一数据源：报价单、工厂资料、下单格式全部由它派生、自动生成。HEMA 按 PSF 追责，规格书必须始终正确、始终是最终版。</p>
+      </article>
+      <article>
+        <h3><b>04</b>节点必须可管控</h3>
+        <p>每一步都有按交期倒推的 deadline、明确负责人、线上审批与自动提醒；卡在谁那里一目了然，项目不再依赖某一个人的记忆和能力。</p>
+      </article>
+      <article>
+        <h3><b>05</b>先内后外的双视角</h3>
+        <p>先做全赛龙内部视角，再开放 HEMA 受限视角——客户只见流程进度与最终供应商名单，看不到明细报价；未来再增加供应商（工厂）视角与账号切换。</p>
+      </article>
+      <article>
+        <h3><b>06</b>HEMA 即模板</h3>
+        <p>HEMA 是管控板块最多、要求最严的客户。把最难的跑通，其他客户做减法、改名称即可复用（如 PSF → Master File），Nebulos 可随后上线。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ 阶段总览 ============ -->
+  <section class="section" id="phases">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Overview</p>
+      <h2>三大阶段总览</h2>
+      <p class="sub">阶段划分来自 Zoe（参照陈子谦的 BTS / SIM 项目流程进度表）；Irene 确认 PPA 属于开发阶段、验厂发生在 FS 阶段。</p>
+    </div>
+    <div class="phases">
+      <div class="phase">
+        <h3>开发阶段</h3>
+        <span class="en">Development · Brief → FS</span>
+        <div class="phase-chips">
+          <b>BRIEF</b><b>ARTWORK</b><b>PSF</b><b>PPA</b><b>TENDER</b><b>BENCHMARK</b><b>FS</b>
+        </div>
+        <p class="phase-note">从接需求到确认订单的全部前端工作，也是本次流程改造的重心。</p>
+      </div>
+      <div class="phase">
+        <h3>中期 · 产前阶段</h3>
+        <span class="en">Pre-production</span>
+        <div class="phase-chips">
+          <b>PO</b><b>包材确认</b><b>验厂</b><b>MSDS</b><b>PP SAMPLE</b>
+        </div>
+        <p class="phase-note">FS 确认即发 PO；包材设计、测试、验厂、MSDS 集中在此阶段（MSDS 需前置）。</p>
+      </div>
+      <div class="phase">
+        <h3>尾期阶段</h3>
+        <span class="en">Production &amp; Shipment</span>
+        <div class="phase-chips">
+          <b>大货样</b><b>大货签样</b><b>验货</b><b>出运</b>
+        </div>
+        <p class="phase-note">大货完成后验货放单；验货对接 HEMA FE Quality Team 与 TUV 第三方。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 工作流九节点 ============ -->
+  <section class="section" id="flow">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Workflow</p>
+      <h2>工作流九节点</h2>
+      <p class="sub">每个节点下方挂载 Irene（<span class="chip chip-irene">IRENE</span>）与 Zoe（<span class="chip chip-zoe">ZOE</span>）在会上提出的平台需求；多人达成一致的记为 <span class="chip chip-team">共识</span>。</p>
+    </div>
+
+    <div class="flow">
+      <p class="flow-phase">开发阶段 Development</p>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">01</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Brief</span>
+            <h3>需求简报</h3>
+          </div>
+          <p class="node-desc">HEMA 给出本季概念与方向——例如「可爱元素、卡通、食物元素」，通常是一份较简略的 PPT，附大致颜色、图案与产品参考图；我们据此输出产品推荐。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>给方向、标准与预算区间</div>
+            <div><b>赛龙</b>输出产品推荐与整体方案</div>
+          </div>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>建项目即倒推排期</strong> —— 按客户交期倒推生成整条时间线，Brief 下的每个动作都挂 deadline。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>自动倒计时</strong> —— Brief 一接收，对应角色自动开始计时（如设计师 5 个工作日），可与绩效挂钩。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>数据化总览</strong> —— 项目主页只放工作流拆解线与完成度（如「100 款已完成 98 款」），点进节点才看明细；「需求包拆解」这类内容下沉到 Brief 详情页，不占主页面。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">02</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Artwork</span>
+            <h3>设计稿</h3>
+          </div>
+          <p class="node-desc">旧模式由 HEMA 设计师出设计稿，且设计与报价「各管各」，稿件与 PSF 信息经常对不上；新模式改为我们代做设计稿，HEMA 线上确认即可。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>确认稿件或给修改意见</div>
+            <div><b>赛龙</b>基于 Brief 与规格书产出标准化稿件</div>
+          </div>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>流程化审批</strong> —— 不是简单的文件共享，而是整条链路的流程化审批：稿件上传 → HEMA 在平台内确认或回填修改意见。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>规格书驱动稿件</strong> —— 把规格书内容直接提取到稿件上、稿件全部标准化；「规格书正确了，稿件有与无都可以」。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">03</span>
+        <div class="node-card core">
+          <div class="node-head">
+            <span class="code">PSF</span>
+            <h3>规格书 · 报价单</h3>
+            <span class="tag-core">底层核心</span>
+          </div>
+          <p class="node-desc">PSF 是技术规格书，Zoe 称之为「底层代码」：拆解封面、内页、线圈、表面处理、包材等全部工序。HEMA 以 PSF 追责——曾因稿件改成 3×3 而 PSF 仍写 3×4，差点承担空运费。旧模式 PSF 由客人提供且常年不更新（「5 年前的 PSF 照样抄到今年」）；新模式改由我们编写：中文版发工厂、英文版发客人，两版同源。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>确认规格书最终版</div>
+            <div><b>赛龙</b>编写双语 PSF，同步生成报价单</div>
+          </div>
+          <ul class="req">
+            <li><span class="chip chip-zoe">ZOE</span><strong>PSF 一键导入</strong> —— 客户 PSF 结构固定，导入后自动按产品规格、包材等分类，直接生成中文工厂版。现在光下载 artwork 就要半天，翻译全靠手搓，新人还看不懂客户的语言体系。</li>
+            <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>中英双语一键切换</strong> —— 中文录入，一键导出英文。</li>
+            <li><span class="chip chip-zoe">ZOE</span><span class="chip chip-irene">IRENE</span><strong>报价单自动生成</strong> —— 客户报价单从规格书数据直接生成，不再重复填写。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>资料库联动</strong> —— 与产品资料库打通，老品固定词条自动带出（「2 毫米灰板」改成「3 毫米」即可）；HEMA 每季约 70% 是老品换设计。</li>
+            <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>统一模板 + 培训</strong> —— 规格书模板先确认；设计师反馈「太复杂看不懂」靠培训解决，各角色只看与自己相关的重点。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>高风险点前置</strong> —— PSF 必须涵盖法规、测试与高风险点，CQV（汪月明团队）在此阶段介入，避免工厂按最简工艺报价、到 FS 阶段才发现达不到品质要求。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">04</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">PPA</span>
+            <h3>测试标准</h3>
+          </div>
+          <p class="node-desc">产品测试要求。旧模式 HEMA 自己出 PPA，经常太慢、拖垮整条项目节点；新模式改为我们依据其标准落地测试要求，HEMA 确认。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>给测试标准，确认落地方案</div>
+            <div><b>赛龙</b>编写测试要求并送审</div>
+          </div>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>负责人 + 审核</strong> —— PPA 板块设置对应负责人（如汪月明）线上审核、写 comments，标注需重点注意的产品。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>质量文件核验</strong> —— 打样前核对 QBP / PPA 等 quality 文件是否齐全，缺什么当场向客人索取。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>MSDS 前置</strong> —— MSDS 提交从中期提前到开发阶段（HSCC 报告为外包审核，流程中单列）。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">05</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Tender</span>
+            <h3>第一轮报价 · 寄样</h3>
+          </div>
+          <p class="node-desc">第一轮报价与寄样同步进行，HEMA 据样品和价格决定每款产品用哪家供应商。新模式下预算已前置，本节点的重心变成「我们给完整方案、HEMA 确认」。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>确认样品与价格</div>
+            <div><b>赛龙</b>匹配供应商、完成报价并寄样</div>
+          </div>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>供应商匹配并入项目</strong> —— 取消独立「匹配工作台」：项目内每款产品（如 A5 线胶本）加一个「供应商匹配」选项，按品类自动筛出可做的工厂（如 100 家中筛出 3 家）。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>按供应商导出报价单</strong> —— 匹配完成后一键导出：A 供应商 5 款、B 供应商 20 款、C 供应商 100 款；多家都能做的款式同时出现在各家报价单里。</li>
+            <li><span class="chip chip-zoe">ZOE</span><span class="chip chip-irene">IRENE</span><strong>CQV 样品评估嵌入</strong> —— 寄样前完成开发样品质评估，评估要求（如开口圈 ≥ 2.5cm、车缝强度）提前传达工厂；第一轮样品的评审模块嵌在 Tender 节点内。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>供应链表格</strong> —— 寄样阶段同步提交供应链表格（对接上海办 Cathy）。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>一键样品 PPT</strong> —— 样品拍照上传后自动生成客户需要的 PPT 和样单清单，不再手工制作。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">06</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Benchmark</span>
+            <h3>第二轮竞价</h3>
+          </div>
+          <p class="node-desc">HEMA 给出目标价和修改 comments，最终敲定哪些款下给我们、哪些给竞争对手。</p>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>与 Tender 合并简化</strong> —— 新模式预算前置（Brief 时已给价格区间），无需真正的二轮竞价，「三、四、五变成一步」，HEMA 只做确认动作。</li>
+            <li><span class="chip chip-team">共识</span><strong>一二轮报价同节点管理</strong> —— 大报价、小报价都归在报价节点内，不再单独拆板块。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">07</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">FS</span>
+            <h3>最终确认 Finalization Sheet</h3>
+          </div>
+          <p class="node-desc">相当于最终合同。供应链透明化管理：每一款产品由哪家工厂生产必须逐一填明（如 100 款分别写清由赛罗文具还是其他工厂生产）。FS 确认后 HEMA 正式发放 PO；同阶段我们提供包材刀模线 / 封模线，半个月到一个月内交齐整个项目的包材设计稿。</p>
+          <div class="node-split">
+            <div><b>HEMA</b>确认 FS、发放 PO、提供包材设计稿</div>
+            <div><b>赛龙</b>填报工厂信息、供应链表格</div>
+          </div>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>供应商信息自动带入</strong> —— Tender 阶段的匹配结果直接填入 FS 的工厂字段，不再手填。</li>
+            <li><span class="chip chip-team">共识</span><strong>客户视角只见名单</strong> —— HEMA 只能看到 FS 里的最终供应商名单；明细报价与成本仅赛龙内部可见。</li>
+            <li><span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><strong>验厂挂接</strong> —— 验厂发生在 FS 阶段，节点与供应商管理板块联动（同一份数据，两处入口）。</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="flow-phase p-sky">中期 · 产前阶段 Pre-production</p>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">08</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">PO</span>
+            <h3>包材与产前样</h3>
+          </div>
+          <p class="node-desc">PO 发放后进入产前：包材确认 → PP Sample 产前样确认（会反复修改）。中期同时推进包材设计、测试、报价、验厂、MSDS 等事项。</p>
+          <ul class="req">
+            <li><span class="chip chip-zoe">ZOE</span><strong>第三方直连</strong> —— 验厂 / 验货由 TUV 主导，平台直接链接第三方，不在内部重复建设。</li>
+            <li><span class="chip chip-irene">IRENE</span><strong>次要环节做成清单</strong> —— 暂不急于做重功能的环节，先做成 checklist 提醒（几个要点逐项打勾），保证流程不漏项。</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="flow-phase p-mint">尾期阶段 Production &amp; Shipment</p>
+
+      <div class="node">
+        <span class="node-num" aria-hidden="true">09</span>
+        <div class="node-card">
+          <div class="node-head">
+            <span class="code">Ship</span>
+            <h3>大货 · 验货 · 出运</h3>
+          </div>
+          <p class="node-desc">产前样确认后依次为：大货样确认 → 大货完成、大货签样 → 验货 → 放单出货（出运）。</p>
+          <ul class="req">
+            <li><span class="chip chip-irene">IRENE</span><strong>验货模块联动</strong> —— 现在质量板块里只有供应商信息，缺验厂、验货两块，必须补齐并与项目管理流程联动。</li>
+            <li><span class="chip chip-zoe">ZOE</span><strong>对接 FE Quality Team</strong> —— 验货环节对接 HEMA FE 的 QA / QC 团队与 TUV，平台内明确各方职责与培训链路。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 模式转变 ============ -->
+  <section class="section" id="model">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Model Shift</p>
+      <h2>协作模式转变</h2>
+      <p class="sub">工作流本身没变，变的是每一步「谁来做」。这也是 Eastlink 各节点功能设计的出发点。</p>
+    </div>
+    <div class="model">
+      <article class="old">
+        <h3>旧模式</h3>
+        <span class="who">HEMA 主导 · 各管各</span>
+        <ul>
+          <li><strong>信息不协同</strong> —— 设计师画稿、报价员做 PSF、测试组做 PPA，互不通气，稿件与报价单经常对不上。</li>
+          <li><strong>节点被拖慢</strong> —— PPA、PSF 出得慢，整条项目时间线跟着延误。</li>
+          <li><strong>重复劳动</strong> —— 同样的信息反复提供、反复翻译，业务全靠手搓。</li>
+          <li><strong>PSF 失真</strong> —— 客人的 PSF 常年不更新，「5 年前的 PSF 照样抄到今年，还是错的」。</li>
+        </ul>
+      </article>
+      <article class="new">
+        <h3>新模式</h3>
+        <span class="who">赛龙主导 · HEMA 只确认</span>
+        <ul>
+          <li><strong>HEMA 给三样东西</strong> —— Brief、标准、预算区间。</li>
+          <li><strong>我们统一产出</strong> —— 设计稿、PSF、PPA、报价单、供应商匹配，一个团队闭环完成，信息天然一致。</li>
+          <li><strong>交付完整方案</strong> —— 价格怎么做、颜色怎么配、配件哪里买，直到落地样品。</li>
+          <li><strong>HEMA 只做确认</strong> —— 样品 OK？价格 OK？确认即进入订单。</li>
+        </ul>
+      </article>
+    </div>
+    <p class="model-result"><b>效果：</b>客户工作量更少、我们主动性更强，流程从八步压缩为「方案 → 确认 → 订单」；供应商决策由我们完成、客户审批即可。MILUS 已按此模式运行——「他只给一个 Brief，所有品全是我们自己做自己推」。</p>
+  </section>
+
+  <!-- ============ 平台板块 ============ -->
+  <section class="section" id="modules">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Modules</p>
+      <h2>Eastlink 平台板块架构</h2>
+      <p class="sub">Irene 把板块分为两类：跟着单个项目走的「项目型」，和常年运行、实时维护的「平台型」。项目管理是最重要的板块，要做得「高效又简洁」。</p>
+    </div>
+    <div class="modules">
+      <div class="module wide">
+        <h3>项目管理 <span class="badge badge-proj">核心 · 项目型</span></h3>
+        <ul>
+          <li><strong>主页即总览表</strong> —— 显示当前有多少项目、各自进行到哪个节点；实际操作在子层级完成。</li>
+          <li><strong>项目详情 = 工作流拆解线</strong> —— 点开项目直接看到 Brief → 出运 的节点条，每个节点显示完成度数据（如「100 款完成 98 款」）。</li>
+          <li><strong>层级下沉</strong> —— 现在的页面「信息太多、抓不到重点」；详情、需求包等全部下沉到节点详情页，主页面保持简洁。</li>
+          <li><strong>节点四件套</strong> —— 每个节点固定带 deadline（倒推）、负责人、审批、文件四要素。</li>
+          <li><strong>匹配内嵌</strong> —— 供应商匹配作为产品行上的一个操作，不再是独立板块。</li>
+          <li><strong>客户定制 = 改名</strong> —— 底层逻辑全客户一致，大客户仅需改板块名称（如 PSF → Master File）、增删板块。</li>
+        </ul>
+      </div>
+      <div class="module">
+        <h3>供应商管理 <span class="badge badge-live">平台型 · 常驻</span></h3>
+        <ul>
+          <li><strong>信息越细越好</strong> —— 品类细分、工艺、开模、周期、均价全部维护，「越细 AI 匹配越精准」。</li>
+          <li><strong>客户筛选</strong> —— 右上角选择客户，选 HEMA 只显示 HEMA 体系的供应商。</li>
+          <li><strong>动态导入</strong> —— 供应商名单持续增加，支持批量导入与更新。</li>
+          <li><strong>验厂与资质档案</strong> —— 沉淀于此，与项目节点联动引用。</li>
+        </ul>
+      </div>
+      <div class="module">
+        <h3>质量管控 <span class="badge badge-live">平台型 · 常驻</span></h3>
+        <ul>
+          <li><strong>从开发样开始</strong> —— CQV 品质评估表前置到开发阶段，「前期没问题，后期都是小异常」。</li>
+          <li><strong>补齐验厂 / 验货模块</strong> —— 当前板块只有供应商信息，两个模块须补上并与项目流程联动。</li>
+          <li><strong>第三方直连</strong> —— TUV 等第三方链接进平台。</li>
+        </ul>
+      </div>
+      <div class="module">
+        <h3>客户管理</h3>
+        <ul>
+          <li><strong>品牌档案</strong> —— 品牌定位、色彩、材料资产库、标准与偏好。</li>
+          <li><strong>联系人备注</strong> —— 维护买手 / 对接人信息即可，不做「客户决策人」板块。</li>
+          <li><strong>过往产品库</strong> —— 按年份 + 项目归档（如 2024 · BTS），项目结束后业务上传并附复盘；解决新人「不知道老品做过、看不懂客户语言」两大痛点。</li>
+          <li><strong>业务员视角</strong> —— 登录后总览自己在手的客户与业态。</li>
+        </ul>
+      </div>
+      <div class="module">
+        <h3>权限与视角</h3>
+        <ul>
+          <li><strong>建设顺序</strong> —— 先做全赛龙内部视角，再开 HEMA 受限视角，未来加供应商视角（工厂自维护信息、接单式协作）。</li>
+          <li><strong>账号切换</strong> —— 不同角色不同账号，可见范围由权限决定。</li>
+          <li><strong>红线</strong> —— HEMA 永远看不到内部明细报价与成本，只见结果与名单。</li>
+        </ul>
+      </div>
+      <div class="module wide cutlist">
+        <h3>砍掉与合并 <span class="badge badge-cut">做减法</span></h3>
+        <ul>
+          <li><strong>匹配工作台</strong> —— 取消独立板块，并入项目管理的产品行操作。</li>
+          <li><strong>关键节点</strong> —— 删除，作用已被工作流节点覆盖。</li>
+          <li><strong>客户决策人</strong> —— 删除；不管对方内部谁拍板，只跟踪「是否已确认」。</li>
+          <li><strong>需求包拆解</strong> —— 降级为 Brief 详情页内容，不占主页面。</li>
+        </ul>
+        <p class="quote">Irene：「每个模块的功能到底是什么要想清楚——过多了，就不简约。尽量在项目管理里把大的功能全部做进去。」</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 自动化清单 ============ -->
+  <section class="section" id="automation">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Automation</p>
+      <h2>自动化清单：告别手搓</h2>
+      <p class="sub">两人反复强调的效率诉求，按「现状 → 上线后」对照整理。前提约束：外部 AI 禁用（稿件防泄露），自动化一律走本地 / 系统内部 AI。</p>
+    </div>
+    <div class="auto">
+      <div class="auto-label" aria-hidden="true"><i>现状 · 手搓</i><i></i><i>上线后</i></div>
+      <div class="auto-row">
+        <div class="from">下载 artwork 半天起步，PSF 逐条人工翻译成中文，再手写产品描述发工厂。</div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="to"><strong>PSF 一键导入</strong>，自动按规格 / 包材分类，直接生成中文工厂版。</div>
+      </div>
+      <div class="auto-row">
+        <div class="from">构建清单、包装清单、下单资料逐项手填，资料审核员再逐项核对。</div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="to"><strong>本地 AI 按公司模板</strong>从 final 规格书一键生成下单格式，审核压力同步减轻。</div>
+      </div>
+      <div class="auto-row">
+        <div class="from">样品拍照后手工排 PPT、手工做样单清单发客人。</div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="to"><strong>照片上传即生成</strong>客户版 PPT 与样单清单。</div>
+      </div>
+      <div class="auto-row">
+        <div class="from">中英文两套文件来回手翻、来回核对。</div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="to"><strong>中文录入、一键导出英文</strong>，双语同源不再错位。</div>
+      </div>
+      <div class="auto-row">
+        <div class="from">找老品靠老员工记忆——「必须是老人，才知道我曾经做过这个」。</div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="to"><strong>过往产品库按年份 / 项目可搜</strong>，固定词条自动带出，改参数即可复用。</div>
+      </div>
+      <div class="auto-row">
+        <div class="from">进度靠业务员逐个人工催办，卡点全凭记忆。</div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="to"><strong>节点自动提醒到人</strong>——「谁卡在哪一步，不用催都知道」（参照华服全线上模式）。</div>
+      </div>
+    </div>
+    <div class="quotes">
+      <blockquote class="q-zoe">「先不管客人爽不爽，我想让我们业务员先爽起来。」<cite>—— Zoe</cite></blockquote>
+      <blockquote class="q-irene">「HEMA 只要走一个老业务员，就垮掉一个项目。上了系统，接手的人是很快的。」<cite>—— Irene</cite></blockquote>
+    </div>
+  </section>
+
+  <!-- ============ 行动项 ============ -->
+  <section class="section" id="actions">
+    <div class="sec-head">
+      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+      <p class="sec-eyebrow">Next Steps</p>
+      <h2>会后行动项</h2>
+    </div>
+    <ol class="actions">
+      <li><strong>按工作流重新梳理 Eastlink 大框架</strong>，先搭骨架、后补细节；会上已认领「今天梳理一下，把大框架先整理」。<span class="owner">产品 / IT</span></li>
+      <li><strong>大板块先确认</strong>；次要环节先降级为 checklist 提醒（要点逐项打勾），不急于做细功能。<span class="owner">产品 / IT</span></li>
+      <li><strong>建项目即按交期倒推生成时间线</strong>，每个节点挂 deadline 与负责人。<span class="owner">产品 / IT</span></li>
+      <li><strong>提供陈子谦的 BTS / SIM 流程进度表</strong>，作为阶段划分与节点参考。<span class="owner">Zoe</span></li>
+      <li><strong>框架完成后集中评审</strong>：验厂 / 验货联动、CQV 嵌入位置、PSF 自动化优先级。<span class="owner">Irene · Zoe · 产品</span></li>
+      <li><strong>推动立项落地</strong>：Irene 与 Zoe 均已在创新提案中提交「HEMA 全流程上线」，需向管理层（于荣杰）汇报争取资源。<span class="owner">Irene · Zoe</span></li>
+    </ol>
+  </section>
+
+  <!-- ============ 整理说明 ============ -->
+  <footer class="footnote">
+    <p><b>整理说明</b></p>
+    <p>① 已按要求剔除 SYLOON HUB（文件共享平台）与 SAP（系统权限 / 对接）两部分讨论，不影响工作流主线。</p>
+    <p>② 语音转写中的 Hima / 黑马 / KIMA / 希玛 / 菲玛 等均归一为 HEMA；eslink / easelink / Estelink 归一为 Eastlink；PSLF 归一为 PSF；BPA 归一为 PPA。</p>
+    <p>③ 除 Irene、Zoe 外的与会者（IT / 产品）意见已并入对应节点，多方一致的标注为「共识」。</p>
+    <p>④ 原始记录：Eastlink__0813.txt（2026-08-13 上午 10:04，时长 1 小时 22 分 25 秒）。</p>
+  </footer>
+
+</main>
+
+</body>
+</html>
