@@ -26,7 +26,6 @@
   --hero-bg-2: #045BE4;
   --hero-ink: #FFFFFF;
   --hero-dim: #CFE2FF;
-  --hero-line: rgba(255, 255, 255, 0.30);
   --shadow: 0 1px 2px rgba(13, 30, 58, 0.05), 0 10px 28px -14px rgba(13, 30, 58, 0.14);
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
@@ -87,23 +86,21 @@ a:focus-visible, summary:focus-visible {
 }
 strong { font-weight: 650; }
 .wrap { max-width: 960px; margin-inline: auto; padding-inline: clamp(18px, 4vw, 36px); }
+main.wrap { padding-bottom: clamp(64px, 10vw, 110px); }
 
 /* ---------- hero ---------- */
 .hero {
   background: linear-gradient(160deg, var(--hero-bg) 0%, var(--hero-bg-2) 100%);
   color: var(--hero-ink);
-  padding: clamp(44px, 8vw, 84px) 0 clamp(36px, 6vw, 60px);
+  padding: clamp(40px, 7vw, 72px) 0 clamp(34px, 5.5vw, 56px);
 }
 .hero-eyebrow {
   font: 600 12px/1.4 var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--hero-dim);
+  margin: 0 0 16px;
 }
-.mark { display: inline-flex; gap: 7px; margin: 22px 0 14px; }
-.mark i { width: 17px; height: 17px; border-radius: 3.5px; display: block; }
-.mark i.sq-sky { background: #57BEEF; }
-.mark i.sq-mint { background: #3CD68B; }
 .hero h1 {
   margin: 0;
   font-size: clamp(30px, 5.4vw, 46px);
@@ -118,16 +115,6 @@ strong { font-weight: 650; }
   color: var(--hero-dim);
   font-size: 15.5px;
 }
-.hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
-.hero-meta span {
-  font: 500 12px/1 var(--mono);
-  letter-spacing: 0.05em;
-  color: var(--hero-ink);
-  border: 1px solid var(--hero-line);
-  border-radius: 999px;
-  padding: 7px 12px;
-}
-.hero-meta span.cut { background: rgba(255, 255, 255, 0.14); border-color: transparent; }
 
 /* ---------- toc ---------- */
 .toc { border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -142,10 +129,6 @@ strong { font-weight: 650; }
 /* ---------- sections ---------- */
 .section { margin-top: clamp(52px, 8vw, 84px); }
 .sec-head { margin-bottom: 24px; }
-.sec-mark { display: inline-flex; gap: 5px; margin-bottom: 10px; }
-.sec-mark i { width: 11px; height: 11px; border-radius: 2.5px; display: block; }
-.sec-mark i.sq-sky { background: var(--sky); }
-.sec-mark i.sq-mint { background: var(--mint); }
 .sec-eyebrow {
   font: 600 11.5px/1.4 var(--mono);
   letter-spacing: 0.16em;
@@ -182,7 +165,12 @@ strong { font-weight: 650; }
 .consensus p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.72; }
 
 /* ---------- phases ---------- */
-.phases { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.phases {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: clamp(34px, 5vw, 52px);
+}
 .phase {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -471,59 +459,6 @@ strong { font-weight: 650; }
 .quotes blockquote.q-irene cite { color: var(--sky-text); }
 .quotes blockquote.q-zoe cite { color: var(--mint-text); }
 
-/* ---------- actions ---------- */
-.actions { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: act; }
-.actions li {
-  counter-increment: act;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 14px 18px 14px 56px;
-  position: relative;
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--muted);
-  box-shadow: var(--shadow);
-}
-.actions li::before {
-  content: counter(act, decimal-leading-zero);
-  position: absolute;
-  left: 14px;
-  top: 15px;
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  background: var(--brand-soft);
-  color: var(--brand-ink);
-  font: 650 12px/28px var(--mono);
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-.actions li strong { color: var(--ink); }
-.actions .owner {
-  display: inline-block;
-  font: 600 11px/1 var(--mono);
-  letter-spacing: 0.06em;
-  color: var(--brand-ink);
-  background: var(--brand-soft);
-  border-radius: 999px;
-  padding: 4px 9px;
-  margin-left: 6px;
-  vertical-align: 1px;
-}
-
-/* ---------- footnote ---------- */
-.footnote {
-  margin-top: clamp(56px, 9vw, 96px);
-  border-top: 1px solid var(--line);
-  padding: 26px 0 56px;
-  color: var(--muted);
-  font-size: 12.5px;
-  line-height: 1.9;
-}
-.footnote p { margin: 0 0 6px; max-width: 720px; }
-.footnote b { color: var(--ink); font-weight: 650; }
-
 @media (max-width: 760px) {
   .consensus, .phases, .model, .modules, .quotes { grid-template-columns: 1fr; }
   .node-split { grid-template-columns: 1fr; }
@@ -542,76 +477,32 @@ strong { font-weight: 650; }
 
 <header class="hero">
   <div class="wrap">
-    <p class="hero-eyebrow">Eastlink 平台 · 需求会议纪要 · 2026-08-13</p>
-    <span class="mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
+    <p class="hero-eyebrow">Eastlink 平台 · 需求整理 · 2026-08-13</p>
     <h1>HEMA 核心工作流</h1>
-    <p class="hero-lede">以 HEMA「从 Brief 到出运」的开发全流程为主线，重新组织 Irene 与 Zoe 在本次会议中提出的平台需求：项目管理按工作流分板块搭建，PSF 规格书作为底层数据源，每个节点有 deadline、负责人与线上审批。</p>
-    <div class="hero-meta">
-      <span>时长 82 分钟</span>
-      <span>Irene · Zoe · IT/产品</span>
-      <span class="cut">已剔除 SYLOON HUB 与 SAP 议题</span>
-    </div>
+    <p class="hero-lede">以 HEMA「从 Brief 到出运」的开发全流程为主线，整理 Irene 与 Zoe 提出的平台需求：项目管理按工作流分板块，PSF 规格书作为底层数据源，每个节点有 deadline、负责人与线上审批。</p>
   </div>
 </header>
 
 <nav class="toc" aria-label="页面目录">
   <div class="wrap toc-row">
+    <a href="#flow">核心工作流</a>
     <a href="#consensus">核心共识</a>
-    <a href="#phases">阶段总览</a>
-    <a href="#flow">工作流九节点</a>
     <a href="#model">模式转变</a>
     <a href="#modules">平台板块</a>
     <a href="#automation">自动化清单</a>
-    <a href="#actions">行动项</a>
   </div>
 </nav>
 
 <main class="wrap">
 
-  <!-- ============ 核心共识 ============ -->
-  <section class="section" id="consensus">
+  <!-- ============ 核心工作流 ============ -->
+  <section class="section" id="flow">
     <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
-      <p class="sec-eyebrow">Consensus</p>
-      <h2>会议核心共识</h2>
-      <p class="sub">六条贯穿全场讨论的结论，是后续所有节点需求的前提。</p>
+      <p class="sec-eyebrow">Core Workflow</p>
+      <h2>核心工作流：三大阶段 · 九个节点</h2>
+      <p class="sub">先看三大阶段，再逐节点展开。每个节点下方挂载对应的平台需求，标签标注提出人：<span class="chip chip-irene">IRENE</span><span class="chip chip-zoe">ZOE</span><span class="chip chip-team">共识</span></p>
     </div>
-    <div class="consensus">
-      <article>
-        <h3><b>01</b>以工作流搭平台骨架</h3>
-        <p>项目管理是 Eastlink 的核心板块，直接按 HEMA 工作流拆分：Brief / Artwork / PSF / PPA / Tender / Benchmark / FS / PO……本阶段先搭大框架、把骨架立起来，细节功能后补。</p>
-      </article>
-      <article>
-        <h3><b>02</b>合作模式升级</h3>
-        <p>HEMA 只给 Brief、标准与预算；设计稿、PSF、PPA、报价全部由我们落地，HEMA 只做「确认」。Tender → Benchmark → FS 三步并成一步（参照 MILUS 已有模式）。</p>
-      </article>
-      <article>
-        <h3><b>03</b>PSF 规格书是底层逻辑</h3>
-        <p>规格书是唯一数据源：报价单、工厂资料、下单格式全部由它派生、自动生成。HEMA 按 PSF 追责，规格书必须始终正确、始终是最终版。</p>
-      </article>
-      <article>
-        <h3><b>04</b>节点必须可管控</h3>
-        <p>每一步都有按交期倒推的 deadline、明确负责人、线上审批与自动提醒；卡在谁那里一目了然，项目不再依赖某一个人的记忆和能力。</p>
-      </article>
-      <article>
-        <h3><b>05</b>先内后外的双视角</h3>
-        <p>先做全赛龙内部视角，再开放 HEMA 受限视角——客户只见流程进度与最终供应商名单，看不到明细报价；未来再增加供应商（工厂）视角与账号切换。</p>
-      </article>
-      <article>
-        <h3><b>06</b>HEMA 即模板</h3>
-        <p>HEMA 是管控板块最多、要求最严的客户。把最难的跑通，其他客户做减法、改名称即可复用（如 PSF → Master File），Nebulos 可随后上线。</p>
-      </article>
-    </div>
-  </section>
 
-  <!-- ============ 阶段总览 ============ -->
-  <section class="section" id="phases">
-    <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
-      <p class="sec-eyebrow">Overview</p>
-      <h2>三大阶段总览</h2>
-      <p class="sub">阶段划分来自 Zoe（参照陈子谦的 BTS / SIM 项目流程进度表）；Irene 确认 PPA 属于开发阶段、验厂发生在 FS 阶段。</p>
-    </div>
     <div class="phases">
       <div class="phase">
         <h3>开发阶段</h3>
@@ -637,16 +528,6 @@ strong { font-weight: 650; }
         </div>
         <p class="phase-note">大货完成后验货放单；验货对接 HEMA FE Quality Team 与 TUV 第三方。</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ============ 工作流九节点 ============ -->
-  <section class="section" id="flow">
-    <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
-      <p class="sec-eyebrow">Workflow</p>
-      <h2>工作流九节点</h2>
-      <p class="sub">每个节点下方挂载 Irene（<span class="chip chip-irene">IRENE</span>）与 Zoe（<span class="chip chip-zoe">ZOE</span>）在会上提出的平台需求；多人达成一致的记为 <span class="chip chip-team">共识</span>。</p>
     </div>
 
     <div class="flow">
@@ -828,10 +709,44 @@ strong { font-weight: 650; }
     </div>
   </section>
 
+  <!-- ============ 核心共识 ============ -->
+  <section class="section" id="consensus">
+    <div class="sec-head">
+      <p class="sec-eyebrow">Consensus</p>
+      <h2>贯穿工作流的六条共识</h2>
+      <p class="sub">上方各节点需求背后的共同前提。</p>
+    </div>
+    <div class="consensus">
+      <article>
+        <h3><b>01</b>以工作流搭平台骨架</h3>
+        <p>项目管理是 Eastlink 的核心板块，直接按 HEMA 工作流拆分：Brief / Artwork / PSF / PPA / Tender / Benchmark / FS / PO……本阶段先搭大框架、把骨架立起来，细节功能后补。</p>
+      </article>
+      <article>
+        <h3><b>02</b>合作模式升级</h3>
+        <p>HEMA 只给 Brief、标准与预算；设计稿、PSF、PPA、报价全部由我们落地，HEMA 只做「确认」。Tender → Benchmark → FS 三步并成一步（参照 MILUS 已有模式）。</p>
+      </article>
+      <article>
+        <h3><b>03</b>PSF 规格书是底层逻辑</h3>
+        <p>规格书是唯一数据源：报价单、工厂资料、下单格式全部由它派生、自动生成。HEMA 按 PSF 追责，规格书必须始终正确、始终是最终版。</p>
+      </article>
+      <article>
+        <h3><b>04</b>节点必须可管控</h3>
+        <p>每一步都有按交期倒推的 deadline、明确负责人、线上审批与自动提醒；卡在谁那里一目了然，项目不再依赖某一个人的记忆和能力。</p>
+      </article>
+      <article>
+        <h3><b>05</b>先内后外的双视角</h3>
+        <p>先做全赛龙内部视角，再开放 HEMA 受限视角——客户只见流程进度与最终供应商名单，看不到明细报价；未来再增加供应商（工厂）视角与账号切换。</p>
+      </article>
+      <article>
+        <h3><b>06</b>HEMA 即模板</h3>
+        <p>HEMA 是管控板块最多、要求最严的客户。把最难的跑通，其他客户做减法、改名称即可复用（如 PSF → Master File），Nebulos 可随后上线。</p>
+      </article>
+    </div>
+  </section>
+
   <!-- ============ 模式转变 ============ -->
   <section class="section" id="model">
     <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
       <p class="sec-eyebrow">Model Shift</p>
       <h2>协作模式转变</h2>
       <p class="sub">工作流本身没变，变的是每一步「谁来做」。这也是 Eastlink 各节点功能设计的出发点。</p>
@@ -864,10 +779,9 @@ strong { font-weight: 650; }
   <!-- ============ 平台板块 ============ -->
   <section class="section" id="modules">
     <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
       <p class="sec-eyebrow">Modules</p>
       <h2>Eastlink 平台板块架构</h2>
-      <p class="sub">Irene 把板块分为两类：跟着单个项目走的「项目型」，和常年运行、实时维护的「平台型」。项目管理是最重要的板块，要做得「高效又简洁」。</p>
+      <p class="sub">板块分两类：跟着单个项目走的「项目型」，和常年运行、实时维护的「平台型」。项目管理承载上方工作流，是最重要的板块，要做得「高效又简洁」。</p>
     </div>
     <div class="modules">
       <div class="module wide">
@@ -931,7 +845,6 @@ strong { font-weight: 650; }
   <!-- ============ 自动化清单 ============ -->
   <section class="section" id="automation">
     <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
       <p class="sec-eyebrow">Automation</p>
       <h2>自动化清单：告别手搓</h2>
       <p class="sub">两人反复强调的效率诉求，按「现状 → 上线后」对照整理。前提约束：外部 AI 禁用（稿件防泄露），自动化一律走本地 / 系统内部 AI。</p>
@@ -974,32 +887,6 @@ strong { font-weight: 650; }
       <blockquote class="q-irene">「HEMA 只要走一个老业务员，就垮掉一个项目。上了系统，接手的人是很快的。」<cite>—— Irene</cite></blockquote>
     </div>
   </section>
-
-  <!-- ============ 行动项 ============ -->
-  <section class="section" id="actions">
-    <div class="sec-head">
-      <span class="sec-mark" aria-hidden="true"><i class="sq-sky"></i><i class="sq-mint"></i></span>
-      <p class="sec-eyebrow">Next Steps</p>
-      <h2>会后行动项</h2>
-    </div>
-    <ol class="actions">
-      <li><strong>按工作流重新梳理 Eastlink 大框架</strong>，先搭骨架、后补细节；会上已认领「今天梳理一下，把大框架先整理」。<span class="owner">产品 / IT</span></li>
-      <li><strong>大板块先确认</strong>；次要环节先降级为 checklist 提醒（要点逐项打勾），不急于做细功能。<span class="owner">产品 / IT</span></li>
-      <li><strong>建项目即按交期倒推生成时间线</strong>，每个节点挂 deadline 与负责人。<span class="owner">产品 / IT</span></li>
-      <li><strong>提供陈子谦的 BTS / SIM 流程进度表</strong>，作为阶段划分与节点参考。<span class="owner">Zoe</span></li>
-      <li><strong>框架完成后集中评审</strong>：验厂 / 验货联动、CQV 嵌入位置、PSF 自动化优先级。<span class="owner">Irene · Zoe · 产品</span></li>
-      <li><strong>推动立项落地</strong>：Irene 与 Zoe 均已在创新提案中提交「HEMA 全流程上线」，需向管理层（于荣杰）汇报争取资源。<span class="owner">Irene · Zoe</span></li>
-    </ol>
-  </section>
-
-  <!-- ============ 整理说明 ============ -->
-  <footer class="footnote">
-    <p><b>整理说明</b></p>
-    <p>① 已按要求剔除 SYLOON HUB（文件共享平台）与 SAP（系统权限 / 对接）两部分讨论，不影响工作流主线。</p>
-    <p>② 语音转写中的 Hima / 黑马 / KIMA / 希玛 / 菲玛 等均归一为 HEMA；eslink / easelink / Estelink 归一为 Eastlink；PSLF 归一为 PSF；BPA 归一为 PPA。</p>
-    <p>③ 除 Irene、Zoe 外的与会者（IT / 产品）意见已并入对应节点，多方一致的标注为「共识」。</p>
-    <p>④ 原始记录：Eastlink__0813.txt（2026-08-13 上午 10:04，时长 1 小时 22 分 25 秒）。</p>
-  </footer>
 
 </main>
 
