@@ -1,0 +1,2061 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eastlink MVP</title>
+<style>
+:root {
+  --bg: #F5F8FD;
+  --surface: #FFFFFF;
+  --surface-2: #EDF3FC;
+  --ink: #0D1E3A;
+  --muted: #51648A;
+  --line: #D9E3F3;
+  --line-dash: #C7D5EC;
+  --brand: #0567FF;
+  --brand-ink: #0356DB;
+  --brand-soft: #E3EDFF;
+  --sky: #57BEEF;
+  --sky-soft: #E3F4FD;
+  --sky-text: #0C6DA6;
+  --mint: #3CD68B;
+  --mint-soft: #DFF8EB;
+  --mint-text: #0C7A4A;
+  --red: #E5484D;
+  --red-soft: #FDEBEC;
+  --amber: #F5A524;
+  --amber-soft: #FDF3DF;
+  --shadow: 0 1px 2px rgba(13,30,58,.05), 0 8px 22px -12px rgba(13,30,58,.13);
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.65 -apple-system, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+a { color: var(--brand-ink); text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+input, select, textarea { font: inherit; color: var(--ink); }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; border-radius: 4px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- topbar ---------- */
+.topbar {
+  background: linear-gradient(150deg, #0567FF, #045BE4);
+  color: #fff;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.topbar .logo { font-weight: 800; font-size: 16px; letter-spacing: .02em; display: flex; align-items: center; gap: 8px; }
+.logo-tag { font: 650 9.5px/1 var(--mono); letter-spacing: .1em; background: rgba(255,255,255,.18); border-radius: 999px; padding: 4px 8px; }
+.topnav { display: flex; gap: 4px; flex: 1; }
+.topnav a {
+  color: rgba(255,255,255,.82);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 550;
+}
+.topnav a:hover { background: rgba(255,255,255,.12); text-decoration: none; }
+.topnav a.on { background: rgba(255,255,255,.18); color: #fff; font-weight: 650; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar select {
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 12.5px;
+}
+.topbar select option { color: #0D1E3A; }
+.btn-reset {
+  background: transparent;
+  color: rgba(255,255,255,.85);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+}
+.btn-reset:hover { background: rgba(255,255,255,.12); }
+.role-note { font-size: 11.5px; color: rgba(255,255,255,.75); }
+
+/* ---------- layout ---------- */
+.view { max-width: 1280px; margin: 0 auto; padding: 22px 24px 80px; }
+.page-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; margin-bottom: 16px; }
+.page-head h1 { margin: 0; font-size: 21px; font-weight: 750; letter-spacing: .01em; }
+.page-head .sub { color: var(--muted); font-size: 13px; }
+.page-head .spacer { flex: 1; }
+.crumb { font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+.crumb a { color: var(--muted); }
+.crumb a:hover { color: var(--brand-ink); }
+.crumb b { color: var(--ink); font-weight: 600; }
+
+/* ---------- cards & stats ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+.card h3 { margin: 0 0 10px; font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.grid { display: grid; gap: 13px; }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g2 { grid-template-columns: 1fr 1fr; }
+.mt { margin-top: 14px; }
+.statcard { padding: 14px 16px; }
+.statcard .num { font: 750 26px/1.15 var(--mono); letter-spacing: -.01em; }
+.statcard .lbl { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.statcard.warn .num { color: var(--red); }
+.statcard.brand .num { color: var(--brand-ink); }
+.statcard.mint .num { color: var(--mint-text); }
+
+/* ---------- pills / chips / badges ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 650;
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.s-pending { background: var(--surface-2); color: var(--muted); }
+.pill.s-in_progress { background: var(--brand-soft); color: var(--brand-ink); }
+.pill.s-review { background: var(--amber-soft); color: #9A6A0B; }
+.pill.s-done { background: var(--mint-soft); color: var(--mint-text); }
+.pill.s-overdue { background: var(--red-soft); color: var(--red); }
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 2.5px 7px;
+  background: var(--surface-2);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.tag.b { background: var(--brand-soft); color: var(--brand-ink); }
+.tag.k { background: var(--sky-soft); color: var(--sky-text); }
+.tag.m { background: var(--mint-soft); color: var(--mint-text); }
+.tag.r { background: var(--red-soft); color: var(--red); }
+.tag.a { background: var(--amber-soft); color: #9A6A0B; }
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  font-size: 11px;
+  font-weight: 750;
+  vertical-align: -5px;
+  margin-right: 5px;
+}
+.who { display: inline-flex; align-items: center; font-size: 12.5px; color: var(--ink); font-weight: 550; margin-right: 10px; }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+}
+.btn:hover { border-color: var(--brand); color: var(--brand-ink); }
+.btn.pri { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.pri:hover { background: var(--brand-ink); color: #fff; }
+.btn.mint { background: var(--mint-soft); border-color: var(--mint); color: var(--mint-text); }
+.btn.danger { background: var(--red-soft); border-color: transparent; color: var(--red); }
+.btn.ghost { background: transparent; }
+.btn.sm { padding: 3.5px 9px; font-size: 12px; border-radius: 7px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* ---------- tables ---------- */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
+table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+.tbl th {
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: .04em;
+  color: var(--muted);
+  background: var(--surface-2);
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.tbl td { padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+.tbl tr:hover td { background: #FAFCFF; }
+.tbl .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tbl input, .tbl select { max-width: 160px; }
+
+/* ---------- forms ---------- */
+input.ipt, select.ipt, textarea.ipt {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 9px;
+  font-size: 13px;
+  background: #fff;
+}
+textarea.ipt { resize: vertical; min-height: 60px; }
+input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--brand); outline: none; }
+.ipt-inline { width: auto; }
+.filterbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 13px; }
+.filterbar .ipt { width: auto; min-width: 130px; }
+.filterbar .search { min-width: 200px; }
+
+/* ---------- project card ---------- */
+.proj-card { cursor: pointer; transition: border-color .15s ease; }
+.proj-card:hover { border-color: var(--brand); }
+.proj-card .top { display: flex; align-items: baseline; gap: 10px; }
+.proj-card .name { font-size: 15.5px; font-weight: 750; }
+.proj-card .meta { color: var(--muted); font-size: 12.5px; margin: 6px 0 10px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.mini-flow { display: flex; gap: 3px; }
+.mini-flow i {
+  height: 8px;
+  flex: 1;
+  border-radius: 3px;
+  background: var(--line);
+}
+.mini-flow i.f-done { background: var(--mint); }
+.mini-flow i.f-in_progress { background: var(--brand); }
+.mini-flow i.f-review { background: var(--amber); }
+.mini-flow i.f-overdue { background: var(--red); }
+
+/* ---------- todo list ---------- */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 4px;
+  border-top: 1px dashed var(--line-dash);
+  cursor: pointer;
+  font-size: 13px;
+}
+.todo-item:first-of-type { border-top: 0; }
+.todo-item:hover .t-name { color: var(--brand-ink); }
+.todo-item .t-name { font-weight: 600; }
+.todo-item .t-proj { color: var(--muted); font-size: 12px; }
+.todo-item .t-dl { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.todo-item .t-dl.over { color: var(--red); font-weight: 700; }
+
+/* ---------- workflow lanes ---------- */
+.lanes { display: grid; gap: 0; }
+.lane { padding: 12px 0; }
+.lane + .lane { border-top: 1px dashed var(--line-dash); }
+.lane-tag { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700; margin-bottom: 9px; }
+.lane-tag i { width: 10px; height: 10px; border-radius: 2.5px; }
+.lane-tag span { font: 550 10px/1 var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+.lane.ph-dev .lane-tag i { background: var(--brand); }
+.lane.ph-pre .lane-tag i { background: var(--sky); }
+.lane.ph-end .lane-tag i { background: var(--mint); }
+.lane-chips { display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: stretch; }
+.nchip {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 118px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+.nchip:hover { border-color: var(--brand); }
+.nchip.cur { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); background: var(--brand-soft); }
+.nchip.disabled { cursor: default; }
+.nchip.disabled:hover { border-color: var(--line); }
+.nchip .l1 { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; }
+.nchip .no {
+  display: inline-grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 5px;
+  color: #fff;
+  font: 700 10px/1 var(--mono);
+}
+.ph-dev .nchip .no { background: var(--brand); }
+.ph-pre .nchip .no { background: var(--sky); color: #08405F; }
+.ph-end .nchip .no { background: var(--mint); color: #06331F; }
+.nchip .l2 { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--muted); font-family: var(--mono); }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.dot.s-pending { background: var(--line-dash); }
+.dot.s-in_progress { background: var(--brand); }
+.dot.s-review { background: var(--amber); }
+.dot.s-done { background: var(--mint); }
+.nchip .over { color: var(--red); font-weight: 700; }
+.hintbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  background: var(--brand-soft);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-top: 13px;
+}
+.hintbar b { color: var(--brand-ink); }
+.hintbar.warn { background: var(--red-soft); }
+.hintbar.warn b { color: var(--red); }
+
+/* ---------- node detail ---------- */
+.node-headcard { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+.node-headcard .big { font-size: 18px; font-weight: 750; display: flex; align-items: center; gap: 10px; }
+.node-headcard .code { font: 700 12px/1 var(--mono); letter-spacing: .1em; color: var(--brand-ink); text-transform: uppercase; }
+.kv { font-size: 12.5px; color: var(--muted); }
+.kv b { color: var(--ink); font-family: var(--mono); font-weight: 650; }
+.kv b.over { color: var(--red); }
+.sec-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  font-family: var(--mono);
+}
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  padding: 6px 9px;
+  border: 1px dashed var(--line-dash);
+  border-radius: 8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.chk { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 13px; cursor: pointer; }
+.chk input { margin-top: 3px; accent-color: var(--brand); }
+.chk.done span { color: var(--muted); text-decoration: line-through; }
+.cmt { border-top: 1px dashed var(--line-dash); padding: 9px 0; font-size: 13px; }
+.cmt:first-of-type { border-top: 0; }
+.cmt .h { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.cmt .t { color: var(--muted); font-size: 11px; font-family: var(--mono); margin-left: auto; }
+.cmt p { margin: 0; color: #3E4F6E; }
+.ver { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px dashed var(--line-dash); font-size: 12.5px; }
+.ver:first-of-type { border-top: 0; }
+.ver .v { font: 700 11px/1.6 var(--mono); color: var(--brand-ink); min-width: 42px; }
+.ver .d { color: var(--muted); font-family: var(--mono); font-size: 11px; margin-left: auto; white-space: nowrap; }
+.reject-box { margin-top: 8px; }
+
+/* ---------- psf ---------- */
+.psf-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 13px; }
+.lang-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+.lang-toggle button { border: 0; background: var(--surface); padding: 5px 13px; font-size: 12.5px; font-weight: 650; color: var(--muted); }
+.lang-toggle button.on { background: var(--brand); color: #fff; }
+.psf-sec { margin-top: 14px; }
+.psf-sec .tbl td input.cell {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 13px;
+}
+.psf-sec .tbl td input.cell:hover { border-color: var(--line); background: #fff; }
+.psf-sec .tbl td input.cell:focus { border-color: var(--brand); background: #fff; outline: none; }
+.psf-sec .tbl td input.cell[disabled] { color: var(--ink); opacity: 1; }
+tr.critical td { background: var(--red-soft) !important; }
+tr.critical td:first-child { border-left: 3px solid var(--red); }
+.badge-final {
+  background: var(--mint);
+  color: #06331F;
+  font: 750 10.5px/1 var(--mono);
+  letter-spacing: .08em;
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.badge-lock { background: var(--surface-2); color: var(--muted); font-size: 11.5px; border-radius: 999px; padding: 4px 10px; font-weight: 650; }
+
+/* ---------- side panel ---------- */
+.panel-mask { position: fixed; inset: 0; background: rgba(9,20,45,.35); z-index: 60; }
+.panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(460px, 94vw);
+  background: var(--surface);
+  z-index: 61;
+  box-shadow: -12px 0 40px rgba(9,20,45,.18);
+  display: flex;
+  flex-direction: column;
+}
+.panel .p-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+.panel .p-head h3 { margin: 0; font-size: 15px; }
+.panel .p-body { padding: 14px 18px; overflow-y: auto; flex: 1; }
+.panel .p-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; gap: 8px; justify-content: flex-end; }
+.x { margin-left: auto; border: 0; background: var(--surface-2); border-radius: 8px; width: 28px; height: 28px; font-size: 14px; color: var(--muted); }
+.sup-row { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 9px; display: flex; gap: 10px; align-items: flex-start; }
+.sup-row.on { border-color: var(--brand); background: var(--brand-soft); }
+.sup-row input { margin-top: 3px; accent-color: var(--brand); }
+.sup-row .s-name { font-weight: 700; font-size: 13.5px; }
+.sup-row .s-meta { color: var(--muted); font-size: 12px; margin-top: 2px; display: flex; flex-wrap: wrap; gap: 3px 10px; }
+
+/* ---------- overlay / sheet ---------- */
+.ovl { position: fixed; inset: 0; background: rgba(9,20,45,.45); z-index: 70; overflow-y: auto; padding: 30px 16px; }
+.sheet {
+  background: #fff;
+  max-width: 880px;
+  margin: 0 auto;
+  border-radius: 14px;
+  padding: 28px 32px;
+  box-shadow: 0 24px 70px rgba(9,20,45,.3);
+  color: #0D1E3A;
+}
+.sheet-head { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #0567FF; padding-bottom: 12px; margin-bottom: 16px; }
+.sheet-head h2 { margin: 0; font-size: 18px; }
+.sheet-head .mk { display: flex; gap: 5px; }
+.sheet-head .mk i { width: 12px; height: 12px; border-radius: 3px; display: block; }
+.sheet-head .mk i:first-child { background: #57BEEF; }
+.sheet-head .mk i:last-child { background: #3CD68B; }
+.sheet-sub { color: #51648A; font-size: 12px; margin: -10px 0 14px; }
+.ovl-actions { max-width: 880px; margin: 0 auto 12px; display: flex; justify-content: flex-end; gap: 8px; }
+.ovl-actions .btn { background: #fff; }
+.slide { border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
+.slide .ph { font-size: 42px; background: var(--surface-2); border-radius: 10px; width: 100%; padding: 22px 0; }
+.slide .a { font: 700 12px/1.4 var(--mono); color: var(--brand-ink); }
+.slide .p { font-size: 12.5px; color: var(--muted); }
+.spin {
+  width: 26px; height: 26px;
+  border: 3px solid var(--brand-soft);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: sp 0.8s linear infinite;
+  margin: 20px auto;
+}
+@keyframes sp { to { transform: rotate(360deg); } }
+.raw {
+  background: #0D1E3A;
+  color: #C9DAF7;
+  font: 12px/1.7 var(--mono);
+  border-radius: 10px;
+  padding: 14px 16px;
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* ---------- matrix (dashboard) ---------- */
+.matrix-wrap { overflow-x: auto; }
+.matrix { border-collapse: collapse; font-size: 12px; min-width: 760px; width: 100%; }
+.matrix th { font: 650 10px/1.3 var(--mono); color: var(--muted); padding: 5px 3px; text-align: center; }
+.matrix td { padding: 4px 3px; }
+.matrix td.pname { font-weight: 700; font-size: 13px; white-space: nowrap; padding-right: 12px; }
+.mcell {
+  height: 26px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  display: grid;
+  place-items: center;
+  font: 650 9.5px/1 var(--mono);
+  color: transparent;
+  cursor: pointer;
+}
+.mcell.s-done { background: var(--mint); color: #06331F; }
+.mcell.s-in_progress { background: var(--brand); color: #fff; }
+.mcell.s-review { background: var(--amber); color: #5B3E06; }
+.mcell.ov { box-shadow: inset 0 0 0 2px var(--red); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; vertical-align: -2px; margin-right: 5px; }
+
+/* ---------- tabs ---------- */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.tabs button {
+  border: 0;
+  background: transparent;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  font-weight: 650;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tabs button.on { color: var(--brand-ink); border-bottom-color: var(--brand); }
+
+/* ---------- clients ---------- */
+.swatches { display: flex; gap: 6px; }
+.swatches i { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); }
+.prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.prod {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+  padding: 12px;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+.prod:hover { border-color: var(--brand); }
+.prod .ph { font-size: 34px; text-align: center; background: var(--surface-2); border-radius: 9px; padding: 14px 0; margin-bottom: 8px; }
+.prod .a { font: 700 11px/1.5 var(--mono); color: var(--brand-ink); }
+.prod .n { font-weight: 650; font-size: 13px; }
+.prod .m { color: var(--muted); font-size: 11.5px; }
+
+/* ---------- client (HEMA) view ---------- */
+.confirm-card { border: 1px solid var(--amber); background: var(--amber-soft); border-radius: 12px; padding: 14px 16px; }
+.confirm-card h4 { margin: 0 0 6px; font-size: 14px; }
+.confirm-card p { margin: 0 0 10px; font-size: 12.5px; color: #6B4E0E; }
+.client-banner {
+  background: var(--sky-soft);
+  color: var(--sky-text);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* ---------- toast ---------- */
+#toast-root { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 90; display: grid; gap: 8px; }
+.toast {
+  background: #0D1E3A;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  box-shadow: 0 12px 30px rgba(9,20,45,.35);
+  animation: tin .2s ease;
+}
+.toast.ok { background: #0C7A4A; }
+@keyframes tin { from { opacity: 0; transform: translateY(8px); } }
+
+.empty { color: var(--muted); font-size: 13px; padding: 18px 0; text-align: center; }
+.note-strip { background: var(--surface-2); border-radius: 9px; padding: 8px 12px; font-size: 12px; color: var(--muted); }
+
+/* ---------- print ---------- */
+@media print {
+  body { background: #fff; }
+  #app, #toast-root, .ovl-actions { display: none !important; }
+  .ovl { position: static; padding: 0; background: #fff; overflow: visible; }
+  .sheet { box-shadow: none; border-radius: 0; max-width: none; padding: 0; }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1000px) {
+  .g4 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .prod-grid { grid-template-columns: repeat(2, 1fr); }
+  .topnav { overflow-x: auto; }
+  .topbar { flex-wrap: wrap; height: auto; padding: 8px 14px; }
+  .view { padding: 16px 14px 60px; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="overlay-root"></div>
+<div id="toast-root"></div>
+<script>
+'use strict';
+/* ============================================================
+   Eastlink MVP Demo — 纯前端原型（mock 数据，人名/供应商均为化名）
+   基于《Eastlink-MVP-PRD.md》实现
+   ============================================================ */
+
+const TODAY = '2026-08-14';
+const DB_KEY = 'eastlink-mvp-v1';
+
+/* ---------- 工作流 14 节点定义 ---------- */
+const NODE_DEFS = [
+  { id: '01', code: 'Brief',     name: '需求简报',   phase: 'dev', dur: 3,  confirm: true  },
+  { id: '02', code: 'Artwork',   name: '设计稿',     phase: 'dev', dur: 5,  confirm: true  },
+  { id: '03', code: 'PSF',       name: '规格书·报价单', phase: 'dev', dur: 5, confirm: true },
+  { id: '04', code: 'PPA',       name: '测试标准',   phase: 'dev', dur: 3,  confirm: true  },
+  { id: '05', code: 'Tender',    name: '一轮报价·寄样', phase: 'dev', dur: 12, confirm: true },
+  { id: '06', code: 'Benchmark', name: '二轮竞价',   phase: 'dev', dur: 7,  confirm: true  },
+  { id: '07', code: 'FS',        name: '最终确认',   phase: 'dev', dur: 5,  confirm: true  },
+  { id: '08', code: 'PO',        name: 'PO·包材确认', phase: 'pre', dur: 20, confirm: true },
+  { id: '09', code: 'PPSample',  name: '产前样确认', phase: 'pre', dur: 10, confirm: true  },
+  { id: '10', code: 'Audit',     name: '验厂',       phase: 'pre', dur: 7,  confirm: false },
+  { id: '11', code: 'Bulk',      name: '大货·签样',  phase: 'end', dur: 30, confirm: false },
+  { id: '12', code: 'DUPRO',     name: '中期验货',   phase: 'end', dur: 0,  confirm: false },
+  { id: '13', code: 'FRI',       name: '大货验货',   phase: 'end', dur: 3,  confirm: false },
+  { id: '14', code: 'Ship',      name: '出运·归档',  phase: 'end', dur: 7,  confirm: false }
+];
+const PHASES = {
+  dev: { label: '开发阶段', en: 'Development' },
+  pre: { label: '中期 · 产前阶段', en: 'Pre-production' },
+  end: { label: '尾期阶段', en: 'Production & Shipment' }
+};
+const STATUS_LABEL = { pending: '未开始', in_progress: '进行中', review: '待审批', done: '已完成' };
+const CATS = { NB: '线圈本 / 本册', BG: '包袋', PN: '金属笔', CU: '水杯' };
+
+/* ---------- 通用工具 ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const d2 = iso => new Date(iso + 'T00:00:00');
+function addDays(iso, n) {
+  const d = d2(iso); d.setDate(d.getDate() + n);
+  const p = x => String(x).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+const diffDays = (a, b) => Math.round((d2(b) - d2(a)) / 86400000);
+const fmtD = iso => iso ? iso.slice(5).replace('-', '/') : '—';
+const nodeDef = id => NODE_DEFS.find(n => n.id === id);
+const isOverdue = n => n.status !== 'done' && n.deadline && n.deadline < TODAY;
+const nowStamp = () => TODAY + ' 10:30';
+
+/* ---------- 时间线倒推（PRD §7.2） ---------- */
+function recalcTimeline(p) {
+  const D = {};
+  const chain = ['14', '13', '11', '10', '09', '08', '07', '06', '05', '04', '03', '02', '01'];
+  let cursor = p.deliveryDate;
+  let bulkStart = null;
+  chain.forEach(id => {
+    const def = nodeDef(id);
+    D[id] = cursor;
+    cursor = addDays(cursor, -def.dur);
+    if (id === '11') bulkStart = cursor;
+  });
+  D['12'] = addDays(bulkStart, 5); // DUPRO：大货开始后 +5 天（约完成 10%）
+  p.nodes.forEach(n => { n.deadline = D[n.id]; });
+  return D;
+}
+
+/* ---------- PSF 品类模板 ---------- */
+function psfTemplate(cat) {
+  const T = {
+    NB: {
+      desc: { zh: 'A5 双线圈笔记本，2mm 灰板封面覆哑膜，内页 80g 道林纸 96 张四色印刷', en: 'A5 twin-wire notebook, 2mm greyboard cover with matt lamination, 96 sheets 80gsm woodfree paper, 4C printing' },
+      cons: [
+        { part: '封面', zh: '2mm 灰板 + 157g 铜版纸覆哑膜', en: '2mm greyboard + 157gsm art paper, matt lamination' },
+        { part: '内页', zh: '80g 道林纸 96 张，四色印刷', en: '96 sheets 80gsm woodfree paper, 4C printing' },
+        { part: '线圈', zh: '双线圈 黑色 φ8mm 金属', en: 'Twin wire-o, black, φ8mm metal' },
+        { part: '装订', zh: 'YO 圈装订，四角圆角', en: 'Wire-o binding, rounded corners' }
+      ],
+      surf: [
+        { process: '烫金', position: '封面 Logo', zh: '定位烫金', en: 'Hot stamping (registered)' },
+        { process: '印刷', position: '封面', zh: '四色印刷 + 哑膜', en: '4C printing + matt lamination' }
+      ],
+      pack: [
+        { item: '吊牌', zh: '300g 铜版纸，四色，含条码', en: '300gsm art paper hangtag, 4C, with barcode' },
+        { item: 'OPP 袋', zh: 'OPP 自粘袋，含警示语', en: 'Self-adhesive OPP bag with warning text' },
+        { item: '外箱', zh: '五层瓦楞 K=K，唛头按客户模板', en: '5-ply corrugated K=K carton, shipping mark per client template' }
+      ],
+      comp: [
+        { type: '法规', requirement: 'REACH 附录 XVII 受限物质', source: 'QBP', critical: true },
+        { type: '测试', requirement: 'EN71-3 重金属迁移', source: 'PPA', critical: true },
+        { type: '法规', requirement: '纸张 FSC 认证', source: 'QBP', critical: false }
+      ]
+    },
+    BG: {
+      desc: { zh: '儿童书包，600D 涤纶 PU 涂层，双肩可调织带，前袋拉链开合', en: 'Kids backpack, 600D polyester with PU coating, adjustable shoulder straps, front zip pocket' },
+      cons: [
+        { part: '面料', zh: '600D 涤纶，PU 涂层', en: '600D polyester, PU coated' },
+        { part: '织带', zh: 'PP 织带 25mm，双肩可调', en: '25mm PP webbing, adjustable' },
+        { part: '拉链', zh: '5# 尼龙拉链，自动锁头', en: '#5 nylon zipper with auto-lock puller' },
+        { part: '车缝', zh: '受力点双线加固', en: 'Double-stitch reinforced at stress points' }
+      ],
+      surf: [
+        { process: '印花', position: '前幅', zh: '热转印图案', en: 'Heat-transfer print' },
+        { process: '织唛', position: '侧缝', zh: '织唛标', en: 'Woven label at side seam' }
+      ],
+      pack: [
+        { item: '吊牌', zh: '300g 铜版纸吊牌 + 安全别针', en: '300gsm hangtag with safety pin' },
+        { item: 'PE 袋', zh: 'PE 袋含透气孔与警示语', en: 'PE bag with air holes and warning text' },
+        { item: '外箱', zh: '五层瓦楞，每箱 20 只', en: '5-ply carton, 20 pcs per carton' }
+      ],
+      comp: [
+        { type: '高风险点', requirement: '开口圈直径 ≥ 2.5cm', source: 'QBP', critical: true },
+        { type: '测试', requirement: '车缝拉力 ≥ 70N', source: 'PPA', critical: true },
+        { type: '法规', requirement: '邻苯二甲酸盐（6P）', source: 'QBP', critical: false }
+      ]
+    },
+    PN: {
+      desc: { zh: '金属圆珠笔，铝合金笔杆阳极氧化，1.0mm 黑色油墨', en: 'Metal ballpoint pen, anodized aluminium barrel, 1.0mm black ink' },
+      cons: [
+        { part: '笔杆', zh: '铝合金，阳极氧化', en: 'Aluminium barrel, anodized' },
+        { part: '笔芯', zh: '1.0mm 黑色油墨，书写 ≥800m', en: '1.0mm black ink refill, writing length ≥800m' },
+        { part: '笔夹', zh: '铁夹电镀镍', en: 'Iron clip, nickel plated' }
+      ],
+      surf: [
+        { process: '丝印', position: '笔杆', zh: '单色 Logo 丝印', en: '1C silk-screen logo' }
+      ],
+      pack: [
+        { item: '纸卡', zh: '350g 白卡吸塑纸卡', en: '350gsm blister card' },
+        { item: '内盒', zh: '50 支/内盒', en: '50 pcs per inner box' },
+        { item: '外箱', zh: '五层瓦楞', en: '5-ply carton' }
+      ],
+      comp: [
+        { type: '测试', requirement: 'ISO 12757 书写性能', source: 'PPA', critical: true },
+        { type: '法规', requirement: '笔帽通气孔（EN 71-1）', source: 'QBP', critical: true }
+      ]
+    },
+    CU: {
+      desc: { zh: '304 不锈钢保温杯 500ml，双层真空，PP 杯盖含硅胶密封圈', en: '304 stainless steel vacuum bottle 500ml, double-wall, PP lid with silicone sealing ring' },
+      cons: [
+        { part: '杯体', zh: '304 不锈钢，双层真空', en: '304 stainless steel, double-wall vacuum' },
+        { part: '杯盖', zh: 'PP + 硅胶密封圈', en: 'PP lid + silicone sealing ring' },
+        { part: '涂层', zh: '外壁粉体喷涂', en: 'Powder coating on outer wall' }
+      ],
+      surf: [
+        { process: '激光雕刻', position: '杯身', zh: 'Logo 激光雕刻', en: 'Laser engraved logo' }
+      ],
+      pack: [
+        { item: '彩盒', zh: '350g 白卡彩盒，四色', en: '350gsm colour box, 4C' },
+        { item: '外箱', zh: '五层瓦楞，每箱 24 只', en: '5-ply carton, 24 pcs' }
+      ],
+      comp: [
+        { type: '法规', requirement: '食品接触材料 LFGB / EU 10-2011', source: 'QBP', critical: true },
+        { type: '测试', requirement: '密封性 + 保温性能测试', source: 'PPA', critical: true }
+      ]
+    }
+  };
+  const t = T[cat] || T.NB;
+  return JSON.parse(JSON.stringify(t));
+}
+
+function makePsf(skuId, cat, ver, locked) {
+  const t = psfTemplate(cat);
+  return {
+    id: 'psf-' + skuId, skuId, version: ver, locked: !!locked,
+    updatedTime: locked ? '2026-08-06' : '2026-08-11', editor: '业务A',
+    sections: { productDesc: t.desc, construction: t.cons, surface: t.surf, packaging: t.pack, compliance: t.comp },
+    history: locked
+      ? [{ ver: 'V1', time: '2026-07-28', author: '业务A', change: '导入客户 PSF，生成结构化初稿' },
+         { ver: 'V2', time: '2026-08-02', author: '业务A', change: '内页克重 80g → 100g，同步英文版' },
+         { ver: 'Final', time: '2026-08-06', author: '业务A', change: '客户确认后锁定最终版' }]
+      : [{ ver: 'V1', time: '2026-08-05', author: '业务B', change: '按品类模板创建' },
+         { ver: 'V2', time: '2026-08-11', author: '业务B', change: '补充高风险点（开口圈 ≥2.5cm）' }]
+  };
+}
+
+/* ---------- 节点实例工厂 ---------- */
+function makeNode(id, ownerId, reviewerId, skus) {
+  const def = nodeDef(id);
+  const skuDone = {};
+  skus.forEach(s => { skuDone[s.id] = false; });
+  return {
+    id, status: 'pending', deadline: null,
+    ownerId, reviewerId: reviewerId || null,
+    inputs: [], todos: [], comments: [], versions: [],
+    skuDone
+  };
+}
+function markSkus(node, skus, count) {
+  skus.slice(0, count).forEach(s => { node.skuDone[s.id] = true; });
+}
+
+/* ---------- Mock 数据 ---------- */
+function seed() {
+  const people = [
+    { id: 'u1', name: '业务A', role: '业务负责人' },
+    { id: 'u2', name: '业务B', role: '业务员' },
+    { id: 'u3', name: 'CQV 审核', role: '品质（CQV）' },
+    { id: 'u4', name: '管理员', role: '管理者' },
+    { id: 'u5', name: 'HEMA 买手', role: '客户' }
+  ];
+
+  const suppliers = [
+    { id: 's1', name: '供应商A', categories: ['NB'], processes: ['线圈装订', '烫金', '四色印刷'], mold: '支持', leadTimeDays: 30, priceBand: '$0.8 – 1.5', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-03-15', certs: ['BSCI', 'FSC'], rating: 5 },
+    { id: 's2', name: '供应商B', categories: ['NB'], processes: ['胶装', '线圈装订'], mold: '支持', leadTimeDays: 45, priceBand: '$0.6 – 1.2', clients: ['HEMA', 'Migros'], auditStatus: 'passed', auditExpiry: '2026-12-01', certs: ['BSCI'], rating: 4 },
+    { id: 's3', name: '供应商C', categories: ['BG'], processes: ['车缝', '热转印'], mold: '不支持', leadTimeDays: 40, priceBand: '$2.5 – 4.0', clients: ['HEMA'], auditStatus: 'pending', auditExpiry: null, certs: ['BSCI'], rating: 4 },
+    { id: 's4', name: '供应商D', categories: ['BG'], processes: ['车缝', '织唛', '印花'], mold: '支持', leadTimeDays: 35, priceBand: '$3.0 – 5.0', clients: ['Migros'], auditStatus: 'passed', auditExpiry: '2027-01-20', certs: ['BSCI', 'ISO9001'], rating: 5 },
+    { id: 's5', name: '供应商E', categories: ['PN'], processes: ['阳极氧化', '丝印', '电镀'], mold: '支持', leadTimeDays: 30, priceBand: '$0.3 – 0.6', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-05-10', certs: ['BSCI'], rating: 4 },
+    { id: 's6', name: '供应商F', categories: ['PN', 'NB'], processes: ['丝印', '移印'], mold: '不支持', leadTimeDays: 25, priceBand: '$0.2 – 0.5', clients: ['HEMA', 'Migros'], auditStatus: 'expired', auditExpiry: '2026-06-30', certs: [], rating: 3 },
+    { id: 's7', name: '供应商G', categories: ['CU'], processes: ['真空焊接', '粉体喷涂', '激光雕刻'], mold: '支持', leadTimeDays: 45, priceBand: '$1.8 – 3.2', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-02-28', certs: ['BSCI', 'LFGB'], rating: 5 },
+    { id: 's8', name: '供应商H', categories: ['CU'], processes: ['注塑', '喷涂'], mold: '支持', leadTimeDays: 50, priceBand: '$1.5 – 2.8', clients: ['Migros'], auditStatus: 'passed', auditExpiry: '2026-11-15', certs: ['ISO9001'], rating: 4 }
+  ];
+
+  /* ----- 项目 1：BTS 2027（进行中，当前 Tender，含逾期演示） ----- */
+  const p1Skus = [
+    { id: 'k1', artNo: 'HM-NB-001', name: 'A5 线圈本', cat: 'NB', ph: '📓', target: 1.20, quote: 1.35, cost: 0.95, cand: ['s1', 's2'], final: null },
+    { id: 'k2', artNo: 'HM-NB-002', name: 'B5 线胶本', cat: 'NB', ph: '📔', target: 1.05, quote: 1.18, cost: 0.82, cand: ['s2'], final: null },
+    { id: 'k3', artNo: 'HM-NB-003', name: '口袋笔记本', cat: 'NB', ph: '📒', target: 0.55, quote: 0.62, cost: 0.41, cand: ['s1', 's2', 's6'], final: null },
+    { id: 'k4', artNo: 'HM-NB-004', name: '精装笔记本', cat: 'NB', ph: '📕', target: 1.80, quote: 2.05, cost: 1.42, cand: [], final: null },
+    { id: 'k5', artNo: 'HM-BG-001', name: '儿童书包', cat: 'BG', ph: '🎒', target: 3.60, quote: 3.95, cost: 2.80, cand: ['s3'], final: null },
+    { id: 'k6', artNo: 'HM-BG-002', name: '时尚托特包', cat: 'BG', ph: '👜', target: 2.90, quote: 3.20, cost: 2.25, cand: [], final: null },
+    { id: 'k7', artNo: 'HM-PN-001', name: '金属圆珠笔', cat: 'PN', ph: '🖊️', target: 0.42, quote: 0.48, cost: 0.31, cand: ['s5', 's6'], final: null },
+    { id: 'k8', artNo: 'HM-PN-002', name: '按动中性笔', cat: 'PN', ph: '✒️', target: 0.36, quote: 0.41, cost: 0.26, cand: ['s5'], final: null },
+    { id: 'k9', artNo: 'HM-CU-001', name: '塑料水杯', cat: 'CU', ph: '🥤', target: 1.60, quote: 1.78, cost: 1.22, cand: ['s7'], final: null },
+    { id: 'k10', artNo: 'HM-CU-002', name: '保温杯', cat: 'CU', ph: '☕', target: 2.80, quote: 3.10, cost: 2.15, cand: ['s7'], final: null }
+  ];
+  const p1 = {
+    id: 'p1', name: 'BTS 2027', client: 'HEMA', season: '2027 春季', deliveryDate: '2026-11-20',
+    createdDate: '2026-07-25', ownerId: 'u1', status: 'active',
+    skus: p1Skus, nodes: NODE_DEFS.map(d => makeNode(d.id, d.id === '04' ? 'u3' : 'u1', d.id === '04' ? 'u3' : (d.confirm ? 'u5' : null), p1Skus))
+  };
+  recalcTimeline(p1);
+  const pn = id => p1.nodes.find(n => n.id === id);
+  pn('01').status = 'done'; markSkus(pn('01'), p1Skus, 10);
+  pn('01').inputs = ['HEMA Brief 2027春季.pptx', '预算区间表.xlsx'];
+  pn('01').todos = [{ t: 'SKU 货号建档', done: true }, { t: '按交期倒推时间线', done: true }, { t: '产品推荐方案', done: true }];
+  pn('01').versions = [{ v: 'V1', time: '2026-07-26', author: '业务A', note: '建项目，导入 Brief 与 SKU 清单' }];
+  pn('02').status = 'done'; markSkus(pn('02'), p1Skus, 10);
+  pn('02').inputs = ['Brief 结论包', '品牌色彩规范'];
+  pn('02').todos = [{ t: '10 款设计稿输出', done: true }, { t: '客户确认', done: true }];
+  pn('02').comments = [
+    { author: 'HEMA 买手', role: '客户', time: '2026-08-01 15:20', text: 'HM-NB-003 封面颜色改为 Pantone 2925C，其余款式确认。' },
+    { author: '业务A', role: '业务', time: '2026-08-02 09:10', text: '已更新稿件 V2，并同步 PSF 颜色字段。' }
+  ];
+  pn('02').versions = [
+    { v: 'V1', time: '2026-07-30', author: '业务A', note: '首版设计稿 10 款' },
+    { v: 'V2', time: '2026-08-02', author: '业务A', note: '按客户意见修改 HM-NB-003 封面色' }
+  ];
+  pn('03').status = 'in_progress'; markSkus(pn('03'), p1Skus, 9);
+  pn('03').inputs = ['客户 PSF 原文（Excel）', '设计稿 V2'];
+  pn('03').todos = [{ t: '10 份双语 PSF', done: false }, { t: '报价单派生', done: true }, { t: '高风险点标注（CQV）', done: true }];
+  pn('04').status = 'review'; markSkus(pn('04'), p1Skus, 8);
+  pn('04').inputs = ['QBP 手册 v3', 'PPA 测试矩阵'];
+  pn('04').todos = [{ t: '10 款测试要求落地', done: true }, { t: 'CQV 审核', done: false }];
+  pn('04').comments = [
+    { author: 'CQV 审核', role: '品质', time: '2026-08-09 14:05', text: '【驳回】HM-BG-001 缺少开口圈 ≥2.5cm 的测试要求，请补充后重新提交。' },
+    { author: '业务A', role: '业务', time: '2026-08-11 09:40', text: '已补充开口圈与车缝拉力要求，重新提交审批。' }
+  ];
+  pn('05').status = 'in_progress'; markSkus(pn('05'), p1Skus, 5);
+  pn('05').inputs = ['Final PSF ×9', '目标价区间'];
+  pn('05').todos = [{ t: '供应商匹配（10 款）', done: false }, { t: '一轮报价汇总', done: false }, { t: 'CQV 开发样评估', done: false }, { t: '样品拍照 + 寄样', done: false }];
+  p1.currentNodeId = '05';
+
+  /* ----- 项目 2：SIM 2026（大货阶段，含 DUPRO 记录） ----- */
+  const p2Skus = [
+    { id: 'm1', artNo: 'HM-NB-101', name: 'SIM 线圈本', cat: 'NB', ph: '📓', target: 1.10, quote: 1.25, cost: 0.88, cand: ['s1'], final: 's1' },
+    { id: 'm2', artNo: 'HM-NB-102', name: 'SIM 练习本', cat: 'NB', ph: '📗', target: 0.48, quote: 0.55, cost: 0.36, cand: ['s2'], final: 's2' },
+    { id: 'm3', artNo: 'HM-PN-101', name: 'SIM 圆珠笔', cat: 'PN', ph: '🖊️', target: 0.38, quote: 0.44, cost: 0.28, cand: ['s5'], final: 's5' },
+    { id: 'm4', artNo: 'HM-BG-101', name: 'SIM 笔袋', cat: 'BG', ph: '👝', target: 1.20, quote: 1.38, cost: 0.95, cand: ['s3'], final: 's3' },
+    { id: 'm5', artNo: 'HM-CU-101', name: 'SIM 水壶', cat: 'CU', ph: '🥤', target: 1.55, quote: 1.72, cost: 1.18, cand: ['s7'], final: 's7' },
+    { id: 'm6', artNo: 'HM-NB-103', name: 'SIM 素描本', cat: 'NB', ph: '🎨', target: 0.95, quote: 1.08, cost: 0.74, cand: ['s1'], final: 's1' }
+  ];
+  const p2 = {
+    id: 'p2', name: 'SIM 2026', client: 'HEMA', season: '2026 秋季', deliveryDate: '2026-09-30',
+    createdDate: '2026-04-10', ownerId: 'u2', status: 'active',
+    skus: p2Skus, nodes: NODE_DEFS.map(d => makeNode(d.id, 'u2', d.confirm ? 'u5' : null, p2Skus))
+  };
+  recalcTimeline(p2);
+  const qn = id => p2.nodes.find(n => n.id === id);
+  ['01','02','03','04','05','06','07','08','09','10'].forEach(id => { qn(id).status = 'done'; markSkus(qn(id), p2Skus, 6); });
+  qn('07').versions = [
+    { v: 'V1', time: '2026-06-20', author: '业务B', note: 'FS 初稿' },
+    { v: 'V2', time: '2026-06-28', author: '业务B', note: '客户改 3×4 → 3×3 装箱，同步修正描述' },
+    { v: 'Final', time: '2026-07-02', author: '业务B', note: '客户确认后锁定 Final 版本' }
+  ];
+  qn('07').fsLocked = true;
+  qn('11').status = 'in_progress'; markSkus(qn('11'), p2Skus, 2);
+  qn('11').todos = [{ t: '大货样确认', done: true }, { t: '大货签样', done: true }, { t: '生产进度跟踪', done: false }];
+  qn('12').status = 'in_progress';
+  qn('12').todos = [{ t: '预约第三方中期验货', done: true }, { t: '整改项跟进', done: false }];
+  p2.currentNodeId = '11';
+
+  /* ----- PSF ----- */
+  const psfs = {};
+  p1Skus.forEach(s => {
+    psfs[s.id] = makePsf(s.id, s.cat, s.id === 'k1' ? 'Final' : 'V2', s.id === 'k1');
+  });
+  p2Skus.forEach(s => { psfs[s.id] = makePsf(s.id, s.cat, 'Final', true); });
+
+  /* ----- CQV 评估记录 ----- */
+  const cqv = [
+    { id: 'c1', projectId: 'p1', nodeId: '05', sku: 'HM-BG-001', item: '开口圈直径 ≥ 2.5cm', result: '通过', note: '要求已在打样前传达工厂', by: 'CQV 审核', time: '2026-08-12' },
+    { id: 'c2', projectId: 'p1', nodeId: '05', sku: 'HM-BG-002', item: '车缝拉力 ≥ 70N', result: '整改后复评', note: '首件 62N，工厂加固后复测', by: 'CQV 审核', time: '2026-08-13' },
+    { id: 'c3', projectId: 'p1', nodeId: '05', sku: 'HM-CU-002', item: '密封性测试', result: '通过', note: '倒置 30min 无渗漏', by: 'CQV 审核', time: '2026-08-13' }
+  ];
+
+  /* ----- 验货记录（DUPRO / FRI） ----- */
+  const inspections = [
+    { id: 'i1', projectId: 'p2', nodeId: '12', kind: 'DUPRO', time: '2026-08-12', progress: '大货完成约 10%', items: [
+      { item: '外观 / 色差', result: 'pass', issue: '', fix: '' },
+      { item: '尺寸抽检', result: 'pass', issue: '', fix: '' },
+      { item: '印刷 / 烫金定位', result: 'fail', issue: '定位烫偏移约 2mm', fix: '整改中：调整定位治具后复检' }
+    ]}
+  ];
+
+  /* ----- 客户档案 ----- */
+  const client = {
+    name: 'HEMA',
+    profile: {
+      positioning: '荷兰国民生活方式品牌：亲民价格 + 高设计感，SKU 覆盖文具、家居、出行',
+      colors: ['#E30613', '#FFFFFF', '#0567FF', '#F5D90A'],
+      materials: '偏好再生纸 / FSC 纸张、rPET 面料、食品级 PP；避免 PVC',
+      standards: 'QBP 手册 v3 · PPA 测试矩阵 · 供应链透明化（FS 填报工厂）'
+    },
+    contacts: [
+      { name: 'HEMA 买手', role: '买手（Stationery）', note: '主对接人，Brief 与定款确认' },
+      { name: 'HEMA QA', role: 'FE Quality Team', note: '验货与品质异常对接' }
+    ],
+    sop: ['Artwork 下载后 24 小时内建档', 'PSF 以 Final 锁定版为准（追责依据）', '包材设计稿 FS 后 0.5–1 个月内交齐']
+  };
+  const clientProducts = [
+    { id: 'h1', year: 2024, project: 'BTS', artNo: 'HM-NB-B24-01', name: 'A5 线圈本（米菲联名）', cat: 'NB', ph: '📓', desc: '2mm 灰板封面覆哑膜，双线圈 φ8mm，内页 80g 96 张' },
+    { id: 'h2', year: 2024, project: 'BTS', artNo: 'HM-NB-B24-02', name: 'B5 作业本', cat: 'NB', ph: '📗', desc: '胶装 60 张，70g 道林纸，封面 250g 白卡' },
+    { id: 'h3', year: 2024, project: 'BTS', artNo: 'HM-BG-B24-01', name: '儿童书包（恐龙）', cat: 'BG', ph: '🎒', desc: '600D 涤纶，开口圈 ≥2.5cm，反光条' },
+    { id: 'h4', year: 2024, project: 'Gift', artNo: 'HM-CU-G24-01', name: '保温杯 450ml', cat: 'CU', ph: '☕', desc: '304 双层真空，LFGB，粉体喷涂' },
+    { id: 'h5', year: 2025, project: 'BTS', artNo: 'HM-NB-B25-01', name: '口袋笔记本', cat: 'NB', ph: '📒', desc: 'A6 胶装 48 张，圆角，四色封面' },
+    { id: 'h6', year: 2025, project: 'BTS', artNo: 'HM-PN-B25-01', name: '金属圆珠笔', cat: 'PN', ph: '🖊️', desc: '铝合金杆阳极氧化，1.0mm 黑芯' },
+    { id: 'h7', year: 2025, project: 'SIM', artNo: 'HM-BG-S25-01', name: '时尚托特包', cat: 'BG', ph: '👜', desc: '12oz 帆布，织唛标，底部加固' },
+    { id: 'h8', year: 2025, project: 'SIM', artNo: 'HM-CU-S25-01', name: '塑料水杯', cat: 'CU', ph: '🥤', desc: '食品级 PP 500ml，刻度线，防漏盖' },
+    { id: 'h9', year: 2026, project: 'BTS', artNo: 'HM-NB-B26-01', name: '精装笔记本', cat: 'NB', ph: '📕', desc: '布面精装 A5，烫金书名，丝带书签' },
+    { id: 'h10', year: 2026, project: 'BTS', artNo: 'HM-PN-B26-01', name: '按动中性笔', cat: 'PN', ph: '✒️', desc: '0.5mm 黑芯，橡胶握手，笔帽通气孔' },
+    { id: 'h11', year: 2026, project: 'Gift', artNo: 'HM-BG-G26-01', name: '帆布购物袋', cat: 'BG', ph: '🛍️', desc: '10oz 帆布，丝印单色，可折叠' },
+    { id: 'h12', year: 2026, project: 'SIM', artNo: 'HM-CU-S26-01', name: '儿童水壶', cat: 'CU', ph: '🍼', desc: 'Tritan 材质 400ml，吸管盖，密封测试' }
+  ];
+
+  return { role: 'sales', projects: [p1, p2], suppliers, people, client, clientProducts, psfs, cqv, inspections };
+}
+
+/* ---------- 存储 ---------- */
+let db;
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) { db = JSON.parse(raw); return; }
+  } catch (e) { /* ignore */ }
+  db = seed();
+  saveDB();
+}
+function saveDB() {
+  try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch (e) { /* ignore */ }
+}
+function resetDemo() {
+  try { localStorage.removeItem(DB_KEY); } catch (e) { /* ignore */ }
+  db = seed(); saveDB();
+  ui.overlay = null; ui.panel = null;
+  location.hash = '#/projects';
+  render();
+  toast('演示数据已重置', true);
+}
+
+/* ---------- 查询助手 ---------- */
+const proj = id => db.projects.find(p => p.id === id);
+const person = id => db.people.find(p => p.id === id) || { name: '—', role: '' };
+const supplier = id => db.suppliers.find(s => s.id === id);
+const nodeOf = (p, nid) => p.nodes.find(n => n.id === nid);
+const skuOf = (p, kid) => p.skus.find(s => s.id === kid);
+const doneCount = (p, n) => p.skus.filter(s => n.skuDone[s.id]).length;
+const activeNodes = p => p.nodes.filter(n => n.status === 'in_progress' || n.status === 'review');
+const isClient = () => db.role === 'client';
+const canEdit = () => db.role !== 'client';
+
+/* ---------- UI 状态（不持久化） ---------- */
+const ui = {
+  overlay: null,          // {kind, ...}
+  panel: null,            // {kind, ...}
+  psfLang: 'zh',
+  qualityTab: 'cqv',
+  supFilter: { client: 'all', cat: 'all', q: '' },
+  prodFilter: { year: 'all', project: 'all', cat: 'all', q: '' },
+  briefFilter: '',
+  rejectOpen: false
+};
+/* ============================================================
+   视图渲染
+   ============================================================ */
+
+function statusPill(n) {
+  const over = isOverdue(n);
+  const def = nodeDef(n.id);
+  let label = STATUS_LABEL[n.status];
+  if (n.status === 'review' && def.confirm) label = '待审批 / 待确认';
+  return `<span class="pill s-${n.status}">${label}</span>${over ? '<span class="pill s-overdue">已逾期</span>' : ''}`;
+}
+function avatarOf(name) { return `<span class="who"><span class="avatar">${esc(String(name).slice(0, 1))}</span>${esc(name)}</span>`; }
+function currentNode(p) { return p.nodes.find(n => n.status !== 'done') || p.nodes[p.nodes.length - 1]; }
+function stars(n) { return '★★★★★'.slice(0, n) + '<span style="opacity:.25">' + '★★★★★'.slice(n) + '</span>'; }
+
+/* ---------- 顶部导航 ---------- */
+function topbar(routeKey) {
+  const role = db.role;
+  let links = '';
+  if (role === 'client') {
+    links = `<a href="#/projects" class="${routeKey === 'projects' ? 'on' : ''}">我的项目</a>`;
+  } else {
+    if (role === 'manager') links += `<a href="#/dashboard" class="${routeKey === 'dashboard' ? 'on' : ''}">管理看板</a>`;
+    links += `
+      <a href="#/projects" class="${routeKey === 'projects' ? 'on' : ''}">项目管理</a>
+      <a href="#/suppliers" class="${routeKey === 'suppliers' ? 'on' : ''}">供应商管理</a>
+      <a href="#/quality" class="${routeKey === 'quality' ? 'on' : ''}">质量管控</a>
+      <a href="#/clients" class="${routeKey === 'clients' ? 'on' : ''}">客户管理</a>`;
+  }
+  return `
+  <header class="topbar">
+    <span class="logo">Eastlink <span class="logo-tag">MVP DEMO</span></span>
+    <nav class="topnav">${links}</nav>
+    <div class="topbar-right">
+      <select data-chg="clientFilter" title="客户筛选">
+        <option>客户：HEMA</option>
+        <option disabled>Migros（二期）</option>
+      </select>
+      <select data-chg="role" title="视角切换">
+        <option value="sales" ${role === 'sales' ? 'selected' : ''}>视角：内部业务</option>
+        <option value="manager" ${role === 'manager' ? 'selected' : ''}>视角：管理者</option>
+        <option value="client" ${role === 'client' ? 'selected' : ''}>视角：HEMA 客户</option>
+        <option value="supplier" disabled>供应商（二期）</option>
+      </select>
+      <button class="btn-reset" data-act="reset">重置演示数据</button>
+    </div>
+  </header>`;
+}
+
+/* ---------- 工作流泳道 ---------- */
+function lanesHtml(p, clickable) {
+  const cur = currentNode(p);
+  const groups = { dev: [], pre: [], end: [] };
+  p.nodes.forEach(n => groups[nodeDef(n.id).phase].push(n));
+  return `<div class="lanes">` + Object.keys(groups).map(ph => `
+    <div class="lane ph-${ph}">
+      <div class="lane-tag"><i></i>${PHASES[ph].label}<span>${PHASES[ph].en}</span></div>
+      <div class="lane-chips">
+        ${groups[ph].map(n => {
+          const def = nodeDef(n.id);
+          const over = isOverdue(n);
+          const dc = doneCount(p, n);
+          return `<div class="nchip ${n.id === cur.id ? 'cur' : ''} ${clickable ? '' : 'disabled'}"
+            ${clickable ? `data-act="goto" data-href="#/projects/${p.id}/node/${n.id}"` : ''}>
+            <span class="l1"><span class="no">${n.id}</span>${def.name}</span>
+            <span class="l2"><span class="dot s-${n.status}"></span>${dc}/${p.skus.length}
+              <span class="${over ? 'over' : ''}">${fmtD(n.deadline)}${over ? ' 逾期' : ''}</span></span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('') + `</div>`;
+}
+
+/* ---------- 首页（内部） ---------- */
+function viewHome() {
+  const projs = db.projects.filter(p => p.status === 'active');
+  const allActive = [];
+  projs.forEach(p => activeNodes(p).forEach(n => allActive.push({ p, n })));
+  const overdue = allActive.filter(x => isOverdue(x.n));
+  allActive.sort((a, b) => (isOverdue(b.n) - isOverdue(a.n)) || (a.n.deadline < b.n.deadline ? -1 : 1));
+  const totalSku = projs.reduce((s, p) => s + p.skus.length, 0);
+
+  return `
+  <div class="page-head"><h1>项目总览</h1><span class="sub">今天：${TODAY} ｜ 客户：HEMA</span></div>
+  <div class="grid g4">
+    <div class="card statcard brand"><div class="num">${projs.length}</div><div class="lbl">进行中项目</div></div>
+    <div class="card statcard"><div class="num">${totalSku}</div><div class="lbl">总 SKU 数</div></div>
+    <div class="card statcard mint"><div class="num">${allActive.length}</div><div class="lbl">待处理节点</div></div>
+    <div class="card statcard warn"><div class="num">${overdue.length}</div><div class="lbl">已逾期节点</div></div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card">
+      <h3>待处理事项 <span class="tag">按 deadline 排序 · 逾期置顶</span></h3>
+      ${allActive.length ? allActive.map(({ p, n }) => {
+        const over = isOverdue(n);
+        return `<div class="todo-item" data-act="goto" data-href="#/projects/${p.id}/node/${n.id}">
+          <span class="dot s-${n.status}"></span>
+          <span><span class="t-name">${n.id} ${nodeDef(n.id).name}</span> · ${statusPill(n)}</span>
+          <span class="t-proj">${esc(p.name)} · ${esc(person(n.ownerId).name)}</span>
+          <span class="t-dl ${over ? 'over' : ''}">${n.deadline}${over ? `（逾期 ${diffDays(n.deadline, TODAY)} 天）` : ''}</span>
+        </div>`;
+      }).join('') : '<div class="empty">暂无待处理事项</div>'}
+    </div>
+    <div>
+      ${projs.map(p => {
+        const cur = currentNode(p);
+        const ov = p.nodes.filter(isOverdue).length;
+        return `<div class="card proj-card ${p !== projs[0] ? 'mt' : ''}" data-act="goto" data-href="#/projects/${p.id}">
+          <div class="top"><span class="name">${esc(p.name)}</span><span class="tag b">${esc(p.client)}</span>
+            <span class="tag">${esc(p.season)}</span>${ov ? `<span class="tag r">${ov} 个节点逾期</span>` : ''}</div>
+          <div class="meta"><span>交期 <b class="mono">${p.deliveryDate}</b></span><span>负责人 ${esc(person(p.ownerId).name)}</span>
+            <span>SKU ${p.skus.length}</span><span>当前节点 <b>${cur.id} ${nodeDef(cur.id).name}</b></span></div>
+          <div class="mini-flow">${p.nodes.map(n => `<i class="f-${isOverdue(n) ? 'overdue' : n.status}" title="${n.id} ${nodeDef(n.id).name}"></i>`).join('')}</div>
+        </div>`;
+      }).join('')}
+      <p class="note-strip mt">按 PRD §8-F1：主页只保留总览与待办，实际操作全部在项目 / 节点子层级完成。</p>
+    </div>
+  </div>`;
+}
+
+/* ---------- 项目详情（内部） ---------- */
+function viewProject(p) {
+  const cur = currentNode(p);
+  const overs = p.nodes.filter(isOverdue);
+  return `
+  <div class="crumb"><a href="#/projects">项目管理</a> / <b>${esc(p.name)}</b></div>
+  <div class="page-head">
+    <h1>${esc(p.name)}</h1>
+    <span class="tag b">${esc(p.client)}</span><span class="tag">${esc(p.season)}</span>
+    <span class="sub">交期 ${p.deliveryDate} ｜ 负责人 ${esc(person(p.ownerId).name)} ｜ SKU ${p.skus.length} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</span>
+  </div>
+  <div class="card">
+    <h3>工作流 <span class="tag">三大阶段 · 14 节点 · 点击进入节点</span></h3>
+    ${lanesHtml(p, true)}
+    <div class="hintbar">当前节点：<b>${cur.id} ${nodeDef(cur.id).name}</b> · ${STATUS_LABEL[cur.status]}
+      <span>下一步：${cur.todos.filter(t => !t.done).map(t => esc(t.t)).join('；') || '推进本节点至完成'}</span></div>
+    ${overs.length ? `<div class="hintbar warn"><b>逾期提醒</b>${overs.map(n =>
+      `<span>${n.id} ${nodeDef(n.id).name}（逾期 ${diffDays(n.deadline, TODAY)} 天 · ${esc(person(n.ownerId).name)}）</span>`).join('')}</div>` : ''}
+  </div>`;
+}
+
+/* ---------- 节点详情 ---------- */
+function viewNode(p, n) {
+  const def = nodeDef(n.id);
+  const over = isOverdue(n);
+  const dc = doneCount(p, n);
+  const days = diffDays(TODAY, n.deadline);
+
+  let actions = '';
+  if (canEdit()) {
+    if (n.status === 'pending') actions = `<button class="btn pri" data-act="n-start">开始节点</button>`;
+    else if (n.status === 'in_progress') actions = `<button class="btn pri" data-act="n-submit">提交审批</button>`;
+    else if (n.status === 'review') actions = `
+      <button class="btn mint" data-act="n-approve">审批通过</button>
+      <button class="btn danger" data-act="n-reject">驳回</button>`;
+    else actions = `<span class="badge-final">节点已完成</span>`;
+  }
+
+  return `
+  <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> / <b>${n.id} ${def.name}</b></div>
+  <div class="card node-headcard">
+    <span class="big"><span class="code">${def.code}</span>${def.name}</span>
+    <span class="tag ${def.phase === 'dev' ? 'b' : def.phase === 'pre' ? 'k' : 'm'}">${PHASES[def.phase].label}</span>
+    ${statusPill(n)}
+    <span class="kv">deadline <b class="${over ? 'over' : ''}">${n.deadline}</b>
+      ${n.status === 'done' ? '' : over ? `<b class="over">（逾期 ${diffDays(n.deadline, TODAY)} 天）</b>` : `（剩 ${days} 天）`}</span>
+    <span class="kv">负责人 ${avatarOf(person(n.ownerId).name)}</span>
+    ${n.reviewerId ? `<span class="kv">审批 / 确认 ${avatarOf(person(n.reviewerId).name)}</span>` : ''}
+    <span style="flex:1"></span>
+    <span class="btnrow">${actions}</span>
+  </div>
+  ${ui.rejectOpen && n.status === 'review' ? `
+  <div class="card mt reject-box">
+    <h3>驳回原因（必填）</h3>
+    <textarea class="ipt" id="rejectReason" placeholder="请说明驳回原因，将写入审批记录…"></textarea>
+    <div class="btnrow mt"><button class="btn danger" data-act="n-reject-confirm">确认驳回</button>
+    <button class="btn ghost" data-act="n-reject-cancel">取消</button></div>
+  </div>` : ''}
+  ${specificArea(p, n)}
+  <div class="grid g3 mt">
+    <div class="card"><h3>输入资料</h3>
+      ${n.inputs.length ? n.inputs.map(f => `<div class="file-item">📄 ${esc(f)}<span class="tag" style="margin-left:auto">占位</span></div>`).join('') : '<div class="empty">暂无输入资料</div>'}
+    </div>
+    <div class="card"><h3>待办清单 <span class="tag">${n.todos.filter(t => t.done).length}/${n.todos.length}</span></h3>
+      ${n.todos.length ? n.todos.map((t, i) => `
+        <label class="chk ${t.done ? 'done' : ''}"><input type="checkbox" ${t.done ? 'checked' : ''} ${canEdit() ? '' : 'disabled'} data-chg="todo" data-i="${i}"><span>${esc(t.t)}</span></label>`).join('') : '<div class="empty">暂无待办</div>'}
+    </div>
+    <div class="card"><h3>版本记录</h3>
+      ${n.versions.length ? n.versions.map(v => `<div class="ver"><span class="v">${esc(v.v)}</span><span>${esc(v.note)}</span><span class="d">${esc(v.time)} · ${esc(v.author)}</span></div>`).join('') : '<div class="empty">暂无版本记录</div>'}
+    </div>
+  </div>
+  <div class="card mt">
+    <h3>SKU 完成度 <span class="tag b">已完成 ${dc} / 共 ${p.skus.length}</span></h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>货号</th><th>品名</th><th>品类</th><th>本节点状态</th></tr></thead>
+      <tbody>${p.skus.map(s => `
+        <tr><td class="num">${esc(s.artNo)}</td><td>${s.ph} ${esc(s.name)}</td><td><span class="tag">${CATS[s.cat]}</span></td>
+        <td>${canEdit() ? `<button class="btn sm ${n.skuDone[s.id] ? 'mint' : ''}" data-act="sku-toggle" data-sku="${s.id}">
+          ${n.skuDone[s.id] ? '✓ 已完成' : '未完成 · 点击标记'}</button>` : (n.skuDone[s.id] ? '✓ 已完成' : '未完成')}</td></tr>`).join('')}
+      </tbody></table></div>
+  </div>
+  <div class="card mt">
+    <h3>审批 / Comments</h3>
+    ${n.comments.length ? n.comments.map(c => `
+      <div class="cmt"><div class="h">${avatarOf(c.author)}<span class="tag">${esc(c.role)}</span><span class="t">${esc(c.time)}</span></div>
+      <p>${esc(c.text)}</p></div>`).join('') : '<div class="empty">暂无记录</div>'}
+    ${canEdit() ? `<div class="btnrow mt"><input class="ipt" id="cmtBox" placeholder="追加一条 comment…" style="flex:1">
+      <button class="btn" data-act="add-comment">发送</button></div>` : ''}
+  </div>`;
+}
+
+/* ---------- 节点专属功能区 ---------- */
+function specificArea(p, n) {
+  if (n.id === '01') return areaBrief(p, n);
+  if (n.id === '03') return areaPsfList(p);
+  if (n.id === '05') return areaTender(p, n);
+  if (n.id === '07') return areaFS(p, n);
+  if (n.id === '12' || n.id === '13') return areaInspect(p, n);
+  return '';
+}
+
+function areaBrief(p) {
+  const q = ui.briefFilter.trim().toUpperCase();
+  const list = p.skus.filter(s => !q || s.artNo.toUpperCase().includes(q) || CATS[s.cat].includes(q) || s.name.includes(q));
+  return `
+  <div class="card mt">
+    <h3>Brief · SKU 清单 <span class="tag">筛选编号，品类就出来了</span></h3>
+    <div class="filterbar">
+      <input class="ipt search" placeholder="按货号 / 品类筛选，如 HM-NB" value="${esc(ui.briefFilter)}" data-chg="brief-filter">
+      ${canEdit() ? `<button class="btn" data-act="recalc">按交期倒推重算时间线</button>` : ''}
+      <span class="note-strip">命中 ${list.length} / ${p.skus.length} 款</span>
+    </div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>货号</th><th>品名</th><th>品类</th><th>客户目标价</th></tr></thead>
+      <tbody>${list.map(s => `<tr><td class="num">${esc(s.artNo)}</td><td>${s.ph} ${esc(s.name)}</td>
+        <td><span class="tag">${CATS[s.cat]}</span></td><td class="num">$${s.target.toFixed(2)}</td></tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+function areaPsfList(p) {
+  return `
+  <div class="card mt">
+    <h3>PSF 规格书 <span class="tag b">底层核心 · 每 SKU 一份</span></h3>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>货号</th><th>品名</th><th>版本</th><th>状态</th><th></th></tr></thead>
+      <tbody>${p.skus.map(s => {
+        const f = db.psfs[s.id];
+        return `<tr><td class="num">${esc(s.artNo)}</td><td>${s.ph} ${esc(s.name)}</td>
+        <td class="num">${f ? esc(f.version) : '—'}</td>
+        <td>${f && f.locked ? '<span class="badge-final">FINAL 已锁定</span>' : '<span class="tag a">编辑中</span>'}</td>
+        <td><button class="btn sm" data-act="goto" data-href="#/projects/${p.id}/psf/${s.id}">打开 PSF</button></td></tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+function areaTender(p, n) {
+  const cqvs = db.cqv.filter(c => c.projectId === p.id);
+  return `
+  <div class="card mt">
+    <h3>供应商匹配 & 一轮报价 <span class="tag">匹配内嵌在产品行 · 无独立工作台</span></h3>
+    <div class="btnrow" style="margin-bottom:12px">
+      <button class="btn pri" data-act="ovl-supquotes">按供应商导出报价单</button>
+      <button class="btn" data-act="ovl-ppt">一键生成样品 PPT</button>
+    </div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>货号</th><th>品名</th><th>品类</th><th>目标价</th><th>对客报价</th><th>候选供应商</th><th></th></tr></thead>
+      <tbody>${p.skus.map(s => `
+        <tr><td class="num">${esc(s.artNo)}</td><td>${s.ph} ${esc(s.name)}</td><td><span class="tag">${CATS[s.cat]}</span></td>
+        <td class="num">$${s.target.toFixed(2)}</td><td class="num">$${s.quote.toFixed(2)}</td>
+        <td>${s.cand.length ? s.cand.map(id => `<span class="tag b">${esc(supplier(id).name)}</span>`).join(' ') : '<span class="tag">未匹配</span>'}</td>
+        <td>${canEdit() ? `<button class="btn sm" data-act="match-open" data-sku="${s.id}">匹配</button>` : ''}</td></tr>`).join('')}
+      </tbody></table></div>
+    <h3 class="mt">CQV 开发样评估（寄样前完成）</h3>
+    ${cqvs.length ? `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>SKU</th><th>评估项</th><th>结论</th><th>备注</th><th>评估人</th></tr></thead>
+      <tbody>${cqvs.map(c => `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
+        <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
+        <td>${esc(c.note)}</td><td>${esc(c.by)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">暂无评估记录</div>'}
+    <h3 class="mt">样品照片墙（占位）</h3>
+    <div class="prod-grid">${p.skus.slice(0, 4).map(s => `<div class="prod"><div class="ph">${s.ph}</div>
+      <div class="a">${esc(s.artNo)}</div><div class="n">${esc(s.name)}</div><div class="m">样品照片占位</div></div>`).join('')}</div>
+  </div>`;
+}
+
+function areaFS(p, n) {
+  const locked = !!n.fsLocked;
+  return `
+  <div class="card mt">
+    <h3>FS 汇总表 <span class="tag b">供应链透明化 · 每款填明工厂</span>
+      ${locked ? '<span class="badge-final">FINAL 已锁定</span>' : ''}
+      <span style="flex:1"></span>
+      ${canEdit() ? (locked
+        ? `<button class="btn sm" data-act="fs-unlock">解锁（需原因）</button>`
+        : `<button class="btn sm pri" data-act="fs-lock">锁定 Final 版本</button>`) : ''}
+    </h3>
+    ${ui.fsUnlockOpen && locked ? `<div class="reject-box">
+      <input class="ipt" id="fsReason" placeholder="解锁原因（将写入版本记录）…">
+      <div class="btnrow mt"><button class="btn danger" data-act="fs-unlock-confirm">确认解锁</button>
+      <button class="btn ghost" data-act="fs-unlock-cancel">取消</button></div></div>` : ''}
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>货号</th><th>品名</th><th>对客价</th><th>最终供应商（从候选带入）</th></tr></thead>
+      <tbody>${p.skus.map(s => {
+        const opts = (s.cand.length ? s.cand : db.suppliers.filter(x => x.categories.includes(s.cat)).map(x => x.id));
+        return `<tr><td class="num">${esc(s.artNo)}</td><td>${s.ph} ${esc(s.name)}</td><td class="num">$${s.quote.toFixed(2)}</td>
+        <td>${canEdit() && !locked ? `<select class="ipt ipt-inline" data-chg="fs-final" data-sku="${s.id}">
+          <option value="">— 未指定 —</option>
+          ${opts.map(id => `<option value="${id}" ${s.final === id ? 'selected' : ''}>${esc(supplier(id).name)}</option>`).join('')}
+        </select>` : (s.final ? `<span class="tag b">${esc(supplier(s.final).name)}</span>` : '<span class="tag">未指定</span>')}
+        ${s.cand.length ? `<span class="tag" style="margin-left:6px">候选 ${s.cand.length}</span>` : ''}</td></tr>`;
+      }).join('')}</tbody></table></div>
+    <p class="note-strip mt">锁定后表格只读；解锁必须填写原因并写入版本记录——对应「FS 改来改去，改得不正确了」的痛点。</p>
+  </div>`;
+}
+
+function areaInspect(p, n) {
+  const recs = db.inspections.filter(r => r.projectId === p.id && r.nodeId === n.id);
+  const kind = n.id === '12' ? 'DUPRO · 中期验货（大货完成约 10% 时）' : 'FRI · 大货验货（大货完成后）';
+  return `
+  <div class="card mt">
+    <h3>验货记录 <span class="tag k">${kind}</span></h3>
+    ${recs.length ? recs.map(r => `
+      <div class="note-strip" style="margin-bottom:10px">检验时间 ${esc(r.time)} · ${esc(r.progress)} · 第三方执行（TUV 占位）</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>检验项</th><th>结果</th><th>问题描述</th><th>整改状态</th></tr></thead>
+        <tbody>${r.items.map(it => `<tr class="${it.result === 'fail' ? 'critical' : ''}">
+          <td>${esc(it.item)}</td><td>${it.result === 'pass' ? '<span class="tag m">PASS</span>' : '<span class="tag r">FAIL</span>'}</td>
+          <td>${esc(it.issue) || '—'}</td><td>${esc(it.fix) || '—'}</td></tr>`).join('')}</tbody>
+      </table></div>`).join('') : `<div class="empty">${n.id === '12' ? '大货开始后自动排期（待开始）' : '大货完成后进行（待开始）'}</div>`}
+  </div>`;
+}
+
+/* ---------- PSF 编辑器 ---------- */
+function psfCell(f, path, val, forceRO) {
+  const ro = f.locked || ui.psfLang === 'en' || forceRO || !canEdit();
+  return `<input class="cell" value="${esc(val)}" ${ro ? 'disabled' : ''} data-chg="psf" data-path="${path}">`;
+}
+function viewPSF(p, s) {
+  const f = db.psfs[s.id];
+  if (!f) return '<div class="empty">未找到 PSF</div>';
+  const L = ui.psfLang;
+  const sec = f.sections;
+  return `
+  <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> /
+    <a href="#/projects/${p.id}/node/03">03 规格书</a> / <b>${esc(s.artNo)}</b></div>
+  <div class="page-head"><h1>${s.ph} ${esc(s.artNo)} · ${esc(s.name)}</h1>
+    <span class="tag">${CATS[s.cat]}</span>
+    <span class="tag b mono">版本 ${esc(f.version)}</span>
+    ${f.locked ? '<span class="badge-final">FINAL 已锁定</span>' : '<span class="tag a">编辑中</span>'}
+  </div>
+  <div class="psf-bar">
+    <span class="lang-toggle">
+      <button class="${L === 'zh' ? 'on' : ''}" data-act="psf-lang" data-l="zh">中文</button>
+      <button class="${L === 'en' ? 'on' : ''}" data-act="psf-lang" data-l="en">EN</button>
+    </span>
+    ${canEdit() ? `
+      <button class="btn" data-act="ovl-import">导入客户 PSF</button>
+      <button class="btn" data-act="psf-save" ${f.locked ? 'disabled' : ''}>保存为新版本</button>
+      ${f.locked ? `<button class="btn" data-act="psf-unlock">解锁（需原因）</button>`
+                 : `<button class="btn mint" data-act="psf-lock">锁定为 Final</button>`}
+      <span style="flex:1"></span>
+      <button class="btn pri" data-act="ovl-quote">生成报价单</button>
+      <button class="btn pri" data-act="ovl-order">生成下单资料</button>
+      <button class="btn" data-act="ovl-en">导出英文版</button>` : ''}
+  </div>
+  ${ui.psfUnlockOpen && f.locked ? `<div class="card reject-box"><input class="ipt" id="psfReason" placeholder="解锁原因（写入版本记录）…">
+    <div class="btnrow mt"><button class="btn danger" data-act="psf-unlock-confirm">确认解锁</button>
+    <button class="btn ghost" data-act="psf-unlock-cancel">取消</button></div></div>` : ''}
+  <div class="card psf-sec"><h3>产品描述</h3>
+    <div class="tbl-wrap"><table class="tbl"><tbody><tr><td>${psfCell(f, 'productDesc.' + L, sec.productDesc[L])}</td></tr></tbody></table></div>
+  </div>
+  <div class="card psf-sec"><h3>构件清单</h3>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:120px">部件</th><th>规格（${L === 'zh' ? '中文' : 'EN'}）</th></tr></thead>
+    <tbody>${sec.construction.map((r, i) => `<tr><td>${esc(r.part)}</td><td>${psfCell(f, `construction.${i}.${L}`, r[L])}</td></tr>`).join('')}</tbody></table></div>
+  </div>
+  <div class="card psf-sec"><h3>表面处理</h3>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:120px">工艺</th><th style="width:130px">位置</th><th>说明</th></tr></thead>
+    <tbody>${sec.surface.map((r, i) => `<tr><td>${esc(r.process)}</td><td>${esc(r.position)}</td><td>${psfCell(f, `surface.${i}.${L}`, r[L])}</td></tr>`).join('')}</tbody></table></div>
+  </div>
+  <div class="card psf-sec"><h3>包材清单</h3>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:120px">包材项</th><th>规格</th></tr></thead>
+    <tbody>${sec.packaging.map((r, i) => `<tr><td>${esc(r.item)}</td><td>${psfCell(f, `packaging.${i}.${L}`, r[L])}</td></tr>`).join('')}</tbody></table></div>
+  </div>
+  <div class="card psf-sec"><h3>法规 · 测试 · 高风险点 <span class="tag r">critical 行始终高亮</span></h3>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:100px">类型</th><th>要求</th><th style="width:90px">来源</th><th style="width:80px">关键</th></tr></thead>
+    <tbody>${sec.compliance.map((r, i) => `<tr class="${r.critical ? 'critical' : ''}">
+      <td>${esc(r.type)}</td><td>${psfCell(f, `compliance.${i}.requirement`, r.requirement, L === 'en')}</td>
+      <td><span class="tag">${esc(r.source)}</span></td><td>${r.critical ? '<span class="tag r">CRITICAL</span>' : '—'}</td></tr>`).join('')}</tbody></table></div>
+  </div>
+  <div class="card psf-sec"><h3>版本历史</h3>
+    ${f.history.map(h => `<div class="ver"><span class="v">${esc(h.ver)}</span><span>${esc(h.change)}</span><span class="d">${esc(h.time)} · ${esc(h.author)}</span></div>`).join('')}
+  </div>`;
+}
+
+/* ---------- 供应商管理 ---------- */
+function viewSuppliers() {
+  const F = ui.supFilter;
+  const list = db.suppliers.filter(s =>
+    (F.client === 'all' || s.clients.includes(F.client)) &&
+    (F.cat === 'all' || s.categories.includes(F.cat)) &&
+    (!F.q || s.name.includes(F.q) || s.categories.map(c => CATS[c]).join().includes(F.q)));
+  const auditPill = s => s.auditStatus === 'passed'
+    ? `<span class="tag m">验厂通过 · 至 ${esc(s.auditExpiry)}</span>`
+    : s.auditStatus === 'pending' ? '<span class="tag a">验厂待审</span>'
+    : `<span class="tag r">验厂过期 · ${esc(s.auditExpiry)}</span>`;
+  return `
+  <div class="page-head"><h1>供应商管理</h1><span class="sub">平台型板块 · 常驻维护 ｜ 信息越细，匹配越准</span>
+    <span class="spacer"></span><button class="btn" data-act="sup-import">导入供应商</button></div>
+  <div class="filterbar">
+    <select class="ipt" data-chg="sup-client">
+      <option value="all" ${F.client === 'all' ? 'selected' : ''}>客户：全部</option>
+      <option value="HEMA" ${F.client === 'HEMA' ? 'selected' : ''}>客户：HEMA</option>
+      <option value="Migros" ${F.client === 'Migros' ? 'selected' : ''}>客户：Migros</option>
+    </select>
+    <select class="ipt" data-chg="sup-cat">
+      <option value="all">品类：全部</option>
+      ${Object.keys(CATS).map(c => `<option value="${c}" ${F.cat === c ? 'selected' : ''}>品类：${CATS[c]}</option>`).join('')}
+    </select>
+    <input class="ipt search" placeholder="搜索供应商 / 品类…" value="${esc(F.q)}" data-chg="sup-q">
+    <span class="note-strip">命中 ${list.length} / ${db.suppliers.length} 家</span>
+  </div>
+  <div class="grid g3">
+    ${list.map(s => `<div class="card proj-card" data-act="sup-detail" data-id="${s.id}">
+      <div class="top"><span class="name">${esc(s.name)}</span>
+        <span class="mono" style="color:var(--amber);font-size:12px">${stars(s.rating)}</span></div>
+      <div class="meta" style="margin-top:8px">
+        ${s.categories.map(c => `<span class="tag b">${CATS[c]}</span>`).join(' ')}
+        ${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</div>
+      <div class="meta">周期 <b class="mono">${s.leadTimeDays} 天</b> · 均价 <b class="mono">${esc(s.priceBand)}</b> · 开模 ${esc(s.mold)}</div>
+      <div>${auditPill(s)}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ---------- 质量管控 ---------- */
+function viewQuality() {
+  const tab = ui.qualityTab;
+  let body = '';
+  if (tab === 'cqv') {
+    body = `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>SKU</th><th>评估项</th><th>结论</th><th>备注</th><th>评估人</th><th>时间</th><th>项目 / 节点</th></tr></thead>
+      <tbody>${db.cqv.map(c => {
+        const p = proj(c.projectId);
+        return `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
+        <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
+        <td>${esc(c.note)}</td><td>${esc(c.by)}</td><td class="num">${esc(c.time)}</td>
+        <td><a href="#/projects/${p.id}/node/${c.nodeId}">${esc(p.name)} · ${c.nodeId} ${nodeDef(c.nodeId).name}</a></td></tr>`;
+      }).join('')}</tbody></table></div>
+      <p class="note-strip mt">质量管控从开发样评估开始——「前期没问题，后期都是小异常」。</p>`;
+  } else if (tab === 'audit') {
+    body = `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>供应商</th><th>验厂状态</th><th>有效期</th><th>资质</th><th>合作客户</th></tr></thead>
+      <tbody>${db.suppliers.map(s => `<tr>
+        <td><b>${esc(s.name)}</b></td>
+        <td>${s.auditStatus === 'passed' ? '<span class="tag m">通过</span>' : s.auditStatus === 'pending' ? '<span class="tag a">待审</span>' : '<span class="tag r">已过期</span>'}</td>
+        <td class="num">${esc(s.auditExpiry || '—')}</td>
+        <td>${s.certs.length ? s.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ') : '—'}</td>
+        <td>${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</td></tr>`).join('')}</tbody></table></div>
+      <p class="note-strip mt">与供应商管理同源数据；验厂随 FS 确认启动、量产前完成（节点 10），第三方（TUV）执行。</p>`;
+  } else {
+    const rows = [];
+    db.inspections.forEach(r => r.items.forEach(it => rows.push({ r, it })));
+    body = rows.length ? `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>项目</th><th>类型</th><th>时间 / 进度</th><th>检验项</th><th>结果</th><th>问题</th><th>整改</th><th></th></tr></thead>
+      <tbody>${rows.map(({ r, it }) => {
+        const p = proj(r.projectId);
+        return `<tr class="${it.result === 'fail' ? 'critical' : ''}">
+          <td>${esc(p.name)}</td><td><span class="tag k">${esc(r.kind)}</span></td>
+          <td class="num">${esc(r.time)}<br><span style="color:var(--muted)">${esc(r.progress)}</span></td>
+          <td>${esc(it.item)}</td>
+          <td>${it.result === 'pass' ? '<span class="tag m">PASS</span>' : '<span class="tag r">FAIL</span>'}</td>
+          <td>${esc(it.issue) || '—'}</td><td>${esc(it.fix) || '—'}</td>
+          <td><a href="#/projects/${p.id}/node/${r.nodeId}">打开节点</a></td></tr>`;
+      }).join('')}</tbody></table></div>` : '<div class="empty">暂无验货记录</div>';
+  }
+  return `
+  <div class="page-head"><h1>质量管控</h1><span class="sub">平台型板块 · 与项目节点联动（同一份数据，两处入口）</span></div>
+  <div class="card">
+    <div class="tabs">
+      <button class="${tab === 'cqv' ? 'on' : ''}" data-act="qtab" data-t="cqv">CQV 开发样评估</button>
+      <button class="${tab === 'audit' ? 'on' : ''}" data-act="qtab" data-t="audit">验厂</button>
+      <button class="${tab === 'insp' ? 'on' : ''}" data-act="qtab" data-t="insp">验货（DUPRO / FRI）</button>
+    </div>
+    ${body}
+  </div>`;
+}
+
+/* ---------- 客户管理 ---------- */
+function viewClients() {
+  const c = db.client;
+  const F = ui.prodFilter;
+  const years = [...new Set(db.clientProducts.map(x => x.year))].sort();
+  const projects = [...new Set(db.clientProducts.map(x => x.project))];
+  const list = db.clientProducts.filter(x =>
+    (F.year === 'all' || String(x.year) === String(F.year)) &&
+    (F.project === 'all' || x.project === F.project) &&
+    (F.cat === 'all' || x.cat === F.cat) &&
+    (!F.q || x.name.includes(F.q) || x.artNo.toUpperCase().includes(F.q.toUpperCase())));
+  return `
+  <div class="page-head"><h1>客户管理</h1><span class="sub">品牌档案 · 联系人 · 过往产品库</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>HEMA · 品牌档案</h3>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 10px">${esc(c.profile.positioning)}</p>
+      <div class="kv" style="margin-bottom:6px">品牌色彩</div>
+      <div class="swatches">${c.profile.colors.map(x => `<i style="background:${esc(x)}" title="${esc(x)}"></i>`).join('')}</div>
+      <div class="kv mt">材料偏好</div><p style="font-size:13px;margin:2px 0 8px">${esc(c.profile.materials)}</p>
+      <div class="kv">标准体系</div><p style="font-size:13px;margin:2px 0 0">${esc(c.profile.standards)}</p>
+    </div>
+    <div class="card"><h3>联系人 & SOP</h3>
+      ${c.contacts.map(x => `<div class="cmt"><div class="h">${avatarOf(x.name)}<span class="tag">${esc(x.role)}</span></div><p>${esc(x.note)}</p></div>`).join('')}
+      <div class="sec-title mt">SOP 备注</div>
+      ${c.sop.map(x => `<div class="file-item">📌 ${esc(x)}</div>`).join('')}
+      <p class="note-strip">不设「客户决策人」板块——只跟踪「是否已确认」。</p>
+    </div>
+  </div>
+  <div class="card mt">
+    <h3>过往产品库 <span class="tag">每季约 70% 老品换设计 · 新人可搜可复用</span></h3>
+    <div class="filterbar">
+      <select class="ipt" data-chg="pf-year"><option value="all">年份：全部</option>
+        ${years.map(y => `<option ${String(F.year) === String(y) ? 'selected' : ''} value="${y}">年份：${y}</option>`).join('')}</select>
+      <select class="ipt" data-chg="pf-project"><option value="all">项目：全部</option>
+        ${projects.map(x => `<option ${F.project === x ? 'selected' : ''} value="${x}">项目：${x}</option>`).join('')}</select>
+      <select class="ipt" data-chg="pf-cat"><option value="all">品类：全部</option>
+        ${Object.keys(CATS).map(k => `<option value="${k}" ${F.cat === k ? 'selected' : ''}>品类：${CATS[k]}</option>`).join('')}</select>
+      <input class="ipt search" placeholder="搜索货号 / 品名…" value="${esc(F.q)}" data-chg="pf-q">
+      <span class="note-strip">命中 ${list.length} / ${db.clientProducts.length}</span>
+    </div>
+    <div class="prod-grid">
+      ${list.map(x => `<div class="prod" data-act="prod-detail" data-id="${x.id}">
+        <div class="ph">${x.ph}</div><div class="a">${esc(x.artNo)}</div>
+        <div class="n">${esc(x.name)}</div><div class="m">${x.year} · ${esc(x.project)} · ${CATS[x.cat]}</div>
+      </div>`).join('') || '<div class="empty">无匹配产品</div>'}
+    </div>
+  </div>`;
+}
+
+/* ---------- 管理者看板 ---------- */
+function viewDashboard() {
+  const projs = db.projects.filter(p => p.status === 'active');
+  const overs = [];
+  projs.forEach(p => p.nodes.filter(isOverdue).forEach(n => overs.push({ p, n })));
+  const reviews = [];
+  projs.forEach(p => p.nodes.filter(n => n.status === 'review').forEach(n => reviews.push({ p, n })));
+  const byOwner = {};
+  projs.forEach(p => activeNodes(p).forEach(n => {
+    const nm = person(n.ownerId).name;
+    byOwner[nm] = (byOwner[nm] || 0) + 1;
+  }));
+  const ranks = Object.entries(byOwner).sort((a, b) => b[1] - a[1]);
+  const maxR = ranks.length ? ranks[0][1] : 1;
+  return `
+  <div class="page-head"><h1>管理看板</h1><span class="sub">谁卡在哪一步，不用催都知道 ｜ 今天：${TODAY}</span></div>
+  <div class="grid g4">
+    <div class="card statcard brand"><div class="num">${projs.length}</div><div class="lbl">进行中项目</div></div>
+    <div class="card statcard warn"><div class="num">${overs.length}</div><div class="lbl">逾期节点</div></div>
+    <div class="card statcard"><div class="num">${reviews.length}</div><div class="lbl">待审批 / 待确认</div></div>
+    <div class="card statcard mint"><div class="num">${projs.reduce((s, p) => s + activeNodes(p).length, 0)}</div><div class="lbl">活跃节点</div></div>
+  </div>
+  <div class="card mt">
+    <h3>项目 × 节点 进度矩阵</h3>
+    <div class="matrix-wrap"><table class="matrix">
+      <thead><tr><th></th>${NODE_DEFS.map(d => `<th>${d.id}<br>${d.code}</th>`).join('')}</tr></thead>
+      <tbody>${projs.map(p => `<tr><td class="pname">${esc(p.name)}</td>
+        ${p.nodes.map(n => `<td><div class="mcell s-${n.status} ${isOverdue(n) ? 'ov' : ''}"
+          title="${n.id} ${nodeDef(n.id).name} · ${STATUS_LABEL[n.status]}${isOverdue(n) ? ' · 逾期' : ''}"
+          data-act="goto" data-href="#/projects/${p.id}/node/${n.id}">${n.id}</div></td>`).join('')}</tr>`).join('')}
+      </tbody></table></div>
+    <div class="legend">
+      <span><i style="background:var(--surface-2)"></i>未开始</span>
+      <span><i style="background:var(--brand)"></i>进行中</span>
+      <span><i style="background:var(--amber)"></i>待审批</span>
+      <span><i style="background:var(--mint)"></i>已完成</span>
+      <span><i style="background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--red)"></i>逾期</span>
+    </div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card"><h3>逾期清单</h3>
+      ${overs.length ? `<div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>项目</th><th>节点</th><th>负责人</th><th>deadline</th><th>逾期</th></tr></thead>
+        <tbody>${overs.map(({ p, n }) => `<tr>
+          <td>${esc(p.name)}</td><td><a href="#/projects/${p.id}/node/${n.id}">${n.id} ${nodeDef(n.id).name}</a></td>
+          <td>${esc(person(n.ownerId).name)}</td><td class="num">${n.deadline}</td>
+          <td><span class="tag r">${diffDays(n.deadline, TODAY)} 天</span></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">无逾期节点 🎉</div>'}
+    </div>
+    <div class="card"><h3>卡点排行（按负责人）</h3>
+      ${ranks.map(([nm, c]) => `<div style="display:flex;align-items:center;gap:10px;padding:7px 0">
+        ${avatarOf(nm)}
+        <div style="flex:1;background:var(--surface-2);border-radius:6px;height:14px;overflow:hidden">
+          <div style="width:${Math.round(c / maxR * 100)}%;height:100%;background:var(--brand)"></div></div>
+        <b class="mono">${c} 项</b></div>`).join('')}
+      <p class="note-strip mt">活跃（进行中 + 待审批）节点按负责人聚合。</p>
+    </div>
+  </div>`;
+}
+
+/* ---------- 客户（HEMA）视角 ---------- */
+function viewClientHome() {
+  const projs = db.projects.filter(p => p.status === 'active');
+  return `
+  <div class="client-banner">HEMA 客户视角 · 只读 + 确认 ｜ 您可以查看项目进度、确认待办事项、下载对外文件</div>
+  <div class="page-head"><h1>我的项目</h1></div>
+  <div class="grid g2">
+    ${projs.map(p => {
+      const confirms = p.nodes.filter(n => nodeDef(n.id).confirm && n.status === 'review').length;
+      return `<div class="card proj-card" data-act="goto" data-href="#/projects/${p.id}">
+        <div class="top"><span class="name">${esc(p.name)}</span><span class="tag">${esc(p.season)}</span>
+          ${confirms ? `<span class="tag a">${confirms} 项待您确认</span>` : ''}</div>
+        <div class="meta"><span>交期 <b class="mono">${p.deliveryDate}</b></span>
+          <span>节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</span></div>
+        <div class="mini-flow">${p.nodes.map(n => `<i class="f-${n.status === 'done' ? 'done' : n.status}"></i>`).join('')}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function viewClientProject(p) {
+  const confirms = p.nodes.filter(n => nodeDef(n.id).confirm && n.status === 'review');
+  const lockedPsfs = p.skus.filter(s => db.psfs[s.id] && db.psfs[s.id].locked);
+  const hasFinal = p.skus.some(s => s.final);
+  return `
+  <div class="client-banner">HEMA 客户视角 · 只读 + 确认</div>
+  <div class="crumb"><a href="#/projects">我的项目</a> / <b>${esc(p.name)}</b></div>
+  <div class="page-head"><h1>${esc(p.name)}</h1><span class="tag">${esc(p.season)}</span>
+    <span class="sub">交期 ${p.deliveryDate} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</span></div>
+  <div class="card"><h3>项目进度</h3>${lanesHtml(p, false)}</div>
+  <div class="card mt"><h3>待您确认（${confirms.length}）</h3>
+    ${confirms.length ? `<div class="grid g2">${confirms.map(n => `
+      <div class="confirm-card">
+        <h4>${n.id} ${nodeDef(n.id).name}</h4>
+        <p>我方已完成本节点交付物，等待您确认后进入下一环节。deadline：${n.deadline}</p>
+        <div class="btnrow">
+          <button class="btn mint" data-act="client-confirm" data-n="${n.id}">确认</button>
+          <button class="btn" data-act="client-change" data-n="${n.id}">提出修改意见</button>
+        </div>
+        ${ui.clientChangeFor === n.id ? `<div class="mt">
+          <textarea class="ipt" id="ccText" placeholder="请填写修改意见…"></textarea>
+          <div class="btnrow mt"><button class="btn pri" data-act="client-change-send" data-n="${n.id}">发送</button></div>
+        </div>` : ''}
+      </div>`).join('')}</div>` : '<div class="empty">暂无待确认事项</div>'}
+  </div>
+  <div class="card mt"><h3>对外文件</h3>
+    ${lockedPsfs.map(s => `<div class="file-item">📘 PSF (EN) · ${esc(s.artNo)} · Final
+      <button class="btn sm" style="margin-left:auto" data-act="ovl-en-c" data-sku="${s.id}">查看</button></div>`).join('')}
+    <div class="file-item">🖼️ 样品清单 PPT
+      <button class="btn sm" style="margin-left:auto" data-act="ovl-ppt-c" data-p="${p.id}">查看</button></div>
+    ${hasFinal ? `<div class="file-item">🏭 FS 最终供应商名单
+      <button class="btn sm" style="margin-left:auto" data-act="ovl-fslist" data-p="${p.id}">查看</button></div>` : ''}
+  </div>`;
+}
+
+/* ============================================================
+   浮层 / 侧滑面板
+   ============================================================ */
+
+function ovlShell(title, sub, body) {
+  return `
+  <div class="ovl" data-act="ovl-close-bg">
+    <div class="ovl-actions">
+      <button class="btn" data-act="print">🖨 打印 / 导出 PDF</button>
+      <button class="btn" data-act="ovl-close">关闭</button>
+    </div>
+    <div class="sheet">
+      <div class="sheet-head"><span class="mk"><i></i><i></i></span><h2>${title}</h2></div>
+      <div class="sheet-sub">${sub}</div>
+      ${body}
+    </div>
+  </div>`;
+}
+
+function renderOverlay() {
+  const o = ui.overlay;
+  if (!o) return '';
+  const p = o.pid ? proj(o.pid) : null;
+  const s = o.skuId && p ? skuOf(p, o.skuId) : null;
+  const f = s ? db.psfs[s.id] : null;
+
+  if (o.kind === 'import') {
+    return `
+    <div class="ovl">
+      <div class="ovl-actions"><button class="btn" data-act="ovl-close">关闭</button></div>
+      <div class="sheet">
+        <div class="sheet-head"><span class="mk"><i></i><i></i></span><h2>导入客户 PSF（演示）</h2></div>
+        <div class="sheet-sub">粘贴 / 选择客户 PSF 原文 → 自动解析为结构化规格 → 生成中文工厂版（演示交互，不做真实解析）</div>
+        <div class="raw">Item: ${esc(s.artNo)}  ${esc(s.name)}
+Cover: 2mm greyboard, 157gsm art paper, matt lamination
+Inner: 96 sheets, 80gsm woodfree, 4C printing
+Binding: twin wire-o, black, dia. 8mm
+Packing: hangtag 300gsm w/ barcode; self-adhesive OPP bag w/ warning
+Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
+        ${o.parsing ? '<div class="spin"></div><div class="empty">正在解析并分类（规格 / 包材 / 法规）…</div>'
+          : `<div class="btnrow mt"><button class="btn pri" data-act="import-parse">解析并导入</button></div>`}
+      </div>
+    </div>`;
+  }
+
+  if (o.kind === 'quote') {
+    return ovlShell('客户报价单', `由 PSF 数据自动生成 · ${esc(s.artNo)} · 版本 ${esc(f.version)} · 生成时间 ${nowStamp()}`, `
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>货号</th><th>图</th><th>品名 / 描述</th><th>对客报价</th><th>包装</th><th>备注</th></tr></thead>
+        <tbody><tr>
+          <td class="num">${esc(s.artNo)}</td><td style="font-size:26px">${s.ph}</td>
+          <td><b>${esc(s.name)}</b><br><span style="color:var(--muted)">${esc(f.sections.productDesc.zh)}</span></td>
+          <td class="num"><b>$${s.quote.toFixed(2)}</b></td>
+          <td>${f.sections.packaging.map(x => esc(x.item)).join(' / ')}</td>
+          <td>MOQ 3,000 · FOB Ningbo</td>
+        </tr></tbody></table></div>
+      <p class="note-strip mt">同源演示：修改 PSF 后重新生成，此表数据随之变化。</p>`);
+  }
+
+  if (o.kind === 'order') {
+    return ovlShell('下单资料（构件清单 + 包装清单）', `本地 AI 按公司模板从 Final 规格书生成（演示） · ${esc(s.artNo)}`, `
+      <h3 style="font-size:14px">产品描述</h3>
+      <p style="font-size:13px">${esc(f.sections.productDesc.zh)}</p>
+      <h3 style="font-size:14px">构件清单</h3>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>部件</th><th>规格</th></tr></thead>
+        <tbody>${f.sections.construction.map(r => `<tr><td>${esc(r.part)}</td><td>${esc(r.zh)}</td></tr>`).join('')}</tbody></table></div>
+      <h3 style="font-size:14px" class="mt">包装清单</h3>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>包材项</th><th>规格</th></tr></thead>
+        <tbody>${f.sections.packaging.map(r => `<tr><td>${esc(r.item)}</td><td>${esc(r.zh)}</td></tr>`).join('')}</tbody></table></div>
+      <p class="note-strip mt">资料审核员只需复核差异字段——「一处录入，多处复用」。</p>`);
+  }
+
+  if (o.kind === 'en') {
+    return ovlShell('PSF — Product Specification (EN)', `${esc(s.artNo)} · ${esc(s.name)} · Version ${esc(f.version)}${f.locked ? ' · FINAL' : ''}`, `
+      <p style="font-size:13px"><b>Description:</b> ${esc(f.sections.productDesc.en)}</p>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Part</th><th>Specification</th></tr></thead>
+        <tbody>${f.sections.construction.map(r => `<tr><td>${esc(r.part)}</td><td>${esc(r.en)}</td></tr>`).join('')}</tbody></table></div>
+      <div class="tbl-wrap mt"><table class="tbl"><thead><tr><th>Packaging</th><th>Specification</th></tr></thead>
+        <tbody>${f.sections.packaging.map(r => `<tr><td>${esc(r.item)}</td><td>${esc(r.en)}</td></tr>`).join('')}</tbody></table></div>
+      <div class="tbl-wrap mt"><table class="tbl"><thead><tr><th>Compliance</th><th>Requirement</th></tr></thead>
+        <tbody>${f.sections.compliance.map(r => `<tr class="${r.critical ? 'critical' : ''}"><td>${esc(r.type)}</td><td>${esc(r.requirement)}${r.critical ? ' <span class="tag r">CRITICAL</span>' : ''}</td></tr>`).join('')}</tbody></table></div>`);
+  }
+
+  if (o.kind === 'ppt') {
+    return ovlShell(`${esc(p.name)} · 样品清单 PPT`, `照片上传后一键生成（演示） · 共 ${p.skus.length} 款 · ${nowStamp()}`, `
+      <div class="prod-grid" style="grid-template-columns:repeat(2,1fr)">
+        ${p.skus.map(x => `<div class="slide"><div class="ph">${x.ph}</div>
+          <div class="a">${esc(x.artNo)}</div><b>${esc(x.name)}</b>
+          <div class="p">对客报价 $${x.quote.toFixed(2)} · ${CATS[x.cat]}</div></div>`).join('')}
+      </div>`);
+  }
+
+  if (o.kind === 'supquotes') {
+    const sups = db.suppliers.filter(x => p.skus.some(k => k.cand.includes(x.id)));
+    return ovlShell('分供应商报价单', `按候选供应商分组导出 · 多家可做的款式同时出现在各家单中 · 内部文件（含成本，不对客户展示）`, `
+      ${sups.length ? sups.map(sp => {
+        const items = p.skus.filter(k => k.cand.includes(sp.id));
+        return `<h3 style="font-size:14px" class="mt">${esc(sp.name)} <span class="tag">周期 ${sp.leadTimeDays} 天</span> <span class="tag">共 ${items.length} 款</span></h3>
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>货号</th><th>品名</th><th>目标价</th><th>对客报价</th><th>内部成本</th></tr></thead>
+          <tbody>${items.map(k => `<tr><td class="num">${esc(k.artNo)}</td><td>${k.ph} ${esc(k.name)}</td>
+            <td class="num">$${k.target.toFixed(2)}</td><td class="num">$${k.quote.toFixed(2)}</td>
+            <td class="num" style="color:var(--red)">$${k.cost.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+      }).join('') : '<div class="empty">暂无候选供应商，请先在 Tender 节点完成匹配</div>'}`);
+  }
+
+  if (o.kind === 'fslist') {
+    const items = p.skus.filter(k => k.final);
+    return ovlShell('FS 最终供应商名单', `供应链透明化 · 仅名单（明细报价与成本不对外）`, `
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>货号</th><th>品名</th><th>最终供应商</th></tr></thead>
+        <tbody>${items.map(k => `<tr><td class="num">${esc(k.artNo)}</td><td>${k.ph} ${esc(k.name)}</td>
+        <td><span class="tag b">${esc(supplier(k.final).name)}</span></td></tr>`).join('')}</tbody></table></div>`);
+  }
+
+  if (o.kind === 'prod') {
+    const x = db.clientProducts.find(y => y.id === o.id);
+    return ovlShell(`${esc(x.artNo)} · ${esc(x.name)}`, `${x.year} · ${esc(x.project)} · ${CATS[x.cat]} · 过往产品库`, `
+      <div style="font-size:50px;text-align:center;background:var(--surface-2);border-radius:12px;padding:26px 0">${x.ph}</div>
+      <h3 style="font-size:14px" class="mt">可复用标准描述</h3>
+      <p style="font-size:13.5px;background:var(--mint-soft);border-radius:10px;padding:12px 14px">${esc(x.desc)}</p>
+      <div class="btnrow"><button class="btn pri" data-act="copy-desc" data-id="${x.id}">📋 复制标准描述</button></div>
+      <p class="note-strip mt">老品换设计时直接复用描述，改参数即可——不再依赖老员工记忆。</p>`);
+  }
+  return '';
+}
+
+function renderPanel() {
+  const pl = ui.panel;
+  if (!pl) return '';
+  if (pl.kind === 'match') {
+    const p = proj(pl.pid), s = skuOf(p, pl.skuId);
+    const hits = db.suppliers.filter(x => x.categories.includes(s.cat));
+    return `
+    <div class="panel-mask" data-act="panel-close"></div>
+    <div class="panel">
+      <div class="p-head"><h3>供应商匹配 · ${esc(s.artNo)}</h3><button class="x" data-act="panel-close">✕</button></div>
+      <div class="p-body">
+        <p class="note-strip" style="margin-bottom:12px">品类：<b>${CATS[s.cat]}</b> · 命中 <b>${hits.length} / ${db.suppliers.length}</b> 家 · 最多选 3 家加入候选</p>
+        ${hits.map(x => `
+          <label class="sup-row ${pl.sel.includes(x.id) ? 'on' : ''}">
+            <input type="checkbox" ${pl.sel.includes(x.id) ? 'checked' : ''} data-chg="match-sel" data-id="${x.id}">
+            <div><div class="s-name">${esc(x.name)} <span class="mono" style="color:var(--amber);font-size:11px">${stars(x.rating)}</span></div>
+              <div class="s-meta"><span>周期 ${x.leadTimeDays} 天</span><span>均价 ${esc(x.priceBand)}</span><span>开模 ${esc(x.mold)}</span>
+                <span>${x.auditStatus === 'passed' ? '验厂✓' : x.auditStatus === 'pending' ? '验厂待审' : '<b style="color:var(--red)">验厂过期</b>'}</span></div>
+              <div class="s-meta">${x.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')} ${x.processes.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>
+            </div>
+          </label>`).join('')}
+      </div>
+      <div class="p-foot"><button class="btn ghost" data-act="panel-close">取消</button>
+        <button class="btn pri" data-act="match-save">保存候选（${pl.sel.length}）</button></div>
+    </div>`;
+  }
+  if (pl.kind === 'supplier') {
+    const x = supplier(pl.id);
+    const coops = db.projects.filter(p => p.skus.some(k => k.cand.includes(x.id) || k.final === x.id));
+    return `
+    <div class="panel-mask" data-act="panel-close"></div>
+    <div class="panel">
+      <div class="p-head"><h3>${esc(x.name)}</h3><button class="x" data-act="panel-close">✕</button></div>
+      <div class="p-body">
+        <div class="kv" style="margin-bottom:8px">评级 <span class="mono" style="color:var(--amber)">${stars(x.rating)}</span></div>
+        <div class="sec-title">能力信息（越细，AI 匹配越准）</div>
+        <div class="meta" style="font-size:13px;display:grid;gap:6px">
+          <div>品类：${x.categories.map(c => `<span class="tag b">${CATS[c]}</span>`).join(' ')}</div>
+          <div>工艺：${x.processes.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>
+          <div>开模：${esc(x.mold)} ｜ 周期：<b class="mono">${x.leadTimeDays} 天</b> ｜ 均价：<b class="mono">${esc(x.priceBand)}</b></div>
+          <div>合作客户：${x.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</div>
+        </div>
+        <div class="sec-title mt">验厂 & 资质</div>
+        <div class="file-item">${x.auditStatus === 'passed' ? `✅ 验厂通过，有效期至 ${esc(x.auditExpiry)}` : x.auditStatus === 'pending' ? '🕐 验厂待审（TUV 排期中）' : `⚠️ 验厂已过期（${esc(x.auditExpiry)}），需重新安排`}</div>
+        ${x.certs.length ? `<div class="btnrow">${x.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>` : ''}
+        <div class="sec-title mt">参与项目</div>
+        ${coops.length ? coops.map(p => `<div class="file-item">📁 ${esc(p.name)} · ${p.skus.filter(k => k.cand.includes(x.id) || k.final === x.id).length} 款</div>`).join('') : '<div class="empty">暂无</div>'}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ============================================================
+   路由 & 渲染入口
+   ============================================================ */
+
+function render() {
+  const parts = (location.hash || '#/projects').replace(/^#\//, '').split('/');
+  let key = parts[0] || 'projects';
+
+  // 视角守卫
+  if (isClient() && !['projects'].includes(key)) { location.hash = '#/projects'; return; }
+  if (key === 'dashboard' && isClient()) { location.hash = '#/projects'; return; }
+
+  let body = '';
+  if (key === 'dashboard') body = viewDashboard();
+  else if (key === 'suppliers') body = viewSuppliers();
+  else if (key === 'quality') body = viewQuality();
+  else if (key === 'clients') body = viewClients();
+  else if (key === 'projects') {
+    const p = parts[1] ? proj(parts[1]) : null;
+    if (!p) body = isClient() ? viewClientHome() : viewHome();
+    else if (parts[2] === 'node' && parts[3]) {
+      if (isClient()) { location.hash = '#/projects/' + p.id; return; }
+      const n = nodeOf(p, parts[3]);
+      body = n ? viewNode(p, n) : viewHome();
+    } else if (parts[2] === 'psf' && parts[3]) {
+      if (isClient()) { location.hash = '#/projects/' + p.id; return; }
+      const s = skuOf(p, parts[3]);
+      body = s ? viewPSF(p, s) : viewHome();
+    } else body = isClient() ? viewClientProject(p) : viewProject(p);
+  } else body = viewHome();
+
+  $('#app').innerHTML = topbar(key) + `<main class="view">${body}</main>` + renderPanel();
+  $('#overlay-root').innerHTML = renderOverlay();
+}
+
+/* ---------- toast ---------- */
+function toast(msg, ok) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (ok ? ' ok' : '');
+  el.textContent = msg;
+  $('#toast-root').appendChild(el);
+  setTimeout(() => el.remove(), 2400);
+}
+
+/* ---------- 上下文取当前路由的项目/节点 ---------- */
+function ctx() {
+  const parts = (location.hash || '').replace(/^#\//, '').split('/');
+  const p = parts[0] === 'projects' && parts[1] ? proj(parts[1]) : null;
+  const n = p && parts[2] === 'node' && parts[3] ? nodeOf(p, parts[3]) : null;
+  const s = p && parts[2] === 'psf' && parts[3] ? skuOf(p, parts[3]) : null;
+  return { p, n, s };
+}
+function addCmt(n, author, role, text) {
+  n.comments.push({ author, role, time: nowStamp(), text });
+}
+
+/* ---------- 事件：点击 ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const act = t.dataset.act;
+  const { p, n, s } = ctx();
+
+  if (act === 'goto') { location.hash = t.dataset.href; return; }
+  if (act === 'reset') { resetDemo(); return; }
+  if (act === 'print') { window.print(); return; }
+  if (act === 'ovl-close') { ui.overlay = null; render(); return; }
+  if (act === 'ovl-close-bg') { if (e.target.classList.contains('ovl')) { ui.overlay = null; render(); } return; }
+  if (act === 'panel-close') { ui.panel = null; render(); return; }
+
+  /* 节点状态流转 */
+  if (act === 'n-start' && n) { n.status = 'in_progress'; addCmt(n, person(n.ownerId).name, '业务', '节点已开始。'); saveDB(); render(); return; }
+  if (act === 'n-submit' && n) { n.status = 'review'; addCmt(n, person(n.ownerId).name, '业务', '已提交审批 / 待客户确认。'); saveDB(); render(); toast('已提交审批'); return; }
+  if (act === 'n-approve' && n) {
+    n.status = 'done'; ui.rejectOpen = false;
+    addCmt(n, n.reviewerId ? person(n.reviewerId).name : '管理员', '审批', '审批通过。');
+    saveDB(); render(); toast('审批通过，节点完成', true); return;
+  }
+  if (act === 'n-reject' && n) { ui.rejectOpen = true; render(); return; }
+  if (act === 'n-reject-cancel') { ui.rejectOpen = false; render(); return; }
+  if (act === 'n-reject-confirm' && n) {
+    const v = ($('#rejectReason') || {}).value || '';
+    if (!v.trim()) { toast('驳回原因必填'); return; }
+    n.status = 'in_progress'; ui.rejectOpen = false;
+    addCmt(n, n.reviewerId ? person(n.reviewerId).name : '管理员', '审批', '【驳回】' + v.trim());
+    saveDB(); render(); toast('已驳回，节点退回进行中'); return;
+  }
+  if (act === 'sku-toggle' && n && p) {
+    const k = t.dataset.sku;
+    n.skuDone[k] = !n.skuDone[k]; saveDB(); render(); return;
+  }
+  if (act === 'add-comment' && n) {
+    const v = ($('#cmtBox') || {}).value || '';
+    if (!v.trim()) return;
+    addCmt(n, db.role === 'manager' ? '管理员' : person(n.ownerId).name, db.role === 'manager' ? '管理' : '业务', v.trim());
+    saveDB(); render(); return;
+  }
+  if (act === 'recalc' && p) {
+    recalcTimeline(p); saveDB(); render(); toast('已按交期 ' + p.deliveryDate + ' 倒推重算全部节点 deadline', true); return;
+  }
+
+  /* PSF */
+  if (act === 'psf-lang') { ui.psfLang = t.dataset.l; render(); return; }
+  if (act === 'psf-save' && s) {
+    const f = db.psfs[s.id];
+    const num = f.history.filter(h => h.ver.startsWith('V')).length + 1;
+    f.version = 'V' + num;
+    f.history.push({ ver: f.version, time: TODAY, author: '业务A', change: '手动保存修订' });
+    saveDB(); render(); toast('已保存为 ' + f.version, true); return;
+  }
+  if (act === 'psf-lock' && s) {
+    const f = db.psfs[s.id];
+    f.locked = true; f.version = 'Final';
+    f.history.push({ ver: 'Final', time: TODAY, author: '业务A', change: '锁定为最终版' });
+    saveDB(); render(); toast('已锁定为 Final，编辑器只读', true); return;
+  }
+  if (act === 'psf-unlock') { ui.psfUnlockOpen = true; render(); return; }
+  if (act === 'psf-unlock-cancel') { ui.psfUnlockOpen = false; render(); return; }
+  if (act === 'psf-unlock-confirm' && s) {
+    const v = ($('#psfReason') || {}).value || '';
+    if (!v.trim()) { toast('解锁原因必填'); return; }
+    const f = db.psfs[s.id];
+    f.locked = false; ui.psfUnlockOpen = false;
+    f.history.push({ ver: f.version + '→修订', time: TODAY, author: '业务A', change: '解锁：' + v.trim() });
+    saveDB(); render(); toast('已解锁，请修订后重新锁定'); return;
+  }
+  if (act === 'ovl-import' && p && s) { ui.overlay = { kind: 'import', pid: p.id, skuId: s.id, parsing: false }; render(); return; }
+  if (act === 'import-parse') {
+    ui.overlay.parsing = true; render();
+    setTimeout(() => {
+      const o = ui.overlay; if (!o) return;
+      const pp = proj(o.pid), ss = skuOf(pp, o.skuId);
+      const f = db.psfs[ss.id];
+      const tpl = psfTemplate(ss.cat);
+      f.sections = { productDesc: tpl.desc, construction: tpl.cons, surface: tpl.surf, packaging: tpl.pack, compliance: tpl.comp };
+      f.history.push({ ver: '导入', time: TODAY, author: '业务A', change: '导入客户 PSF 并自动分类（规格 / 包材 / 法规）' });
+      ui.overlay = null; saveDB(); render();
+      toast('导入完成：已自动分类并生成中文工厂版', true);
+    }, 1000);
+    return;
+  }
+  if (act === 'ovl-quote' && p && s) { ui.overlay = { kind: 'quote', pid: p.id, skuId: s.id }; render(); return; }
+  if (act === 'ovl-order' && p && s) { ui.overlay = { kind: 'order', pid: p.id, skuId: s.id }; render(); return; }
+  if (act === 'ovl-en' && p && s) { ui.overlay = { kind: 'en', pid: p.id, skuId: s.id }; render(); return; }
+
+  /* Tender */
+  if (act === 'match-open' && p) { ui.panel = { kind: 'match', pid: p.id, skuId: t.dataset.sku, sel: [...skuOf(p, t.dataset.sku).cand] }; render(); return; }
+  if (act === 'match-save' && ui.panel) {
+    const pp = proj(ui.panel.pid), ss = skuOf(pp, ui.panel.skuId);
+    ss.cand = [...ui.panel.sel];
+    ui.panel = null; saveDB(); render(); toast('候选供应商已保存（' + ss.cand.length + ' 家）', true); return;
+  }
+  if (act === 'ovl-supquotes' && p) { ui.overlay = { kind: 'supquotes', pid: p.id }; render(); return; }
+  if (act === 'ovl-ppt' && p) { ui.overlay = { kind: 'ppt', pid: p.id }; render(); return; }
+
+  /* FS */
+  if (act === 'fs-lock' && n) {
+    n.fsLocked = true;
+    n.versions.push({ v: 'Final', time: TODAY, author: person(n.ownerId).name, note: 'FS 锁定为权威版本' });
+    saveDB(); render(); toast('FS 已锁定 Final', true); return;
+  }
+  if (act === 'fs-unlock') { ui.fsUnlockOpen = true; render(); return; }
+  if (act === 'fs-unlock-cancel') { ui.fsUnlockOpen = false; render(); return; }
+  if (act === 'fs-unlock-confirm' && n) {
+    const v = ($('#fsReason') || {}).value || '';
+    if (!v.trim()) { toast('解锁原因必填'); return; }
+    n.fsLocked = false; ui.fsUnlockOpen = false;
+    n.versions.push({ v: '解锁', time: TODAY, author: person(n.ownerId).name, note: '解锁：' + v.trim() });
+    saveDB(); render(); toast('FS 已解锁，改动将留痕'); return;
+  }
+
+  /* 客户视角 */
+  if (act === 'client-confirm' && p) {
+    const nn = nodeOf(p, t.dataset.n);
+    nn.status = 'done'; addCmt(nn, 'HEMA 买手', '客户', '已确认。');
+    saveDB(); render(); toast('已确认，我方将进入下一环节', true); return;
+  }
+  if (act === 'client-change') { ui.clientChangeFor = ui.clientChangeFor === t.dataset.n ? null : t.dataset.n; render(); return; }
+  if (act === 'client-change-send' && p) {
+    const v = ($('#ccText') || {}).value || '';
+    if (!v.trim()) { toast('请填写修改意见'); return; }
+    const nn = nodeOf(p, t.dataset.n);
+    nn.status = 'in_progress'; ui.clientChangeFor = null;
+    addCmt(nn, 'HEMA 买手', '客户', '【修改意见】' + v.trim());
+    saveDB(); render(); toast('修改意见已发送，节点退回进行中', true); return;
+  }
+  if (act === 'ovl-en-c' && p) { ui.overlay = { kind: 'en', pid: p.id, skuId: t.dataset.sku }; render(); return; }
+  if (act === 'ovl-ppt-c') { ui.overlay = { kind: 'ppt', pid: t.dataset.p }; render(); return; }
+  if (act === 'ovl-fslist') { ui.overlay = { kind: 'fslist', pid: t.dataset.p }; render(); return; }
+
+  /* 供应商 / 质量 / 客户板块 */
+  if (act === 'sup-detail') { ui.panel = { kind: 'supplier', id: t.dataset.id }; render(); return; }
+  if (act === 'sup-import') { toast('批量导入为二期能力（演示占位）'); return; }
+  if (act === 'qtab') { ui.qualityTab = t.dataset.t; render(); return; }
+  if (act === 'prod-detail') { ui.overlay = { kind: 'prod', id: t.dataset.id }; render(); return; }
+  if (act === 'copy-desc') {
+    const x = db.clientProducts.find(y => y.id === t.dataset.id);
+    const txt = x.artNo + ' ' + x.name + '：' + x.desc;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(() => toast('标准描述已复制到剪贴板', true), () => toast('复制失败'));
+    } else toast('当前环境不支持剪贴板');
+    return;
+  }
+});
+
+/* ---------- 事件：表单变更 ---------- */
+document.addEventListener('change', e => {
+  const t = e.target.closest('[data-chg]');
+  if (!t) return;
+  const k = t.dataset.chg;
+  const { p, n, s } = ctx();
+
+  if (k === 'role') {
+    db.role = t.value; saveDB();
+    ui.overlay = null; ui.panel = null; ui.rejectOpen = false;
+    location.hash = t.value === 'manager' ? '#/dashboard' : '#/projects';
+    render(); return;
+  }
+  if (k === 'todo' && n) { n.todos[+t.dataset.i].done = t.checked; saveDB(); render(); return; }
+  if (k === 'psf' && s) {
+    const f = db.psfs[s.id];
+    const path = t.dataset.path.split('.');
+    let obj = f.sections;
+    for (let i = 0; i < path.length - 1; i++) obj = obj[path[i]];
+    obj[path[path.length - 1]] = t.value;
+    f.updatedTime = TODAY; saveDB(); return;
+  }
+  if (k === 'fs-final' && p) { skuOf(p, t.dataset.sku).final = t.value || null; saveDB(); render(); return; }
+  if (k === 'match-sel' && ui.panel) {
+    const id = t.dataset.id;
+    const sel = ui.panel.sel;
+    if (t.checked) {
+      if (sel.length >= 3) { toast('最多选择 3 家候选'); render(); return; }
+      sel.push(id);
+    } else ui.panel.sel = sel.filter(x => x !== id);
+    render(); return;
+  }
+  if (k === 'brief-filter') { ui.briefFilter = t.value; render(); return; }
+  if (k === 'sup-client') { ui.supFilter.client = t.value; render(); return; }
+  if (k === 'sup-cat') { ui.supFilter.cat = t.value; render(); return; }
+  if (k === 'sup-q') { ui.supFilter.q = t.value; render(); return; }
+  if (k === 'pf-year') { ui.prodFilter.year = t.value; render(); return; }
+  if (k === 'pf-project') { ui.prodFilter.project = t.value; render(); return; }
+  if (k === 'pf-cat') { ui.prodFilter.cat = t.value; render(); return; }
+  if (k === 'pf-q') { ui.prodFilter.q = t.value; render(); return; }
+});
+
+/* 输入即时筛选 */
+document.addEventListener('input', e => {
+  const t = e.target.closest('[data-chg="brief-filter"],[data-chg="sup-q"],[data-chg="pf-q"]');
+  if (!t) return;
+  const k = t.dataset.chg;
+  const v = t.value;
+  const st = t.selectionStart;
+  if (k === 'brief-filter') ui.briefFilter = v;
+  if (k === 'sup-q') ui.supFilter.q = v;
+  if (k === 'pf-q') ui.prodFilter.q = v;
+  render();
+  const nt = document.querySelector(`[data-chg="${k}"]`);
+  if (nt) { nt.focus(); nt.setSelectionRange(st, st); }
+});
+
+/* ---------- 初始化 ---------- */
+loadDB();
+window.addEventListener('hashchange', () => { ui.rejectOpen = false; ui.fsUnlockOpen = false; ui.psfUnlockOpen = false; render(); });
+render();
+</script>
+</body>
+</html>
