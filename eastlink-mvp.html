@@ -43,54 +43,107 @@ input, select, textarea { font: inherit; color: var(--ink); }
 :focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; border-radius: 4px; }
 .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-/* ---------- topbar ---------- */
-.topbar {
-  background: linear-gradient(150deg, #0567FF, #045BE4);
-  color: #fff;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  height: 52px;
+/* ---------- shell: sidebar + main ---------- */
+.shell { display: flex; min-height: 100vh; }
+.sidebar {
+  flex: 0 0 210px;
   position: sticky;
   top: 0;
+  height: 100vh;
+  background: linear-gradient(165deg, #0567FF 0%, #0349BC 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px 14px;
   z-index: 40;
 }
-.topbar .logo { font-weight: 800; font-size: 16px; letter-spacing: .02em; display: flex; align-items: center; gap: 8px; }
-.logo-tag { font: 650 9.5px/1 var(--mono); letter-spacing: .1em; background: rgba(255,255,255,.18); border-radius: 999px; padding: 4px 8px; }
-.topnav { display: flex; gap: 4px; flex: 1; }
-.topnav a {
+.side-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: .02em;
+  padding: 0 8px 14px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.16);
+}
+.logo-tag { font: 650 9.5px/1 var(--mono); letter-spacing: .1em; background: rgba(255,255,255,.18); border-radius: 999px; padding: 4px 7px; }
+.side-nav { display: flex; flex-direction: column; gap: 2px; }
+.side-nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: 9px;
   color: rgba(255,255,255,.82);
-  padding: 6px 12px;
-  border-radius: 8px;
   font-size: 13.5px;
   font-weight: 550;
 }
-.topnav a:hover { background: rgba(255,255,255,.12); text-decoration: none; }
-.topnav a.on { background: rgba(255,255,255,.18); color: #fff; font-weight: 650; }
-.topbar-right { display: flex; align-items: center; gap: 8px; }
-.topbar select {
-  background: rgba(255,255,255,.14);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.3);
-  border-radius: 8px;
-  padding: 5px 8px;
-  font-size: 12.5px;
+.side-nav a svg { flex: 0 0 16px; width: 16px; height: 16px; opacity: .9; }
+.side-nav a:hover { background: rgba(255,255,255,.12); color: #fff; text-decoration: none; }
+.side-nav a.on { background: rgba(255,255,255,.18); color: #fff; font-weight: 700; }
+.side-nav a.on::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  border-radius: 0 3px 3px 0;
+  background: #fff;
 }
-.topbar select option { color: #0D1E3A; }
+.side-nav a.on svg { opacity: 1; }
+.side-foot { margin-top: auto; padding-top: 12px; }
 .btn-reset {
+  width: 100%;
   background: transparent;
   color: rgba(255,255,255,.85);
   border: 1px solid rgba(255,255,255,.3);
   border-radius: 8px;
-  padding: 5px 10px;
+  padding: 7px 10px;
   font-size: 12.5px;
 }
 .btn-reset:hover { background: rgba(255,255,255,.12); }
-.role-note { font-size: 11.5px; color: rgba(255,255,255,.75); }
+.main { flex: 1; min-width: 0; }
+.mainbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 50px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+}
+.mainbar .spacer { flex: 1; }
+.mainbar select {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 12.5px;
+}
+.mainbar select:hover { border-color: var(--brand); }
+.role-badge {
+  font-size: 12px;
+  font-weight: 650;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+.role-badge.r-client { background: var(--sky-soft); color: var(--sky-text); }
+.role-badge.r-manager { background: var(--mint-soft); color: var(--mint-text); }
+.mainbar .today { font-size: 12px; color: var(--muted); }
 
 /* ---------- layout ---------- */
-.view { max-width: 1280px; margin: 0 auto; padding: 22px 24px 80px; }
+.view { max-width: 1180px; margin: 0 auto; padding: 22px 24px 80px; }
 .page-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; margin-bottom: 16px; }
 .page-head h1 { margin: 0; font-size: 21px; font-weight: 750; letter-spacing: .01em; }
 .page-head .sub { color: var(--muted); font-size: 13px; }
@@ -236,12 +289,92 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   height: 8px;
   flex: 1;
   border-radius: 3px;
-  background: var(--line);
 }
-.mini-flow i.f-done { background: var(--mint); }
-.mini-flow i.f-in_progress { background: var(--brand); }
-.mini-flow i.f-review { background: var(--amber); }
-.mini-flow i.f-overdue { background: var(--red); }
+/* 通用进度段配色（.mini-flow i 与 .seg 共用）——各状态类特异性保持一致，
+   故容器不设默认 background，未开始由 .f-pending 显式着色 */
+.f-pending { background: var(--line); }
+.f-done { background: var(--mint); }
+.f-in_progress { background: var(--brand); }
+.f-review { background: var(--amber); }
+.f-overdue { background: var(--red); }
+
+/* ---------- home: 统计卡筛选 / 风险条 / 项目行 ---------- */
+.statcard.click { cursor: pointer; transition: border-color .15s ease; }
+.statcard.click:hover { border-color: var(--brand); }
+.statcard.on { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand), var(--shadow); }
+.statcard .hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.riskbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  background: var(--red-soft);
+  color: var(--red);
+  border-radius: 11px;
+  padding: 11px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.riskbar .go { margin-left: auto; font-size: 12.5px; font-weight: 650; }
+.riskbar .cool { color: #8A3B3E; font-weight: 500; }
+.prow { cursor: pointer; transition: border-color .15s ease; }
+.prow:hover { border-color: var(--brand); }
+.prow-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.prow-head .name { font-size: 16px; font-weight: 750; }
+.prow-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 9px 0 12px;
+}
+.prow-meta b { color: var(--ink); font-family: var(--mono); font-weight: 650; }
+.prow-meta b.over { color: var(--red); }
+.flowbar { display: flex; gap: 10px; align-items: flex-end; }
+.flowbar .grp { display: flex; gap: 3px; }
+.flowbar .grp.g-dev { flex: 7; }
+.flowbar .grp.g-pre { flex: 3; }
+.flowbar .grp.g-end { flex: 4; }
+.seg {
+  position: relative;
+  flex: 1;
+  height: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+.seg:hover { transform: scaleY(1.5); }
+.seg.cur {
+  height: 16px;
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--brand);
+}
+.flow-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: center;
+  margin-top: 11px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.flow-legend b { color: var(--ink); }
+.phase-ticks {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  font: 550 9.5px/1 var(--mono);
+  letter-spacing: .1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.phase-ticks span.g-dev { flex: 7; }
+.phase-ticks span.g-pre { flex: 3; }
+.phase-ticks span.g-end { flex: 4; }
+.todo-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 4px; }
+.todo-head .tabs { margin: 0 0 0 auto; border: 0; }
+.todo-head .tabs button { padding: 5px 11px; font-size: 12.5px; }
 
 /* ---------- todo list ---------- */
 .todo-item {
@@ -559,9 +692,26 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
   .g3 { grid-template-columns: 1fr; }
   .g2 { grid-template-columns: 1fr; }
   .prod-grid { grid-template-columns: repeat(2, 1fr); }
-  .topnav { overflow-x: auto; }
-  .topbar { flex-wrap: wrap; height: auto; padding: 8px 14px; }
+  .shell { display: block; }
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 8px 14px;
+  }
+  .side-brand { border-bottom: 0; padding: 0; margin: 0; white-space: nowrap; }
+  .side-nav { flex-direction: row; gap: 2px; }
+  .side-nav a { white-space: nowrap; padding: 7px 10px; }
+  .side-nav a.on::before { display: none; }
+  .side-foot { margin: 0 0 0 auto; padding: 0; }
+  .btn-reset { width: auto; white-space: nowrap; }
+  .mainbar { padding: 0 14px; flex-wrap: wrap; height: auto; min-height: 50px; }
   .view { padding: 16px 14px 60px; }
+  .prow-meta { gap: 4px 14px; }
 }
 </style>
 </head>
@@ -955,6 +1105,7 @@ const ui = {
   panel: null,            // {kind, ...}
   psfLang: 'zh',
   qualityTab: 'cqv',
+  homeFilter: 'all',
   supFilter: { client: 'all', cat: 'all', q: '' },
   prodFilter: { year: 'all', project: 'all', cat: 'all', q: '' },
   briefFilter: '',
@@ -976,37 +1127,59 @@ function currentNode(p) { return p.nodes.find(n => n.status !== 'done') || p.nod
 function stars(n) { return '★★★★★'.slice(0, n) + '<span style="opacity:.25">' + '★★★★★'.slice(n) + '</span>'; }
 
 /* ---------- 顶部导航 ---------- */
-function topbar(routeKey) {
+const ICONS = {
+  dashboard: '<path d="M3 3h7v7H3zM14 3h7v4h-7zM14 11h7v10h-7zM3 14h7v7H3z"/>',
+  projects: '<path d="M3 5h6l2 2h10v12H3z"/><path d="M7 12h10M7 16h6"/>',
+  suppliers: '<path d="M3 20V9l5 3V9l5 3V9l5 3v8z"/><path d="M8 20v-3h3v3"/>',
+  quality: '<path d="M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  clients: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 20c0-2.2-.8-4-2-5.2"/>'
+};
+const ROLE_LABEL = { sales: '内部业务视角', manager: '管理者视角', client: 'HEMA 客户视角' };
+
+function navLink(href, key, routeKey, icon, label) {
+  return `<a href="${href}" class="${routeKey === key ? 'on' : ''}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[icon]}</svg>${label}</a>`;
+}
+
+function shell(routeKey, body) {
   const role = db.role;
   let links = '';
   if (role === 'client') {
-    links = `<a href="#/projects" class="${routeKey === 'projects' ? 'on' : ''}">我的项目</a>`;
+    links = navLink('#/projects', 'projects', routeKey, 'projects', '我的项目');
   } else {
-    if (role === 'manager') links += `<a href="#/dashboard" class="${routeKey === 'dashboard' ? 'on' : ''}">管理看板</a>`;
-    links += `
-      <a href="#/projects" class="${routeKey === 'projects' ? 'on' : ''}">项目管理</a>
-      <a href="#/suppliers" class="${routeKey === 'suppliers' ? 'on' : ''}">供应商管理</a>
-      <a href="#/quality" class="${routeKey === 'quality' ? 'on' : ''}">质量管控</a>
-      <a href="#/clients" class="${routeKey === 'clients' ? 'on' : ''}">客户管理</a>`;
+    if (role === 'manager') links += navLink('#/dashboard', 'dashboard', routeKey, 'dashboard', '管理看板');
+    links += navLink('#/projects', 'projects', routeKey, 'projects', '项目管理')
+      + navLink('#/suppliers', 'suppliers', routeKey, 'suppliers', '供应商管理')
+      + navLink('#/quality', 'quality', routeKey, 'quality', '质量管控')
+      + navLink('#/clients', 'clients', routeKey, 'clients', '客户管理');
   }
   return `
-  <header class="topbar">
-    <span class="logo">Eastlink <span class="logo-tag">MVP DEMO</span></span>
-    <nav class="topnav">${links}</nav>
-    <div class="topbar-right">
-      <select data-chg="clientFilter" title="客户筛选">
-        <option>客户：HEMA</option>
-        <option disabled>Migros（二期）</option>
-      </select>
-      <select data-chg="role" title="视角切换">
-        <option value="sales" ${role === 'sales' ? 'selected' : ''}>视角：内部业务</option>
-        <option value="manager" ${role === 'manager' ? 'selected' : ''}>视角：管理者</option>
-        <option value="client" ${role === 'client' ? 'selected' : ''}>视角：HEMA 客户</option>
-        <option value="supplier" disabled>供应商（二期）</option>
-      </select>
-      <button class="btn-reset" data-act="reset">重置演示数据</button>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="side-brand">Eastlink <span class="logo-tag">MVP DEMO</span></div>
+      <nav class="side-nav">${links}</nav>
+      <div class="side-foot"><button class="btn-reset" data-act="reset">重置演示数据</button></div>
+    </aside>
+    <div class="main">
+      <header class="mainbar">
+        <span class="role-badge r-${role}">${ROLE_LABEL[role] || ''}</span>
+        <span class="today mono">今天 ${TODAY}</span>
+        <span class="spacer"></span>
+        <select data-chg="clientFilter" title="客户筛选">
+          <option>客户：HEMA</option>
+          <option disabled>Migros（二期）</option>
+        </select>
+        <select data-chg="role" title="视角切换">
+          <option value="sales" ${role === 'sales' ? 'selected' : ''}>视角：内部业务</option>
+          <option value="manager" ${role === 'manager' ? 'selected' : ''}>视角：管理者</option>
+          <option value="client" ${role === 'client' ? 'selected' : ''}>视角：HEMA 客户</option>
+          <option value="supplier" disabled>供应商（二期）</option>
+        </select>
+      </header>
+      <main class="view">${body}</main>
     </div>
-  </header>`;
+  </div>`;
 }
 
 /* ---------- 工作流泳道 ---------- */
@@ -1034,49 +1207,102 @@ function lanesHtml(p, clickable) {
 }
 
 /* ---------- 首页（内部） ---------- */
+function projectRow(p) {
+  const cur = currentNode(p);
+  const overs = p.nodes.filter(isOverdue);
+  const done = p.nodes.filter(n => n.status === 'done').length;
+  const pct = Math.round(done / p.nodes.length * 100);
+  const toDelivery = diffDays(TODAY, p.deliveryDate);
+  const curOver = isOverdue(cur);
+  const curDays = diffDays(TODAY, cur.deadline);
+  const groups = { dev: [], pre: [], end: [] };
+  p.nodes.forEach(n => groups[nodeDef(n.id).phase].push(n));
+
+  return `<div class="card prow mt" data-act="goto" data-href="#/projects/${p.id}">
+    <div class="prow-head">
+      <span class="name">${esc(p.name)}</span>
+      <span class="tag b">${esc(p.client)}</span><span class="tag">${esc(p.season)}</span>
+      ${overs.length ? `<span class="tag r">${overs.length} 个节点逾期</span>` : ''}
+      <span style="flex:1"></span>
+      <span class="tag ${pct >= 60 ? 'm' : ''}">进度 ${done}/${p.nodes.length} · ${pct}%</span>
+    </div>
+    <div class="prow-meta">
+      <span>交期 <b>${p.deliveryDate}</b>（${toDelivery >= 0 ? `剩 ${toDelivery} 天` : `<b class="over">已过 ${-toDelivery} 天</b>`}）</span>
+      <span>SKU <b>${p.skus.length}</b></span>
+      <span>负责人 ${avatarOf(person(p.ownerId).name)}</span>
+    </div>
+    <div class="flowbar">
+      ${['dev', 'pre', 'end'].map(ph => `<span class="grp g-${ph}">
+        ${groups[ph].map(n => `<i class="seg f-${isOverdue(n) ? 'overdue' : n.status} ${n.id === cur.id ? 'cur' : ''}"
+          title="${n.id} ${nodeDef(n.id).name} · ${STATUS_LABEL[n.status]}${isOverdue(n) ? ' · 已逾期' : ''}"
+          data-act="goto" data-href="#/projects/${p.id}/node/${n.id}"></i>`).join('')}
+      </span>`).join('')}
+    </div>
+    <div class="phase-ticks"><span class="g-dev">开发 01–07</span><span class="g-pre">产前 08–10</span><span class="g-end">尾期 11–14</span></div>
+    <div class="flow-legend">
+      当前节点 <b>${cur.id} ${nodeDef(cur.id).name}</b> · ${STATUS_LABEL[cur.status]} ·
+      deadline ${cur.deadline}
+      ${curOver ? `<span class="tag r">逾期 ${-curDays} 天</span>` : `<span class="tag">剩 ${curDays} 天</span>`}
+    </div>
+  </div>`;
+}
+
 function viewHome() {
   const projs = db.projects.filter(p => p.status === 'active');
   const allActive = [];
   projs.forEach(p => activeNodes(p).forEach(n => allActive.push({ p, n })));
   const overdue = allActive.filter(x => isOverdue(x.n));
+  const reviews = allActive.filter(x => x.n.status === 'review');
   allActive.sort((a, b) => (isOverdue(b.n) - isOverdue(a.n)) || (a.n.deadline < b.n.deadline ? -1 : 1));
-  const totalSku = projs.reduce((s, p) => s + p.skus.length, 0);
+
+  const F = ui.homeFilter;
+  const list = F === 'overdue' ? overdue : F === 'review' ? reviews : allActive;
+  const worst = overdue.length
+    ? overdue.reduce((a, b) => diffDays(a.n.deadline, TODAY) >= diffDays(b.n.deadline, TODAY) ? a : b)
+    : null;
 
   return `
-  <div class="page-head"><h1>项目总览</h1><span class="sub">今天：${TODAY} ｜ 客户：HEMA</span></div>
+  <div class="page-head"><h1>项目总览</h1><span class="sub">客户：HEMA ｜ 点击统计卡可筛选下方待办</span></div>
   <div class="grid g4">
-    <div class="card statcard brand"><div class="num">${projs.length}</div><div class="lbl">进行中项目</div></div>
-    <div class="card statcard"><div class="num">${totalSku}</div><div class="lbl">总 SKU 数</div></div>
-    <div class="card statcard mint"><div class="num">${allActive.length}</div><div class="lbl">待处理节点</div></div>
-    <div class="card statcard warn"><div class="num">${overdue.length}</div><div class="lbl">已逾期节点</div></div>
+    <div class="card statcard brand"><div class="num">${projs.length}</div><div class="lbl">进行中项目</div>
+      <div class="hint">${projs.reduce((s, p) => s + p.skus.length, 0)} 个 SKU 在手</div></div>
+    <div class="card statcard click ${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">
+      <div class="num">${allActive.length}</div><div class="lbl">待处理节点</div><div class="hint">进行中 + 待审批</div></div>
+    <div class="card statcard click ${F === 'review' ? 'on' : ''}" data-act="home-filter" data-f="review">
+      <div class="num" style="color:var(--amber)">${reviews.length}</div><div class="lbl">待审批 / 待客户确认</div>
+      <div class="hint">卡在审批环节</div></div>
+    <div class="card statcard warn click ${F === 'overdue' ? 'on' : ''}" data-act="home-filter" data-f="overdue">
+      <div class="num">${overdue.length}</div><div class="lbl">已逾期节点</div>
+      <div class="hint">${worst ? `最长逾期 ${diffDays(worst.n.deadline, TODAY)} 天` : '全部按期'}</div></div>
   </div>
-  <div class="grid g2 mt">
-    <div class="card">
-      <h3>待处理事项 <span class="tag">按 deadline 排序 · 逾期置顶</span></h3>
-      ${allActive.length ? allActive.map(({ p, n }) => {
-        const over = isOverdue(n);
-        return `<div class="todo-item" data-act="goto" data-href="#/projects/${p.id}/node/${n.id}">
-          <span class="dot s-${n.status}"></span>
-          <span><span class="t-name">${n.id} ${nodeDef(n.id).name}</span> · ${statusPill(n)}</span>
-          <span class="t-proj">${esc(p.name)} · ${esc(person(n.ownerId).name)}</span>
-          <span class="t-dl ${over ? 'over' : ''}">${n.deadline}${over ? `（逾期 ${diffDays(n.deadline, TODAY)} 天）` : ''}</span>
-        </div>`;
-      }).join('') : '<div class="empty">暂无待处理事项</div>'}
+  ${worst ? `<div class="riskbar mt" data-act="goto" data-href="#/projects/${worst.p.id}/node/${worst.n.id}">
+    ⚠ ${overdue.length} 个节点逾期，最长逾期 ${diffDays(worst.n.deadline, TODAY)} 天
+    <span class="cool">最紧急：${esc(worst.p.name)} · ${worst.n.id} ${nodeDef(worst.n.id).name} · ${esc(person(worst.n.ownerId).name)}</span>
+    <span class="go">立即处理 →</span></div>` : ''}
+
+  <div class="page-head" style="margin:26px 0 0"><h1 style="font-size:16px">项目</h1>
+    <span class="sub">点击节点条上任一段可直接进入该节点</span></div>
+  ${projs.map(projectRow).join('')}
+
+  <div class="card mt">
+    <div class="todo-head">
+      <h3 style="margin:0">待处理事项 <span class="tag">逾期置顶 · 按 deadline 排序</span></h3>
+      <div class="tabs">
+        <button class="${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">全部 ${allActive.length}</button>
+        <button class="${F === 'review' ? 'on' : ''}" data-act="home-filter" data-f="review">待审批 ${reviews.length}</button>
+        <button class="${F === 'overdue' ? 'on' : ''}" data-act="home-filter" data-f="overdue">仅逾期 ${overdue.length}</button>
+      </div>
     </div>
-    <div>
-      ${projs.map(p => {
-        const cur = currentNode(p);
-        const ov = p.nodes.filter(isOverdue).length;
-        return `<div class="card proj-card ${p !== projs[0] ? 'mt' : ''}" data-act="goto" data-href="#/projects/${p.id}">
-          <div class="top"><span class="name">${esc(p.name)}</span><span class="tag b">${esc(p.client)}</span>
-            <span class="tag">${esc(p.season)}</span>${ov ? `<span class="tag r">${ov} 个节点逾期</span>` : ''}</div>
-          <div class="meta"><span>交期 <b class="mono">${p.deliveryDate}</b></span><span>负责人 ${esc(person(p.ownerId).name)}</span>
-            <span>SKU ${p.skus.length}</span><span>当前节点 <b>${cur.id} ${nodeDef(cur.id).name}</b></span></div>
-          <div class="mini-flow">${p.nodes.map(n => `<i class="f-${isOverdue(n) ? 'overdue' : n.status}" title="${n.id} ${nodeDef(n.id).name}"></i>`).join('')}</div>
-        </div>`;
-      }).join('')}
-      <p class="note-strip mt">按 PRD §8-F1：主页只保留总览与待办，实际操作全部在项目 / 节点子层级完成。</p>
-    </div>
+    ${list.length ? list.map(({ p, n }) => {
+      const over = isOverdue(n);
+      const left = diffDays(TODAY, n.deadline);
+      return `<div class="todo-item" data-act="goto" data-href="#/projects/${p.id}/node/${n.id}">
+        <span class="dot s-${n.status}"></span>
+        <span><span class="t-name">${n.id} ${nodeDef(n.id).name}</span> ${statusPill(n)}</span>
+        <span class="t-proj">${esc(p.name)} · ${avatarOf(person(n.ownerId).name)}</span>
+        <span class="t-dl ${over ? 'over' : ''}">${n.deadline} · ${over ? `逾期 ${-left} 天` : `剩 ${left} 天`}</span>
+      </div>`;
+    }).join('') : `<div class="empty">${F === 'overdue' ? '没有逾期节点 🎉' : F === 'review' ? '没有待审批事项' : '暂无待处理事项'}</div>`}
   </div>`;
 }
 
@@ -1821,7 +2047,7 @@ function render() {
     } else body = isClient() ? viewClientProject(p) : viewProject(p);
   } else body = viewHome();
 
-  $('#app').innerHTML = topbar(key) + `<main class="view">${body}</main>` + renderPanel();
+  $('#app').innerHTML = shell(key, body) + renderPanel();
   $('#overlay-root').innerHTML = renderOverlay();
 }
 
@@ -1854,6 +2080,7 @@ document.addEventListener('click', e => {
   const { p, n, s } = ctx();
 
   if (act === 'goto') { location.hash = t.dataset.href; return; }
+  if (act === 'home-filter') { ui.homeFilter = t.dataset.f; render(); return; }
   if (act === 'reset') { resetDemo(); return; }
   if (act === 'print') { window.print(); return; }
   if (act === 'ovl-close') { ui.overlay = null; render(); return; }
