@@ -361,7 +361,7 @@ input.ipt-inline, select.ipt-inline, textarea.ipt-inline { width: auto; }
 .flowbar .grp { display: flex; gap: 3px; }
 .flowbar .grp.g-dev { flex: 7; }
 .flowbar .grp.g-pre { flex: 3; }
-.flowbar .grp.g-end { flex: 4; }
+.flowbar .grp.g-end { flex: 5; }
 .seg {
   position: relative;
   flex: 1;
@@ -396,7 +396,7 @@ input.ipt-inline, select.ipt-inline, textarea.ipt-inline { width: auto; }
 }
 .phase-ticks span.g-dev { flex: 7; }
 .phase-ticks span.g-pre { flex: 3; }
-.phase-ticks span.g-end { flex: 4; }
+.phase-ticks span.g-end { flex: 5; }
 .todo-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 4px; }
 .todo-head .tabs { margin: 0 0 0 auto; border: 0; }
 .todo-head .tabs button { padding: 5px 11px; font-size: 13.5px; }
@@ -719,6 +719,60 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .add-row { display: flex; gap: 6px; margin-top: 9px; align-items: center; }
 .add-row .ipt { max-width: 200px; }
 
+/* ---------- 业务环节 SOP ---------- */
+.sop-item { border-top: 1px dashed var(--line-dash); padding: 11px 2px; }
+.sop-item:first-of-type { border-top: 0; }
+.sop-head { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 10px; cursor: pointer; }
+.sop-head:hover .sop-name { color: var(--brand-ink); }
+.sop-name { font-weight: 650; font-size: 14px; }
+.sop-when {
+  font-size: 12.5px;
+  color: var(--sky-text);
+  background: var(--sky-soft);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.sop-toggle { margin-left: auto; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.sop-body { margin-top: 9px; padding-left: 2px; }
+.sop-note {
+  position: relative;
+  padding-left: 17px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #3E4F6E;
+  margin: 5px 0;
+}
+.sop-note::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--brand);
+  opacity: .6;
+}
+.sop-note.warn { color: #9A3B3E; }
+.sop-note.warn::before { background: var(--red); opacity: 1; }
+.sop-path {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+  background: var(--surface-2);
+  border-radius: 7px;
+  padding: 6px 10px;
+  font: 500 11.5px/1.5 var(--mono);
+  color: var(--muted);
+  word-break: break-all;
+}
+.sop-path b { color: var(--ink); font-weight: 650; flex: 0 0 auto; }
+.sop-path button { margin-left: auto; flex: 0 0 auto; }
+.sop-card { border-left: 3px solid var(--brand); }
+.sop-card.ph-pre { border-left-color: var(--sky); }
+.sop-card.ph-end { border-left-color: var(--mint); }
+
 /* ---------- 表单行 / 选择芯片 ---------- */
 .form-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; margin-bottom: 9px; font-size: 14px; }
 .form-row > label { color: var(--muted); font-size: 13.5px; }
@@ -940,9 +994,9 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
    ============================================================ */
 
 const TODAY = '2026-08-14';
-const DB_KEY = 'eastlink-mvp-v3';
+const DB_KEY = 'eastlink-mvp-v4';
 
-/* ---------- 工作流 14 节点定义 ---------- */
+/* ---------- 工作流 15 节点定义 ---------- */
 const NODE_DEFS = [
   { id: '01', code: 'Brief',     name: '需求简报',   phase: 'dev', dur: 3,  confirm: true  },
   { id: '02', code: 'Artwork',   name: '设计稿',     phase: 'dev', dur: 5,  confirm: true  },
@@ -957,7 +1011,8 @@ const NODE_DEFS = [
   { id: '11', code: 'Bulk',      name: '大货·签样',  phase: 'end', dur: 30, confirm: false },
   { id: '12', code: 'DUPRO',     name: '中期验货',   phase: 'end', dur: 0,  confirm: false },
   { id: '13', code: 'FRI',       name: '大货验货',   phase: 'end', dur: 3,  confirm: false },
-  { id: '14', code: 'Ship',      name: '出运·归档',  phase: 'end', dur: 7,  confirm: false }
+  { id: '14', code: 'Ship',      name: '出运',       phase: 'end', dur: 7,  confirm: false },
+  { id: '15', code: 'Closeout',  name: '收汇与合规收尾', phase: 'end', dur: 30, confirm: false }
 ];
 const PHASES = {
   dev: { label: '开发阶段', en: 'Development' },
@@ -965,6 +1020,110 @@ const PHASES = {
   end: { label: '尾期阶段', en: 'Production & Shipment' }
 };
 const STATUS_LABEL = { pending: '未开始', in_progress: '进行中', review: '待审批', done: '已完成' };
+/* ---------- HEMA BTS 业务环节 SOP（录自业务七部台账，THEME 线）---------- */
+const NAS = '\\\\192.168.5.7\\业务七部';
+const SOP = [
+  { node: '01', name: 'HEMA 开发推荐流程 Proposal + 客人来访选款接待',
+    when: 'BTS 2027：第一轮 3.30–3.31 来访；第二轮 8.27–8.28 来访', notes: [],
+    projPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 会议\\2026\\2026-03-3031 stationery & gifting' },
+  { node: '03', name: 'HEMA SPEC / PSF 和 quality file 确认',
+    when: '以客人第一封邮件发的 timeline 为准', notes: [],
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\spec' },
+  { node: '04', name: 'HEMA 测试报价流程',
+    when: '以客人第一封邮件发的 timeline 为准',
+    notes: ['测试报价可按 FCM、Textile、TOY、NON TOY 类型发给客人确认报价和项目',
+      '报给客人的美金价汇率 6.5 左右往上取整（需考虑可能重测等费用）',
+      '测试报价可以在 PP 样开始阶段就让测试组启动'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA TCF',
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\测试\\客人反馈' },
+  { node: '05', name: 'HEMA Tender 报价流程',
+    when: '以客人第一封邮件发的 timeline 为准', notes: ['注意系统报价关闭时间！'],
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\报价' },
+  { node: '05', name: 'HEMA 寄样流程',
+    when: '以客人第一封邮件发的 timeline 为准',
+    notes: ['Offer 样数量：荷兰 / 上海办各 1 套，展示盒里不含产品',
+      'PP 样数量：荷兰 / 上海办各 1 套，展示盒里不含产品',
+      '大货样数量：2 套给荷兰，1 套给上海办，1 套给 TUV 验货',
+      '等大货样到齐后，再寄 1 套拍照样给上海办',
+      '寄样信息及相应文件见群里压缩包'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 寄样',
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\寄样' },
+  { node: '05', name: 'FTY 供应链表格填写',
+    when: '以客人第一封邮件发的 timeline 为准',
+    notes: ['FPP 要为验厂工厂，也是验货的工厂',
+      'Producer / Component 的工厂有 BSCI 的，也需要标注出来'],
+    projPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 订单选择供应商审批\\发送HEMA审批\\BTS 2026' },
+  { node: '05', name: 'HEMA MSDS 提供流程',
+    when: 'tender 上传系统时，同步提供',
+    notes: ['MSDS 需要在 tender 阶段，按照客户的要求及时提供'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA REACH 注册',
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\SDS' },
+  { node: '08', name: 'HEMA 包材设计和确认流程',
+    when: '以客人第一封邮件发的 timeline 为准',
+    notes: ['普遍不覆膜，不是塑料材质，不接受 PVC 材质；特殊情况需向客人说明！',
+      '覆膜的话，膜的重量 < 整体包材的 5%（如 PVC 饰头易出油：饰头在彩盒里—内衬覆膜；饰头在彩盒外—裹雪梨纸）',
+      '彩盒：350g 灰底白',
+      '背卡：350g 灰底白对裱 + OPP 袋（厚）；350g 白底白 + OPP 袋（薄，一般用于软磁书签）',
+      '腰封：350g 灰底白',
+      '吊牌：350g 白底白',
+      '卡头：350g 灰底白',
+      '展示盒：Theme—2mm 灰板裱 157g 铜版纸 / 单 E 瓦裱灰底白；BTS—单 E 瓦裱灰底白',
+      '橡皮包纸：128g 铜版纸，双面覆膜（要和客人说明！）',
+      '不干胶：金属笔上为 PET 可移覆亮膜；条形 / 蝴蝶标—PP 合成可移（塑料材质需向客人说明）；笔记本—玻卡可移；其他—基本上铜版纸可移（PVC 袋子—蓝泰可移；EVA 袋子—铜版纸可移）',
+      '皮质笔 / 毛球笔入展示盒：先上一层热收缩膜，再贴不干胶，需向客人说明'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 包材设计要求与模板',
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\包材' },
+  { node: '08', name: 'HEMA 下单流程', when: '',
+    notes: ['仔细核对 PO，如果有问题及时表格和邮件发给对接人调整订单'] },
+  { node: '08', name: 'HEMA 建资料流程（含 Startpack）', when: '',
+    notes: ['可以从订单表里找往年产品的项目编号和 SKU，然后去 SAP 里查找客户产品资料'],
+    projPath: '见订单表和 SAP 的产品资料描述' },
+  { node: '08', name: 'HEMA CPS 填写', when: '', notes: [] },
+  { node: '09', name: 'HEMA 产前 / 大货样样品反馈-邮件', when: '',
+    notes: ['如果有图片放到 comments 里，需要再新建一个 sheet，标注 SKU 和品名，把图片放进去',
+      '样品寄出后，需要在 comments 里写上寄出时间',
+      'comments 可以直接在微信群里发给对接人，并在群里催回复',
+      '客人会在 comments 标注出 PP sample 和 Production sample approved 的状态'],
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\comments' },
+  { node: '10', name: 'HEMA 验厂流程', when: '', notes: [],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 验厂',
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\验厂' },
+  { node: '12', name: 'HEMA 中期验货流程', when: '', notes: [] },
+  { node: '13', name: 'HEMA 验货流程（含自检报告上传）', when: '',
+    notes: ['在赛龙验货的产品，需要至少提前一周多订验货；BTS 出货季 TUV 还有可能排不上验货',
+      'Startpack 验货时，需要提供里面所有产品的签样',
+      '在外面的工厂验货时，需提前告知工厂验货时间，准备好公关费、签样；验货结束后让工厂提供签字单子照片'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 验货' },
+  { node: '13', name: 'HEMA TCF 上传流程', when: '', notes: [],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA TCF',
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\测试\\TCF' },
+  { node: '14', name: 'HEMA 订舱流程', when: 'CDD 前 45 天',
+    notes: ['如果有需要商检的木制产品，最好订在一个柜子里'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 装柜' },
+  { node: '14', name: 'HEMA 箱单发票登记', when: '出运后收到开船件就要立马核对，并登记到收汇表里',
+    notes: [], sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 收汇' },
+  { node: '15', name: 'HEMA 收汇流程', when: '', notes: [] },
+  { node: '15', name: 'HEMA 免罚金 + 出运证据操作流程',
+    when: '一般在出运后，看对接人会不会发来邮件或信息', notes: [],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 免罚金+出运证据' },
+  { node: '15', name: 'Product-PIM 产品表格填写', when: '',
+    notes: ['可以参照往年的产品填写'],
+    projPath: NAS + '\\BU028\\项目开发\\…\\Product information, materials and quality marks - BTS 2026' },
+  { node: '15', name: 'Package-PIM 包材表格填写', when: '', notes: ['可以参照往年的产品填写'] },
+  { node: '15', name: 'HEMA 测试收汇流程', when: '', notes: ['出运后，及时做测试发票并且收汇'],
+    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\测试\\2026 BTS Theme测试发票' },
+  { node: '15', name: 'HEMA GRS / RCS TC 操作流程', when: '', notes: ['出运后，及时开 TC'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA GRS' },
+  { node: '15', name: 'HEMA BCI 棉流程', when: '出运后 1 个月左右',
+    notes: ['出运后 1 个月左右，要填写对应的 BCI 棉文件；HEMA 组的群里会有人通知填写'],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA BCI 棉' },
+  { node: '15', name: 'HEMA EUDR 申请流程', when: '', notes: [],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA EUDR' },
+  { node: '15', name: 'HEMA FSC 发票登记流程', when: '', notes: [],
+    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA FSC' }
+];
+const sopOf = nid => SOP.filter(s => s.node === nid);
+
 const CATS = { NB: '线圈本 / 本册', BG: '包袋', PN: '金属笔', CU: '水杯' };
 const CAT_PH = { NB: '📓', BG: '👜', PN: '🖊️', CU: '🥤' };
 
@@ -996,6 +1155,7 @@ function recalcTimeline(p) {
     if (id === '11') bulkStart = cursor;
   });
   D['12'] = addDays(bulkStart, 5); // DUPRO：大货开始后 +5 天（约完成 10%）
+  D['15'] = addDays(p.deliveryDate, 30); // 收尾：出运后 30 天窗口（BCI 棉等约出运后 1 个月）
   p.nodes.forEach(n => { n.deadline = D[n.id]; });
   return D;
 }
@@ -1333,6 +1493,11 @@ function seed() {
     { id: 'h12', year: 2026, project: 'SIM', artNo: 'HM-CU-S26-01', name: '儿童水壶', cat: 'CU', ph: '🍼', desc: 'Tritan 材质 400ml，吸管盖，密封测试' }
   ];
 
+  // 未预置待办的节点，用台账里的业务环节自动生成 checklist
+  [p1, p2].forEach(pp => pp.nodes.forEach(nn => {
+    if (!nn.todos.length) nn.todos = sopOf(nn.id).map(s => ({ t: s.name, done: nn.status === 'done' }));
+  }));
+
   return { role: 'sales', projects: [p1, p2], suppliers, people, client, clientProducts, psfs, cqv, inspections };
 }
 
@@ -1375,6 +1540,9 @@ const ui = {
   panel: null,            // {kind, ...}
   psfLang: 'zh',
   cqvFilter: 'all',
+  sopOpen: null,
+  sopQ: '',
+  sopPhase: 'all',
   clientEdit: false,
   uploadTarget: null,
   homeFilter: 'all',
@@ -1479,8 +1647,9 @@ function shell(parts, body) {
       + subLink('#/quality/audit', r0 === 'quality' && r1 === 'audit', '验厂')
       + subLink('#/quality/insp', r0 === 'quality' && r1 === 'insp', '验货 DUPRO / FRI'));
     links += navGroup('clients', '客户管理', r0 === 'clients', '#/clients/profile',
-      subLink('#/clients/profile', r0 === 'clients' && r1 !== 'products', '品牌档案')
-      + subLink('#/clients/products', r0 === 'clients' && r1 === 'products', '过往产品库'));
+      subLink('#/clients/profile', r0 === 'clients' && !['products', 'sop'].includes(r1), '品牌档案')
+      + subLink('#/clients/products', r0 === 'clients' && r1 === 'products', '过往产品库')
+      + subLink('#/clients/sop', r0 === 'clients' && r1 === 'sop', 'SOP 手册'));
   }
   return `
   <div class="shell">
@@ -1571,7 +1740,7 @@ function projectRow(p) {
           data-act="goto" data-href="#/projects/${p.id}/node/${n.id}"></i>`).join('')}
       </span>`).join('')}
     </div>
-    <div class="phase-ticks"><span class="g-dev">开发 01–07</span><span class="g-pre">产前 08–10</span><span class="g-end">尾期 11–14</span></div>
+    <div class="phase-ticks"><span class="g-dev">开发 01–07</span><span class="g-pre">产前 08–10</span><span class="g-end">尾期 11–15</span></div>
     <div class="flow-legend">
       当前节点 <b>${cur.id} ${nodeDef(cur.id).name}</b> · ${STATUS_LABEL[cur.status]} ·
       deadline ${cur.deadline}
@@ -1688,9 +1857,9 @@ function viewProject(p) {
     <button class="btn" data-act="goto" data-href="#/quality/risk/${p.id}">本项目质量</button>
   </div>
   <div class="crumb"><a href="#/projects">项目管理</a> / <b>${esc(p.name)}</b></div>
-  <p class="sub" style="color:var(--muted);font-size:13.5px;margin:0 0 16px">交期 ${p.deliveryDate} ｜ 负责人 ${esc(person(p.ownerId).name)} ｜ SKU ${p.skus.length} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</p>
+  <p class="sub" style="color:var(--muted);font-size:13.5px;margin:0 0 16px">交期 ${p.deliveryDate} ｜ 负责人 ${esc(person(p.ownerId).name)} ｜ SKU ${p.skus.length} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/${p.nodes.length}</p>
   <div class="card">
-    <h3>工作流 <span class="tag">三大阶段 · 14 节点 · 点击进入节点</span></h3>
+    <h3>工作流 <span class="tag">三大阶段 · ${NODE_DEFS.length} 节点 · 点击进入节点</span></h3>
     ${lanesHtml(p, true)}
     <div class="hintbar">当前节点：<b>${cur.id} ${nodeDef(cur.id).name}</b> · ${STATUS_LABEL[cur.status]}
       <span>下一步：${cur.todos.filter(t => !t.done).map(t => esc(t.t)).join('；') || '推进本节点至完成'}</span></div>
@@ -1717,15 +1886,49 @@ function nextStepBar(p, n) {
   return '';
 }
 
+/* ---------- 业务环节 SOP 渲染 ---------- */
+const WARN_RE = /不接受|需向客人说明|要和客人说明|注意|提前一周|排不上|立马|及时|催|必须|要考虑/;
+function sopPathRow(label, path) {
+  return `<div class="sop-path"><b>${label}</b><span>${esc(path)}</span>
+    <button class="btn sm" data-act="copy-path" data-p="${esc(path)}">复制</button></div>`;
+}
+function sopNotes(s) {
+  return s.notes.map(t => `<div class="sop-note ${WARN_RE.test(t) ? 'warn' : ''}">${esc(t)}</div>`).join('')
+    + (s.sopPath ? sopPathRow('SOP 文件', s.sopPath) : '')
+    + (s.projPath ? sopPathRow('项目路径', s.projPath) : '');
+}
+function nodeSopCard(n) {
+  const list = sopOf(n.id);
+  if (!list.length) return '';
+  return `<div class="card mt sop-card ph-${nodeDef(n.id).phase}">
+    <h3>业务环节 SOP <span class="tag">${list.length} 个环节 · 来自 HEMA BTS 台账</span>
+      <span style="flex:1"></span>
+      <a href="#/clients/sop" style="font-size:13px">查看完整手册 →</a></h3>
+    ${list.map((s, i) => {
+      const key = n.id + '-' + i;
+      const open = ui.sopOpen === key;
+      const has = s.notes.length || s.sopPath || s.projPath;
+      return `<div class="sop-item">
+        <div class="sop-head" ${has ? `data-act="sop-toggle" data-k="${key}"` : ''}>
+          <span class="sop-name">${esc(s.name)}</span>
+          ${s.when ? `<span class="sop-when">⏱ ${esc(s.when)}</span>` : ''}
+          ${has ? `<span class="sop-toggle">${open ? '收起 ▴' : (s.notes.length ? s.notes.length + ' 条注意事项 ' : '路径 ') + '▾'}</span>` : ''}
+        </div>
+        ${open ? `<div class="sop-body">${sopNotes(s)}</div>` : ''}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
 function nodeFlowCard(p, n) {
   const idx = p.nodes.findIndex(x => x.id === n.id);
   const prev = p.nodes[idx - 1], next = p.nodes[idx + 1];
   const groups = { dev: [], pre: [], end: [] };
   p.nodes.forEach(x => groups[nodeDef(x.id).phase].push(x));
-  const LBL = { dev: '开发 01–07', pre: '产前 08–10', end: '尾期 11–14' };
+  const LBL = { dev: '开发 01–07', pre: '产前 08–10', end: '尾期 11–15' };
   return `<div class="card">
     <div class="nflow-head">
-      <h3>项目流程 <span class="tag">14 节点 · 点击任一格跳转</span></h3>
+      <h3>项目流程 <span class="tag">${NODE_DEFS.length} 节点 · 点击任一格跳转</span></h3>
       <span class="navs">
         <button class="btn sm" ${prev ? `data-act="goto" data-href="#/projects/${p.id}/node/${prev.id}"` : 'disabled'}>‹ ${prev ? prev.id + ' ' + nodeDef(prev.id).name : '已是首节点'}</button>
         <button class="btn sm" ${next ? `data-act="goto" data-href="#/projects/${p.id}/node/${next.id}"` : 'disabled'}>${next ? next.id + ' ' + nodeDef(next.id).name : '已是末节点'} ›</button>
@@ -1773,7 +1976,7 @@ function viewNode(p, n) {
     <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> / <b>${n.id} ${def.name}</b></div>
     <div class="t-meta">
       <span class="tag ${def.phase === 'dev' ? 'b' : def.phase === 'pre' ? 'k' : 'm'}">${PHASES[def.phase].label}</span>
-      <span>第 <b>${step}</b> / 14 步</span>
+      <span>第 <b>${step}</b> / ${NODE_DEFS.length} 步</span>
       <span>deadline <b class="${over ? 'over' : ''}">${n.deadline}</b>
         ${n.status === 'done' ? '' : over ? `<b class="over">逾期 ${diffDays(n.deadline, TODAY)} 天</b>` : `（剩 ${days} 天）`}</span>
       <span>负责人 ${avatarOf(person(n.ownerId).name)}</span>
@@ -1782,6 +1985,7 @@ function viewNode(p, n) {
   </div>
   ${nodeFlowCard(p, n)}
   ${nextStepBar(p, n)}
+  ${nodeSopCard(n)}
   ${ui.submitConfirm && n.status === 'in_progress' ? `
   <div class="card mt reject-box">
     <h3>确认提交审批？</h3>
@@ -1845,8 +2049,44 @@ function specificArea(p, n) {
   if (n.id === '03') return areaPsfList(p);
   if (n.id === '05') return areaTender(p, n);
   if (n.id === '07') return areaFS(p, n);
+  if (n.id === '08') return areaPackaging();
   if (n.id === '12' || n.id === '13') return areaInspect(p, n);
+  if (n.id === '15') return areaCloseout(n);
   return '';
+}
+
+/* 08 包材：把台账里的克重 / 材质规则做成速查表 */
+function areaPackaging() {
+  const s = SOP.find(x => x.name.indexOf('包材设计') >= 0);
+  const rows = s.notes.filter(t => /^(彩盒|背卡|腰封|吊牌|卡头|展示盒|橡皮包纸|不干胶)/.test(t))
+    .map(t => { const i = t.indexOf('：'); return [t.slice(0, i), t.slice(i + 1)]; });
+  return `<div class="card mt">
+    <h3>包材规格速查 <span class="tag">HEMA 硬性要求 · 出错即返工</span></h3>
+    <div class="riskbar" style="cursor:default;margin-bottom:12px">⚠ 普遍不覆膜、不接受 PVC 材质
+      <span class="cool">特殊情况必须向客人说明；确需覆膜时膜重 &lt; 整体包材 5%</span></div>
+    <div class="tbl-wrap"><table class="tbl" style="min-width:0">
+      <thead><tr><th style="width:120px">包材项</th><th>规格要求</th></tr></thead>
+      <tbody>${rows.map(([k, v]) => `<tr><td><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="note-strip mt">皮质笔 / 毛球笔入展示盒：先上一层热收缩膜再贴不干胶，需向客人说明。完整规则见下方业务环节 SOP。</p>
+  </div>`;
+}
+
+/* 15 收尾：出运后合规与收汇清单 */
+function areaCloseout(n) {
+  const list = sopOf('15');
+  return `<div class="card mt">
+    <h3>出运后收尾清单 <span class="tag m">${list.length} 项</span>
+      <span style="flex:1"></span>
+      <span class="tag">deadline ${n.deadline}（出运后 30 天）</span></h3>
+    <p class="note-strip" style="margin-bottom:10px">这些环节最容易漏——BCI 棉要等客户群通知、EUDR 与 FSC 发票各有登记入口。系统按项目逐项跟踪，不再靠人记。</p>
+    <div class="grid g2">
+      ${list.map((s, i) => `<label class="chk ${n.todos[i] && n.todos[i].done ? 'done' : ''}">
+        <input type="checkbox" ${n.todos[i] && n.todos[i].done ? 'checked' : ''} ${canEdit() ? '' : 'disabled'} data-chg="todo" data-i="${i}">
+        <span>${esc(s.name)}${s.when ? `<br><span style="color:var(--muted);font-size:12.5px">⏱ ${esc(s.when)}</span>` : ''}</span>
+      </label>`).join('')}
+    </div>
+  </div>`;
 }
 
 function areaBrief(p) {
@@ -1908,6 +2148,14 @@ function areaTender(p, n) {
       <tbody>${cqvs.map(c => `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
         <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
         <td>${esc(c.note)}</td><td>${esc(c.by)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">暂无评估记录</div>'}
+    <h3 class="mt">寄样套数速查 <span class="tag">照台账执行，漏寄要补运费</span></h3>
+    <div class="tbl-wrap"><table class="tbl" style="min-width:0">
+      <thead><tr><th style="width:130px">样品类型</th><th>寄送要求</th></tr></thead>
+      <tbody>
+        <tr><td><b>Offer 样</b></td><td>荷兰 / 上海办各 1 套，展示盒里不含产品</td></tr>
+        <tr><td><b>PP 样</b></td><td>荷兰 / 上海办各 1 套，展示盒里不含产品</td></tr>
+        <tr><td><b>大货样</b></td><td>2 套给荷兰、1 套给上海办、1 套给 TUV 验货；到齐后再补寄 1 套拍照样给上海办</td></tr>
+      </tbody></table></div>
     <h3 class="mt">样品照片墙
       ${canEdit() ? `<button class="btn sm" data-act="upload" data-kind="photo" data-pid="${p.id}" style="margin-left:8px">＋ 上传样品照片</button>` : ''}
       <span class="tag">${(p.photos || []).length}/12</span></h3>
@@ -1954,6 +2202,8 @@ function areaInspect(p, n) {
   const recs = db.inspections.filter(r => r.projectId === p.id && r.nodeId === n.id);
   const kind = n.id === '12' ? 'DUPRO · 中期验货（大货完成约 10% 时）' : 'FRI · 大货验货（大货完成后）';
   return `
+  ${n.id === '13' ? `<div class="riskbar mt" style="cursor:default">⏰ 验货需至少提前一周以上预订
+    <span class="cool">BTS 出货季 TUV 可能排不上；外厂验货须提前告知工厂、备好公关费与签样，验完索取签字单照片</span></div>` : ''}
   <div class="card mt">
     <h3>验货记录 <span class="tag k">${kind}</span></h3>
     ${recs.length ? recs.map(r => `
@@ -2319,6 +2569,45 @@ function viewClientProfile() {
   </div>`;
 }
 
+/* ---------- 客户管理 · SOP 手册 ---------- */
+function viewClientSop() {
+  const q = ui.sopQ.trim();
+  const PH = ui.sopPhase;
+  const hit = s => (!q || s.name.includes(q) || s.notes.join('').includes(q) || (s.when || '').includes(q))
+    && (PH === 'all' || nodeDef(s.node).phase === PH);
+  const list = SOP.filter(hit);
+  const groups = { dev: [], pre: [], end: [] };
+  list.forEach(s => groups[nodeDef(s.node).phase].push(s));
+  const noteCount = SOP.reduce((a, s) => a + s.notes.length, 0);
+
+  return `
+  <div class="page-head"><h1>客户管理 · SOP 手册</h1>
+    <span class="tag b">HEMA · THEME 线</span>
+    <span class="sub">${SOP.length} 个业务环节 · ${noteCount} 条注意事项 ｜ 新人通读，老人速查</span></div>
+  <p class="note-strip" style="margin-bottom:14px">来源：业务七部 HEMA BTS 台账。Brand 线的差异规则尚未整理，卡片标注 <span class="tag b">THEME</span> 以便日后并列补充。</p>
+  <div class="filterbar">
+    <input class="ipt search" placeholder="搜索环节 / 注意事项全文，如「PVC」「寄样」「汇率」…" value="${esc(ui.sopQ)}" data-chg="sop-q">
+    <div class="tabs" style="margin:0;border:0">
+      ${[['all', '全部'], ['dev', '开发阶段'], ['pre', '中期 · 产前'], ['end', '尾期']].map(([k, l]) =>
+        `<button class="${PH === k ? 'on' : ''}" data-act="sop-phase" data-p="${k}">${l}</button>`).join('')}
+    </div>
+    <span class="note-strip">命中 ${list.length} / ${SOP.length}</span>
+  </div>
+  ${['dev', 'pre', 'end'].map(ph => groups[ph].length ? `
+    <div class="page-head" style="margin:22px 0 10px"><h1 style="font-size:17px">${PHASES[ph].label}</h1>
+      <span class="sub">${groups[ph].length} 个环节</span></div>
+    ${groups[ph].map(s => `<div class="card mt sop-card ph-${ph}">
+      <div class="sop-head" style="cursor:default">
+        <span class="sop-name" style="font-size:15px">${esc(s.name)}</span>
+        <span class="tag b" data-act="goto" data-href="#/projects/p1/node/${s.node}" style="cursor:pointer">节点 ${s.node} ${nodeDef(s.node).name}</span>
+        ${s.when ? `<span class="sop-when">⏱ ${esc(s.when)}</span>` : ''}
+        <span style="margin-left:auto"><span class="tag">THEME</span></span>
+      </div>
+      ${(s.notes.length || s.sopPath || s.projPath) ? `<div class="sop-body">${sopNotes(s)}</div>` : '<div class="sop-body" style="color:var(--muted);font-size:13px">按标准流程执行，暂无特别注意事项</div>'}
+    </div>`).join('')}` : '').join('')}
+  ${list.length ? '' : '<div class="card mt"><div class="empty">无匹配环节，换个关键词试试</div></div>'}`;
+}
+
 /* ---------- 客户管理 · 过往产品库 ---------- */
 function viewClientProducts() {
   const F = ui.prodFilter;
@@ -2423,7 +2712,7 @@ function viewClientHome() {
         <div class="top"><span class="name">${esc(p.name)}</span><span class="tag">${esc(p.season)}</span>
           ${confirms ? `<span class="tag a">${confirms} 项待您确认</span>` : ''}</div>
         <div class="meta"><span>交期 <b class="mono">${p.deliveryDate}</b></span>
-          <span>节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</span></div>
+          <span>节点完成 ${p.nodes.filter(n => n.status === 'done').length}/${p.nodes.length}</span></div>
         <div class="mini-flow">${p.nodes.map(n => `<i class="f-${n.status === 'done' ? 'done' : n.status}"></i>`).join('')}</div>
       </div>`;
     }).join('')}
@@ -2438,7 +2727,7 @@ function viewClientProject(p) {
   <div class="client-banner">HEMA 客户视角 · 只读 + 确认</div>
   <div class="crumb"><a href="#/projects">我的项目</a> / <b>${esc(p.name)}</b></div>
   <div class="page-head"><h1>${esc(p.name)}</h1><span class="tag">${esc(p.season)}</span>
-    <span class="sub">交期 ${p.deliveryDate} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</span></div>
+    <span class="sub">交期 ${p.deliveryDate} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/${p.nodes.length}</span></div>
   <div class="card"><h3>项目进度</h3>${lanesHtml(p, false)}</div>
   <div class="card mt"><h3>待您确认（${confirms.length}）</h3>
     ${confirms.length ? `<div class="grid g2">${confirms.map(n => `
@@ -2783,7 +3072,8 @@ function render() {
   else if (key === 'archived') body = viewArchived();
   else if (key === 'suppliers') body = viewSuppliers();
   else if (key === 'quality') body = viewQuality(parts[1] || 'risk', parts[2] || 'all');
-  else if (key === 'clients') body = parts[1] === 'products' ? viewClientProducts() : viewClientProfile();
+  else if (key === 'clients') body = parts[1] === 'products' ? viewClientProducts()
+    : parts[1] === 'sop' ? viewClientSop() : viewClientProfile();
   else if (key === 'projects') {
     const p = parts[1] ? proj(parts[1]) : null;
     if (!p) body = isClient() ? viewClientHome() : viewHome();
@@ -2952,10 +3242,11 @@ document.addEventListener('click', e => {
       nodes: NODE_DEFS.map(x => makeNode(x.id, x.id === '04' ? 'u3' : d.owner, x.id === '04' ? 'u3' : (x.confirm ? 'u5' : null), skus))
     };
     recalcTimeline(npj);
+    npj.nodes.forEach(nn => { if (!nn.todos.length) nn.todos = sopOf(nn.id).map(s => ({ t: s.name, done: false })); });
     const n1 = npj.nodes[0];
     n1.status = 'in_progress';
     n1.todos = [{ t: 'SKU 货号建档', done: skus.length > 0 }, { t: '按交期倒推时间线', done: true }, { t: '产品推荐方案', done: false }];
-    n1.versions = [{ v: 'V1', time: TODAY, author: person(d.owner).name, note: '建项目，倒推生成 14 节点时间线' }];
+    n1.versions = [{ v: 'V1', time: TODAY, author: person(d.owner).name, note: '建项目，倒推生成 ' + NODE_DEFS.length + ' 节点时间线' }];
     n1.inputs = d.files.map(f => ({ name: f.name, size: f.size, time: TODAY, by: person(d.owner).name }));
     npj.photos = [];
     skus.forEach(x => { db.psfs[x.id] = makePsf(x.id, x.cat, 'V1', false); });
@@ -2986,7 +3277,7 @@ document.addEventListener('click', e => {
     n.status = 'done'; ui.rejectOpen = false;
     addCmt(n, n.reviewerId ? person(n.reviewerId).name : '管理员', '审批', '审批通过。');
     let msg = '审批通过，节点完成';
-    if (n.id === '14' && p && p.status === 'active') {
+    if (n.id === '15' && p && p.status === 'active') {
       p.status = 'archived';
       const yr = parseInt(p.deliveryDate.slice(0, 4), 10);
       const pj = p.name.split(/\s+/)[0] || p.name;
@@ -3146,6 +3437,15 @@ document.addEventListener('click', e => {
     });
     ui.panel = null; saveDB(); render();
     toast('已加入供应商库——名单动态维护，立即进入匹配池', true);
+    return;
+  }
+  if (act === 'sop-toggle') { ui.sopOpen = ui.sopOpen === t.dataset.k ? null : t.dataset.k; render(); return; }
+  if (act === 'sop-phase') { ui.sopPhase = t.dataset.p; render(); return; }
+  if (act === 'copy-path') {
+    const v = t.dataset.p;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(v).then(() => toast('路径已复制，可直接粘贴到资源管理器', true), () => toast('复制失败'));
+    } else toast('当前环境不支持剪贴板');
     return;
   }
   if (act === 'cqv-filter') { ui.cqvFilter = t.dataset.f; render(); return; }
@@ -3314,7 +3614,7 @@ document.addEventListener('change', e => {
 
 /* 输入即时筛选 */
 document.addEventListener('input', e => {
-  const t = e.target.closest('[data-chg="brief-filter"],[data-chg="sup-q"],[data-chg="pf-q"],[data-chg="gsearch"]');
+  const t = e.target.closest('[data-chg="brief-filter"],[data-chg="sup-q"],[data-chg="pf-q"],[data-chg="gsearch"],[data-chg="sop-q"]');
   if (!t) return;
   const k = t.dataset.chg;
   const v = t.value;
@@ -3323,6 +3623,7 @@ document.addEventListener('input', e => {
   if (k === 'sup-q') ui.supFilter.q = v;
   if (k === 'pf-q') ui.prodFilter.q = v;
   if (k === 'gsearch') ui.searchQ = v;
+  if (k === 'sop-q') ui.sopQ = v;
   render();
   const nt = document.querySelector(`[data-chg="${k}"]`);
   if (nt) { nt.focus(); nt.setSelectionRange(st, st); }
