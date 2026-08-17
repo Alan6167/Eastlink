@@ -994,7 +994,7 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
    ============================================================ */
 
 const TODAY = '2026-08-14';
-const DB_KEY = 'eastlink-mvp-v4';
+const DB_KEY = 'eastlink-mvp-v5';
 
 /* ---------- 工作流 15 节点定义 ---------- */
 const NODE_DEFS = [
@@ -1488,6 +1488,10 @@ function seed() {
     { id: 'h12', year: 2026, project: 'SIM', artNo: 'HM-CU-S26-01', name: '儿童水壶', cat: 'CU', ph: '🍼', desc: 'Tritan 材质 400ml，吸管盖，密封测试' }
   ];
 
+  // 高风险点：p2（已进大货）的要求视为均已传达工厂；p1 仅锁定版已传达
+  p2Skus.forEach(s => { const f = psfs[s.id]; f.sections.compliance.forEach(r => { if (r.critical) r.told = true; }); });
+  p1Skus.forEach(s => { const f = psfs[s.id]; if (f.locked) f.sections.compliance.forEach(r => { if (r.critical) r.told = true; }); });
+
   // 未预置待办的节点，用台账里的业务环节自动生成 checklist
   [p1, p2].forEach(pp => pp.nodes.forEach(nn => {
     if (!nn.todos.length) nn.todos = sopOf(nn.id).map(s => ({ t: s.name, done: nn.status === 'done' }));
@@ -1538,6 +1542,8 @@ const ui = {
   sopOpen: null,
   sopQ: '',
   sopPhase: 'all',
+  cqvDraft: null,
+  auditEdit: null,
   clientEdit: false,
   uploadTarget: null,
   homeFilter: 'all',
@@ -2380,44 +2386,75 @@ function viewQuality(tab, pid) {
 
   let body = '';
   if (tab === 'risk') {
-    body = risks.length ? `<div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>SKU</th><th>类型</th><th>高风险要求</th><th>来源</th><th>项目</th><th>PSF 版本</th><th></th></tr></thead>
-      <tbody>${risks.map(({ p, s, f, r }) => `<tr class="critical">
+    const told = risks.filter(x => x.r.told).length;
+    body = risks.length ? `<div class="note-strip" style="margin-bottom:10px">已传达工厂 <b>${told}</b> / ${risks.length} 项——勾选表示该要求已在打样前传达工厂并确认。</div>
+      <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>SKU</th><th>类型</th><th>高风险要求</th><th>来源</th><th>项目</th><th>PSF 版本</th><th>已传达工厂</th><th></th></tr></thead>
+      <tbody>${risks.map(({ p, s, f, r }) => {
+        const idx = f.sections.compliance.indexOf(r);
+        return `<tr class="${r.told ? '' : 'critical'}">
         <td class="num">${esc(s.artNo)}</td><td>${esc(r.type)}</td><td><b>${esc(r.requirement)}</b></td>
         <td><span class="tag">${esc(r.source)}</span></td><td>${esc(p.name)}</td>
         <td>${f.locked ? '<span class="tag m">Final 锁定</span>' : `<span class="tag a">${esc(f.version)} 编辑中</span>`}</td>
-        <td><a href="#/projects/${p.id}/psf/${s.id}">打开 PSF</a></td></tr>`).join('')}</tbody></table></div>
+        <td><label class="chk" style="padding:0"><input type="checkbox" ${r.told ? 'checked' : ''} ${canEdit() ? '' : 'disabled'}
+          data-chg="risk-told" data-sku="${s.id}" data-i="${idx}">
+          <span style="font-size:12.5px">${r.told ? '已传达' : '待传达'}</span></label></td>
+        <td><a href="#/projects/${p.id}/psf/${s.id}">打开 PSF</a></td></tr>`;
+      }).join('')}</tbody></table></div>
       <p class="note-strip mt">高风险点在 PSF 阶段前置录入（CQV 介入），打样前必须传达工厂——避免按最简工艺报价、到 FS 才返工。</p>`
       : `<div class="empty">${P ? esc(pname) + ' 暂无高风险点（PSF 中尚未标记 critical 项）' : '暂无高风险点'}</div>`;
   } else if (tab === 'cqv') {
     const CF = ui.cqvFilter;
     const list = cqvAll.filter(c => CF === 'all' || (CF === 'pass' ? c.result === '通过' : c.result !== '通过'));
-    body = `<div class="tabs" style="border:0;margin-bottom:8px">
-      <button class="${CF === 'all' ? 'on' : ''}" data-act="cqv-filter" data-f="all">全部 ${cqvAll.length}</button>
-      <button class="${CF === 'pass' ? 'on' : ''}" data-act="cqv-filter" data-f="pass">通过</button>
-      <button class="${CF === 'pending' ? 'on' : ''}" data-act="cqv-filter" data-f="pending">待复评 ${cqvPending}</button>
+    body = `<div class="filterbar" style="margin-bottom:10px">
+      <div class="tabs" style="border:0;margin:0">
+        <button class="${CF === 'all' ? 'on' : ''}" data-act="cqv-filter" data-f="all">全部 ${cqvAll.length}</button>
+        <button class="${CF === 'pass' ? 'on' : ''}" data-act="cqv-filter" data-f="pass">通过</button>
+        <button class="${CF === 'pending' ? 'on' : ''}" data-act="cqv-filter" data-f="pending">待复评 ${cqvPending}</button>
+      </div>
+      <span style="flex:1"></span>
+      ${canEdit() ? '<button class="btn pri" data-act="cqv-new">＋ 新增评估</button>' : ''}
     </div>
     ${list.length ? `<div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>SKU</th><th>评估项</th><th>结论</th><th>备注</th><th>评估人</th><th>时间</th><th>项目 / 节点</th></tr></thead>
+      <thead><tr><th>SKU</th><th>评估项</th><th>结论</th><th>备注</th><th>评估人</th><th>时间</th><th>项目 / 节点</th>${canEdit() ? '<th>审核操作</th>' : ''}</tr></thead>
       <tbody>${list.map(c => {
         const p = proj(c.projectId);
-        return `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
-        <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
+        const passed = c.result === '通过';
+        const failed = c.result === '不通过';
+        return `<tr class="${failed ? 'critical' : ''}"><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
+        <td>${passed ? '<span class="tag m">通过</span>' : failed ? '<span class="tag r">不通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
         <td>${esc(c.note)}</td><td>${esc(c.by)}</td><td class="num">${esc(c.time)}</td>
-        <td><a href="#/projects/${p.id}/node/${c.nodeId}">${esc(p.name)} · ${c.nodeId} ${nodeDef(c.nodeId).name}</a></td></tr>`;
+        <td><a href="#/projects/${p.id}/node/${c.nodeId}">${esc(p.name)} · ${c.nodeId} ${nodeDef(c.nodeId).name}</a></td>
+        ${canEdit() ? `<td class="btnrow">${passed
+          ? `<button class="btn sm" data-act="cqv-reopen" data-id="${c.id}">退回复评</button>`
+          : `<button class="btn sm mint" data-act="cqv-judge" data-id="${c.id}" data-r="通过">判定通过</button>
+             <button class="btn sm danger" data-act="cqv-judge" data-id="${c.id}" data-r="不通过">不通过</button>`}</td>` : ''}
+        </tr>`;
       }).join('')}</tbody></table></div>`
       : `<div class="empty">${P ? esc(pname) + ' 暂无 CQV 评估记录（开发样评估在寄样前进行）' : '暂无评估记录'}</div>`}
-      <p class="note-strip mt">质量管控从开发样评估开始——「前期没问题，后期都是小异常」。</p>`;
+      <p class="note-strip mt">质量管控从开发样评估开始——「前期没问题，后期都是小异常」。判定结果会记录评估人与时间。</p>`;
   } else if (tab === 'audit') {
     body = sups.length ? `<div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>供应商</th><th>验厂状态</th><th>有效期</th><th>资质</th>${P ? '<th>本项目 SKU</th>' : '<th>合作客户</th>'}</tr></thead>
+      <thead><tr><th>供应商</th><th>验厂状态</th><th>有效期</th><th>资质</th>${P ? '<th>本项目 SKU</th>' : '<th>合作客户</th>'}${canEdit() ? '<th>审核操作</th>' : ''}</tr></thead>
       <tbody>${sups.map(s => `<tr>
         <td><a data-act="sup-detail" data-id="${s.id}" style="cursor:pointer"><b>${esc(s.name)}</b></a></td>
         <td>${auditPill(s)}</td>
         <td class="num">${esc(s.auditExpiry || '—')}</td>
         <td>${s.certs.length ? s.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ') : '—'}</td>
         ${P ? `<td>${projectSkusOf(P, s.id).map(k => `<span class="tag ${k.locked ? 'm' : 'b'}">${esc(k.artNo)}${k.locked ? ' ✓' : ''}</span>`).join(' ')}</td>`
-            : `<td>${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</td>`}</tr>`).join('')}</tbody></table></div>
+            : `<td>${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</td>`}
+        ${canEdit() ? `<td><button class="btn sm" data-act="audit-open" data-id="${s.id}">录入验厂结果</button></td>` : ''}</tr>
+        ${ui.auditEdit === s.id ? `<tr><td colspan="${P ? 6 : 6}" style="background:var(--surface-2)">
+          <div class="filterbar" style="margin:0">
+            <b style="font-size:13.5px">${esc(s.name)} · 录入验厂结果</b>
+            <select class="ipt ipt-inline" id="audType">
+              <option>客户验厂（TUV）</option><option>BSCI</option><option>体系审核</option></select>
+            <select class="ipt ipt-inline" id="audResult"><option>通过</option><option>不通过</option><option>排期中</option></select>
+            <label style="font-size:13px;color:var(--muted)">有效期至
+              <input class="ipt ipt-inline" type="date" id="audExpiry" value="${addDays(TODAY, 365)}"></label>
+            <button class="btn sm pri" data-act="audit-save" data-id="${s.id}">保存</button>
+            <button class="btn sm ghost" data-act="audit-cancel">取消</button>
+          </div></td></tr>` : ''}`).join('')}</tbody></table></div>
       <p class="note-strip mt">${P ? '仅显示本项目已匹配 / 锁定（✓）的供应商；' : ''}与供应商管理同源数据；验厂随 FS 确认启动、量产前完成（节点 10），第三方（TUV）执行。点击供应商名可打开档案。</p>`
       : `<div class="empty">${esc(pname)} 尚未匹配供应商（在 05 Tender 节点完成匹配后显示）</div>`;
   } else {
@@ -2455,7 +2492,8 @@ function viewQuality(tab, pid) {
     <a href="#/quality/${tab}">清除筛选，看全部项目 →</a></div>` : ''}
   <div class="grid g4">
     <div class="card statcard warn click ${tab === 'risk' ? 'on' : ''}" data-act="goto" data-href="#/quality/risk${suffix}">
-      <div class="num">${risks.length}</div><div class="lbl">高风险点（PSF 前置）</div><div class="hint">打样前必达</div></div>
+      <div class="num">${risks.filter(x => !x.r.told).length}</div><div class="lbl">高风险点待传达工厂</div>
+      <div class="hint">共 ${risks.length} 项 · 打样前必达</div></div>
     <div class="card statcard click ${tab === 'cqv' ? 'on' : ''}" data-act="goto" data-href="#/quality/cqv${suffix}">
       <div class="num" style="color:var(--amber)">${cqvPending}</div><div class="lbl">CQV 待复评</div><div class="hint">开发样评估</div></div>
     <div class="card statcard click ${tab === 'audit' ? 'on' : ''}" data-act="goto" data-href="#/quality/audit${suffix}">
@@ -2770,6 +2808,36 @@ function renderOverlay() {
   const p = o.pid ? proj(o.pid) : null;
   const s = o.skuId && p ? skuOf(p, o.skuId) : null;
   const f = s ? db.psfs[s.id] : null;
+
+  if (o.kind === 'cqvNew') {
+    const d = ui.cqvDraft;
+    const pp = proj(d.projectId) || db.projects[0];
+    return `
+    <div class="ovl">
+      <div class="ovl-actions"><button class="btn" data-act="ovl-close">关闭</button></div>
+      <div class="sheet" style="max-width:620px">
+        <div class="sheet-head"><span class="mk"><i></i><i></i></span><h2>新增 CQV 开发样评估</h2></div>
+        <div class="sheet-sub">寄样前完成评估，要求在打样前传达工厂——避免样品出来才发现结构或工艺不达标。</div>
+        <div class="form-row"><label>项目 *</label><select class="ipt" data-chg="cq-proj">
+          ${db.projects.filter(x => x.status === 'active').map(x =>
+            `<option value="${x.id}" ${d.projectId === x.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}
+        </select></div>
+        <div class="form-row"><label>SKU *</label><select class="ipt" data-chg="cq-sku">
+          <option value="">— 请选择 —</option>
+          ${pp.skus.map(k => `<option value="${esc(k.artNo)}" ${d.sku === k.artNo ? 'selected' : ''}>${esc(k.artNo)} ${esc(k.name)}</option>`).join('')}
+        </select></div>
+        <div class="form-row"><label>评估项 *</label><input class="ipt" placeholder="如：开口圈直径 ≥ 2.5cm / 车缝拉力 ≥ 70N" value="${esc(d.item)}" data-chg="cq-item"></div>
+        <div class="form-row"><label>结论</label><select class="ipt" data-chg="cq-result">
+          <option ${d.result === '通过' ? 'selected' : ''}>通过</option>
+          <option ${d.result === '整改后复评' ? 'selected' : ''}>整改后复评</option>
+          <option ${d.result === '不通过' ? 'selected' : ''}>不通过</option></select></div>
+        <div class="form-row"><label>备注</label><input class="ipt" placeholder="评估说明、已传达工厂的要求…" value="${esc(d.note)}" data-chg="cq-note"></div>
+        <div class="form-row"><label>评估人</label><input class="ipt" value="CQV 审核" disabled></div>
+        <div class="btnrow mt"><span style="flex:1"></span>
+          <button class="btn pri" data-act="cqv-create">保存评估</button></div>
+      </div>
+    </div>`;
+  }
 
   if (o.kind === 'newProj') {
     const d = ui.newProj;
@@ -3433,6 +3501,51 @@ document.addEventListener('click', e => {
   if (act === 'sop-toggle') { ui.sopOpen = ui.sopOpen === t.dataset.k ? null : t.dataset.k; render(); return; }
   if (act === 'sop-phase') { ui.sopPhase = t.dataset.p; render(); return; }
   if (act === 'cqv-filter') { ui.cqvFilter = t.dataset.f; render(); return; }
+  if (act === 'cqv-new') {
+    ui.cqvDraft = { projectId: (db.projects.find(x => x.status === 'active') || db.projects[0]).id, sku: '', item: '', result: '整改后复评', note: '' };
+    ui.overlay = { kind: 'cqvNew' }; render(); return;
+  }
+  if (act === 'cqv-create') {
+    const d = ui.cqvDraft;
+    if (!d.sku) { toast('请选择 SKU'); return; }
+    if (!d.item.trim()) { toast('评估项必填'); return; }
+    db.cqv.push({
+      id: 'c' + (db.cqv.length + 1) + '-' + db.cqv.length, projectId: d.projectId, nodeId: '05',
+      sku: d.sku, item: d.item.trim(), result: d.result, note: d.note.trim() || '—',
+      by: 'CQV 审核', time: TODAY
+    });
+    ui.overlay = null; ui.cqvDraft = null; saveDB(); render();
+    toast('评估已记录，同步显示在 05 Tender 节点', true); return;
+  }
+  if (act === 'cqv-judge') {
+    const c = db.cqv.find(x => x.id === t.dataset.id);
+    if (c) {
+      const r = t.dataset.r;
+      c.result = r; c.by = 'CQV 审核'; c.time = TODAY;
+      c.note = (r === '通过' ? '复评通过：' : '判定不通过：') + c.note.replace(/^(复评通过|判定不通过)：/, '');
+      saveDB(); render(); toast('已判定为「' + r + '」', r === '通过');
+    }
+    return;
+  }
+  if (act === 'cqv-reopen') {
+    const c = db.cqv.find(x => x.id === t.dataset.id);
+    if (c) { c.result = '整改后复评'; c.time = TODAY; saveDB(); render(); toast('已退回复评'); }
+    return;
+  }
+  if (act === 'audit-open') { ui.auditEdit = t.dataset.id; render(); return; }
+  if (act === 'audit-cancel') { ui.auditEdit = null; render(); return; }
+  if (act === 'audit-save') {
+    const s = supplier(t.dataset.id);
+    const type = ($('#audType') || {}).value || '客户验厂（TUV）';
+    const res = ($('#audResult') || {}).value || '通过';
+    const exp = ($('#audExpiry') || {}).value || '';
+    s.audits = s.audits || [];
+    s.audits.unshift({ date: TODAY, type, result: res, expiry: res === '通过' ? exp : null });
+    s.auditStatus = res === '通过' ? 'passed' : res === '排期中' ? 'pending' : 'expired';
+    s.auditExpiry = res === '通过' ? exp : null;
+    ui.auditEdit = null; saveDB(); render();
+    toast(s.name + ' 验厂结果已录入：' + res, res === '通过'); return;
+  }
   if (act === 'sup-edit-open') {
     const x = supplier(t.dataset.id);
     ui.panel = { kind: 'supEdit', id: x.id, draft: {
@@ -3569,6 +3682,17 @@ document.addEventListener('change', e => {
     const c = t.dataset.c, d = ui.panel.draft;
     d.clients = t.checked ? [...d.clients, c] : d.clients.filter(x => x !== c);
     render(); return;
+  }
+  if (k === 'cq-proj') { ui.cqvDraft.projectId = t.value; ui.cqvDraft.sku = ''; render(); return; }
+  if (k === 'cq-sku') { ui.cqvDraft.sku = t.value; return; }
+  if (k === 'cq-item') { ui.cqvDraft.item = t.value; return; }
+  if (k === 'cq-result') { ui.cqvDraft.result = t.value; return; }
+  if (k === 'cq-note') { ui.cqvDraft.note = t.value; return; }
+  if (k === 'risk-told') {
+    const f = db.psfs[t.dataset.sku];
+    const row = f && f.sections.compliance[+t.dataset.i];
+    if (row) { row.told = t.checked; saveDB(); render(); }
+    return;
   }
   if (k === 'cp') {
     const path = t.dataset.path.split('.');
