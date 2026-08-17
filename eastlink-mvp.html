@@ -96,6 +96,30 @@ input, select, textarea { font: inherit; color: var(--ink); }
   background: #fff;
 }
 .side-nav a.on svg { opacity: 1; }
+.side-group { display: flex; flex-direction: column; }
+.side-parent .chev { margin-left: auto; font-size: 10px; opacity: .7; transition: transform .15s ease; }
+.side-group.open .side-parent .chev { transform: rotate(180deg); }
+.side-nav a.grp-on { color: #fff; }
+.side-subs {
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  margin: 2px 0 5px 15px;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255,255,255,.22);
+}
+.side-group.open .side-subs { display: flex; }
+.side-nav a.sub { padding: 6.5px 9px; font-size: 12.5px; border-radius: 7px; color: rgba(255,255,255,.72); }
+.side-nav a.sub.on { background: rgba(255,255,255,.2); color: #fff; font-weight: 650; }
+.side-nav a.sub.on::before { display: none; }
+.sub-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font: 700 9.5px/1 var(--mono);
+  border-radius: 999px;
+  padding: 3px 6px;
+}
 .side-foot { margin-top: auto; padding-top: 12px; }
 .btn-reset {
   width: 100%;
@@ -678,6 +702,25 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .empty { color: var(--muted); font-size: 13px; padding: 18px 0; text-align: center; }
 .note-strip { background: var(--surface-2); border-radius: 9px; padding: 8px 12px; font-size: 12px; color: var(--muted); }
 
+/* ---------- 文件上传 / 照片墙 / 档案编辑 ---------- */
+.file-item .del {
+  margin-left: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+}
+.file-item .del:hover { color: var(--red); }
+.file-item .fmeta { margin-left: auto; font: 500 11px/1.4 var(--mono); color: var(--muted); white-space: nowrap; }
+.prod .ph.img { padding: 0; overflow: hidden; height: 88px; }
+.prod .ph.img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tag .tx { margin-left: 5px; cursor: pointer; opacity: .65; }
+.tag .tx:hover { opacity: 1; }
+.add-row { display: flex; gap: 6px; margin-top: 9px; align-items: center; }
+.add-row .ipt { max-width: 200px; }
+
 /* ---------- 表单行 / 选择芯片 ---------- */
 .form-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; margin-bottom: 9px; font-size: 13px; }
 .form-row > label { color: var(--muted); font-size: 12.5px; }
@@ -801,6 +844,9 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
   .side-nav { flex-direction: row; gap: 2px; }
   .side-nav a { white-space: nowrap; padding: 7px 10px; }
   .side-nav a.on::before { display: none; }
+  .side-group { flex-direction: row; align-items: center; }
+  .side-parent .chev { display: none; }
+  .side-subs { display: flex !important; flex-direction: row; border-left: 0; margin: 0; padding-left: 0; }
   .side-foot { margin: 0 0 0 auto; padding: 0; }
   .btn-reset { width: auto; white-space: nowrap; }
   .mainbar { padding: 0 14px; flex-wrap: wrap; height: auto; min-height: 50px; }
@@ -813,6 +859,7 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
 <div id="app"></div>
 <div id="overlay-root"></div>
 <div id="toast-root"></div>
+<input type="file" id="fileInput" multiple hidden>
 <script>
 'use strict';
 /* ============================================================
@@ -821,7 +868,7 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
    ============================================================ */
 
 const TODAY = '2026-08-14';
-const DB_KEY = 'eastlink-mvp-v2';
+const DB_KEY = 'eastlink-mvp-v3';
 
 /* ---------- 工作流 14 节点定义 ---------- */
 const NODE_DEFS = [
@@ -1068,12 +1115,13 @@ function seed() {
   };
   recalcTimeline(p1);
   const pn = id => p1.nodes.find(n => n.id === id);
+  p1.photos = [];
   pn('01').status = 'done'; markSkus(pn('01'), p1Skus, 10);
-  pn('01').inputs = ['HEMA Brief 2027春季.pptx', '预算区间表.xlsx'];
+  pn('01').inputs = [{ name: 'HEMA Brief 2027春季.pptx', seed: true }, { name: '预算区间表.xlsx', seed: true }];
   pn('01').todos = [{ t: 'SKU 货号建档', done: true }, { t: '按交期倒推时间线', done: true }, { t: '产品推荐方案', done: true }];
   pn('01').versions = [{ v: 'V1', time: '2026-07-26', author: '业务A', note: '建项目，导入 Brief 与 SKU 清单' }];
   pn('02').status = 'done'; markSkus(pn('02'), p1Skus, 10);
-  pn('02').inputs = ['Brief 结论包', '品牌色彩规范'];
+  pn('02').inputs = [{ name: 'Brief 结论包.pdf', seed: true }, { name: '品牌色彩规范.pdf', seed: true }];
   pn('02').todos = [{ t: '10 款设计稿输出', done: true }, { t: '客户确认', done: true }];
   pn('02').comments = [
     { author: 'HEMA 买手', role: '客户', time: '2026-08-01 15:20', text: 'HM-NB-003 封面颜色改为 Pantone 2925C，其余款式确认。' },
@@ -1084,17 +1132,17 @@ function seed() {
     { v: 'V2', time: '2026-08-02', author: '业务A', note: '按客户意见修改 HM-NB-003 封面色' }
   ];
   pn('03').status = 'in_progress'; markSkus(pn('03'), p1Skus, 9);
-  pn('03').inputs = ['客户 PSF 原文（Excel）', '设计稿 V2'];
+  pn('03').inputs = [{ name: '客户 PSF 原文.xlsx', seed: true }, { name: '设计稿 V2.ai', seed: true }];
   pn('03').todos = [{ t: '10 份双语 PSF', done: false }, { t: '报价单派生', done: true }, { t: '高风险点标注（CQV）', done: true }];
   pn('04').status = 'review'; markSkus(pn('04'), p1Skus, 8);
-  pn('04').inputs = ['QBP 手册 v3', 'PPA 测试矩阵'];
+  pn('04').inputs = [{ name: 'QBP 手册 v3.pdf', seed: true }, { name: 'PPA 测试矩阵.xlsx', seed: true }];
   pn('04').todos = [{ t: '10 款测试要求落地', done: true }, { t: 'CQV 审核', done: false }];
   pn('04').comments = [
     { author: 'CQV 审核', role: '品质', time: '2026-08-09 14:05', text: '【驳回】HM-BG-001 缺少开口圈 ≥2.5cm 的测试要求，请补充后重新提交。' },
     { author: '业务A', role: '业务', time: '2026-08-11 09:40', text: '已补充开口圈与车缝拉力要求，重新提交审批。' }
   ];
   pn('05').status = 'in_progress'; markSkus(pn('05'), p1Skus, 5);
-  pn('05').inputs = ['Final PSF ×9', '目标价区间'];
+  pn('05').inputs = [{ name: 'Final PSF 汇总包.zip', seed: true }, { name: '目标价区间.xlsx', seed: true }];
   pn('05').todos = [{ t: '供应商匹配（10 款）', done: false }, { t: '一轮报价汇总', done: false }, { t: 'CQV 开发样评估', done: false }, { t: '样品拍照 + 寄样', done: false }];
   p1.currentNodeId = '05';
 
@@ -1113,6 +1161,7 @@ function seed() {
     skus: p2Skus, nodes: NODE_DEFS.map(d => makeNode(d.id, 'u2', d.confirm ? 'u5' : null, p2Skus))
   };
   recalcTimeline(p2);
+  p2.photos = [];
   const qn = id => p2.nodes.find(n => n.id === id);
   ['01','02','03','04','05','06','07','08','09','10'].forEach(id => { qn(id).status = 'done'; markSkus(qn(id), p2Skus, 6); });
   qn('07').versions = [
@@ -1253,8 +1302,9 @@ const ui = {
   overlay: null,          // {kind, ...}
   panel: null,            // {kind, ...}
   psfLang: 'zh',
-  qualityTab: 'risk',
   cqvFilter: 'all',
+  clientEdit: false,
+  uploadTarget: null,
   homeFilter: 'all',
   todoMine: true,
   searchQ: '',
@@ -1319,23 +1369,46 @@ function searchDrop() {
     </div>`).join('') : '<div class="search-item" style="color:var(--muted);cursor:default">无匹配结果</div>'}</div>`;
 }
 
-function navLink(href, key, routeKey, icon, label) {
-  return `<a href="${href}" class="${routeKey === key ? 'on' : ''}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[icon]}</svg>${label}</a>`;
+function navIcon(icon) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[icon]}</svg>`;
+}
+function navLink(href, on, icon, label) {
+  return `<a href="${href}" class="${on ? 'on' : ''}">${navIcon(icon)}${label}</a>`;
+}
+function subLink(href, on, label, badge) {
+  return `<a class="sub ${on ? 'on' : ''}" href="${href}">${label}${badge ? `<span class="sub-badge">${badge}</span>` : ''}</a>`;
+}
+function navGroup(icon, label, open, firstHref, subs) {
+  return `<div class="side-group ${open ? 'open' : ''}">
+    <a class="side-parent ${open ? 'grp-on' : ''}" href="${firstHref}">${navIcon(icon)}${label}<span class="chev">▾</span></a>
+    <div class="side-subs">${subs}</div>
+  </div>`;
 }
 
-function shell(routeKey, body) {
+function shell(parts, body) {
   const role = db.role;
+  const r0 = parts[0] || 'projects';
+  const r1 = parts[1] || '';
   let links = '';
   if (role === 'client') {
-    links = navLink('#/projects', 'projects', routeKey, 'projects', '我的项目');
+    links = navLink('#/projects', r0 === 'projects', 'projects', '我的项目');
   } else {
-    if (role === 'manager') links += navLink('#/dashboard', 'dashboard', routeKey, 'dashboard', '管理看板');
-    links += navLink('#/projects', 'projects', routeKey, 'projects', '项目管理')
-      + navLink('#/suppliers', 'suppliers', routeKey, 'suppliers', '供应商管理')
-      + navLink('#/quality', 'quality', routeKey, 'quality', '质量管控')
-      + navLink('#/clients', 'clients', routeKey, 'clients', '客户管理');
+    if (role === 'manager') links += navLink('#/dashboard', r0 === 'dashboard', 'dashboard', '管理看板');
+    const al = myAlerts();
+    links += navGroup('projects', '项目管理', ['projects', 'todos', 'archived'].includes(r0), '#/projects',
+      subLink('#/projects', r0 === 'projects', '项目总览')
+      + subLink('#/todos', r0 === 'todos', '我的待办', al || '')
+      + subLink('#/archived', r0 === 'archived', '已归档项目'));
+    links += navLink('#/suppliers', r0 === 'suppliers', 'suppliers', '供应商管理');
+    links += navGroup('quality', '质量管控', r0 === 'quality', '#/quality/risk',
+      subLink('#/quality/risk', r0 === 'quality' && (r1 === 'risk' || !r1), '高风险点总览')
+      + subLink('#/quality/cqv', r0 === 'quality' && r1 === 'cqv', 'CQV 开发样评估')
+      + subLink('#/quality/audit', r0 === 'quality' && r1 === 'audit', '验厂')
+      + subLink('#/quality/insp', r0 === 'quality' && r1 === 'insp', '验货 DUPRO / FRI'));
+    links += navGroup('clients', '客户管理', r0 === 'clients', '#/clients/profile',
+      subLink('#/clients/profile', r0 === 'clients' && r1 !== 'products', '品牌档案')
+      + subLink('#/clients/products', r0 === 'clients' && r1 === 'products', '过往产品库'));
   }
   return `
   <div class="shell">
@@ -1443,29 +1516,25 @@ function viewHome() {
   const scoped = mineOn ? allActive.filter(x => x.n.ownerId === PERSONA) : allActive;
   const overdue = scoped.filter(x => isOverdue(x.n));
   const reviews = scoped.filter(x => x.n.status === 'review');
-  scoped.sort((a, b) => (isOverdue(b.n) - isOverdue(a.n)) || (a.n.deadline < b.n.deadline ? -1 : 1));
-
-  const F = ui.homeFilter;
-  const list = F === 'overdue' ? overdue : F === 'review' ? reviews : scoped;
   const worst = overdue.length
     ? overdue.reduce((a, b) => diffDays(a.n.deadline, TODAY) >= diffDays(b.n.deadline, TODAY) ? a : b)
     : null;
 
   return `
-  <div class="page-head"><h1>项目总览</h1><span class="sub">客户：HEMA ｜ 点击统计卡可筛选下方待办</span>
+  <div class="page-head"><h1>项目总览</h1><span class="sub">客户：HEMA ｜ 点击统计卡进入待办</span>
     <span class="spacer"></span>
     ${canEdit() ? '<button class="btn pri" data-act="np-open">＋ 新建项目</button>' : ''}</div>
   <div class="grid g4">
     <div class="card statcard brand"><div class="num">${projs.length}</div><div class="lbl">进行中项目</div>
       <div class="hint">${projs.reduce((s, p) => s + p.skus.length, 0)} 个 SKU 在手</div></div>
-    <div class="card statcard click ${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">
-      <div class="num">${scoped.length}</div><div class="lbl">待处理节点${mineOn ? '（我的）' : ''}</div><div class="hint">进行中 + 待审批</div></div>
-    <div class="card statcard click ${F === 'review' ? 'on' : ''}" data-act="home-filter" data-f="review">
+    <div class="card statcard click" data-act="goto-todos" data-f="all">
+      <div class="num">${scoped.length}</div><div class="lbl">待处理节点${mineOn ? '（我的）' : ''}</div><div class="hint">进行中 + 待审批 →</div></div>
+    <div class="card statcard click" data-act="goto-todos" data-f="review">
       <div class="num" style="color:var(--amber)">${reviews.length}</div><div class="lbl">待审批 / 待客户确认</div>
-      <div class="hint">卡在审批环节</div></div>
-    <div class="card statcard warn click ${F === 'overdue' ? 'on' : ''}" data-act="home-filter" data-f="overdue">
+      <div class="hint">卡在审批环节 →</div></div>
+    <div class="card statcard warn click" data-act="goto-todos" data-f="overdue">
       <div class="num">${overdue.length}</div><div class="lbl">已逾期节点</div>
-      <div class="hint">${worst ? `最长逾期 ${diffDays(worst.n.deadline, TODAY)} 天` : '全部按期'}</div></div>
+      <div class="hint">${worst ? `最长逾期 ${diffDays(worst.n.deadline, TODAY)} 天 →` : '全部按期'}</div></div>
   </div>
   ${worst ? `<div class="riskbar mt" data-act="goto" data-href="#/projects/${worst.p.id}/node/${worst.n.id}">
     ⚠ ${overdue.length} 个节点逾期，最长逾期 ${diffDays(worst.n.deadline, TODAY)} 天
@@ -1474,16 +1543,31 @@ function viewHome() {
 
   <div class="page-head" style="margin:26px 0 0"><h1 style="font-size:16px">项目</h1>
     <span class="sub">点击节点条上任一段可直接进入该节点</span></div>
-  ${projs.map(projectRow).join('')}
+  ${projs.map(projectRow).join('') || '<div class="card mt"><div class="empty">暂无进行中项目，点右上角「＋ 新建项目」开始。</div></div>'}`;
+}
 
-  <div class="card mt">
+/* ---------- 我的待办 ---------- */
+function viewTodos() {
+  const projs = db.projects.filter(p => p.status === 'active');
+  const allActive = [];
+  projs.forEach(p => activeNodes(p).forEach(n => allActive.push({ p, n })));
+  const mineOn = db.role === 'sales' && ui.todoMine;
+  const scoped = mineOn ? allActive.filter(x => x.n.ownerId === PERSONA) : allActive;
+  const overdue = scoped.filter(x => isOverdue(x.n));
+  const reviews = scoped.filter(x => x.n.status === 'review');
+  scoped.sort((a, b) => (isOverdue(b.n) - isOverdue(a.n)) || (a.n.deadline < b.n.deadline ? -1 : 1));
+  const F = ui.homeFilter;
+  const list = F === 'overdue' ? overdue : F === 'review' ? reviews : scoped;
+
+  return `
+  <div class="page-head"><h1>我的待办</h1><span class="sub">逾期置顶 · 按 deadline 排序 ｜ 卡在谁那里一目了然</span></div>
+  <div class="card">
     <div class="todo-head">
-      <h3 style="margin:0">待处理事项 <span class="tag">逾期置顶 · 按 deadline 排序</span></h3>
-      ${db.role === 'sales' ? `<div class="tabs" style="margin-left:auto">
+      ${db.role === 'sales' ? `<div class="tabs" style="margin:0">
         <button class="${mineOn ? 'on' : ''}" data-act="todo-mine" data-v="1">只看我的</button>
         <button class="${!mineOn ? 'on' : ''}" data-act="todo-mine" data-v="0">全员</button>
-      </div>` : '<span style="margin-left:auto"></span>'}
-      <div class="tabs" style="margin:0">
+      </div>` : ''}
+      <div class="tabs" style="margin-left:auto">
         <button class="${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">全部 ${scoped.length}</button>
         <button class="${F === 'review' ? 'on' : ''}" data-act="home-filter" data-f="review">待审批 ${reviews.length}</button>
         <button class="${F === 'overdue' ? 'on' : ''}" data-act="home-filter" data-f="overdue">仅逾期 ${overdue.length}</button>
@@ -1500,6 +1584,24 @@ function viewHome() {
       </div>`;
     }).join('') : `<div class="empty">${F === 'overdue' ? '没有逾期节点 🎉' : F === 'review' ? '没有待审批事项' : '暂无待处理事项'}</div>`}
   </div>`;
+}
+
+/* ---------- 已归档项目 ---------- */
+function viewArchived() {
+  const list = db.projects.filter(p => p.status === 'archived');
+  return `
+  <div class="page-head"><h1>已归档项目</h1><span class="sub">出运·归档（节点 14）完成后进入此处，规格与资料沉淀到过往产品库</span></div>
+  ${list.length ? list.map(p => `
+    <div class="card prow mt" data-act="goto" data-href="#/projects/${p.id}">
+      <div class="prow-head"><span class="name">${esc(p.name)}</span>
+        <span class="tag">${esc(p.season)}</span><span class="tag m">已归档</span></div>
+      <div class="prow-meta">
+        <span>交期 <b>${p.deliveryDate}</b></span><span>SKU <b>${p.skus.length}</b></span>
+        <span>负责人 ${avatarOf(person(p.ownerId).name)}</span>
+        <span>✓ ${p.skus.length} 款产品已沉淀入<a href="#/clients/products" onclick="event.stopPropagation()">过往产品库</a></span>
+      </div>
+    </div>`).join('')
+  : '<div class="card mt"><div class="empty">暂无归档项目。项目走完「14 出运·归档」并审批通过后，会自动移入此处。</div></div>'}`;
 }
 
 /* ---------- 项目详情（内部） ---------- */
@@ -1601,8 +1703,14 @@ function viewNode(p, n) {
   </div>` : ''}
   ${specificArea(p, n)}
   <div class="grid g3 mt">
-    <div class="card"><h3>输入资料</h3>
-      ${n.inputs.length ? n.inputs.map(f => `<div class="file-item">📄 ${esc(f)}<span class="tag" style="margin-left:auto">占位</span></div>`).join('') : '<div class="empty">暂无输入资料</div>'}
+    <div class="card"><h3>输入资料 / 附件
+      <span style="flex:1"></span>
+      ${canEdit() ? `<button class="btn sm" data-act="upload" data-kind="node" data-pid="${p.id}" data-nid="${n.id}">＋ 上传文件</button>` : ''}</h3>
+      ${n.inputs.length ? n.inputs.map((f, i) => `<div class="file-item">${fileIcon(f.name)} ${esc(f.name)}
+        ${f.seed ? '<span class="tag fmeta">占位</span>'
+          : `<span class="fmeta">${f.size ? fmtSize(f.size) + ' · ' : ''}${esc(f.time || '')}${f.by ? ' · ' + esc(f.by) : ''}</span>
+             ${canEdit() ? `<button class="del" data-act="input-del" data-i="${i}" title="删除">✕</button>` : ''}`}
+      </div>`).join('') : '<div class="empty">暂无资料，点右上角上传</div>'}
     </div>
     <div class="card"><h3>待办清单 <span class="tag">${n.todos.filter(t => t.done).length}/${n.todos.length}</span></h3>
       ${n.todos.length ? n.todos.map((t, i) => `
@@ -1703,9 +1811,15 @@ function areaTender(p, n) {
       <tbody>${cqvs.map(c => `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
         <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
         <td>${esc(c.note)}</td><td>${esc(c.by)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">暂无评估记录</div>'}
-    <h3 class="mt">样品照片墙（占位）</h3>
-    <div class="prod-grid">${p.skus.slice(0, 4).map(s => `<div class="prod"><div class="ph">${s.ph}</div>
-      <div class="a">${esc(s.artNo)}</div><div class="n">${esc(s.name)}</div><div class="m">样品照片占位</div></div>`).join('')}</div>
+    <h3 class="mt">样品照片墙
+      ${canEdit() ? `<button class="btn sm" data-act="upload" data-kind="photo" data-pid="${p.id}" style="margin-left:8px">＋ 上传样品照片</button>` : ''}
+      <span class="tag">${(p.photos || []).length}/12</span></h3>
+    <div class="prod-grid">${(p.photos && p.photos.length)
+      ? p.photos.map((ph, i) => `<div class="prod"><div class="ph img"><img src="${ph.thumb}" alt="${esc(ph.name)}"></div>
+          <div class="m" style="margin-top:6px">${esc(ph.name)}</div>
+          ${canEdit() ? `<button class="btn sm" style="margin-top:6px" data-act="photo-del" data-i="${i}">删除</button>` : ''}</div>`).join('')
+      : p.skus.slice(0, 4).map(s => `<div class="prod"><div class="ph">${s.ph}</div>
+          <div class="a">${esc(s.artNo)}</div><div class="n">${esc(s.name)}</div><div class="m">样品照片占位 · 可上传真实照片</div></div>`).join('')}</div>
   </div>`;
 }
 
@@ -1903,8 +2017,7 @@ function riskRows() {
 }
 function inspClosed(it) { return it.result === 'fail' && it.fix && it.fix.startsWith('已闭环'); }
 
-function viewQuality() {
-  const tab = ui.qualityTab;
+function viewQuality(tab) {
   const risks = riskRows();
   const cqvPending = db.cqv.filter(r => r.result !== '通过').length;
   const auditIssue = db.suppliers.filter(s => auditState(s) !== 'valid').length;
@@ -1969,70 +2082,89 @@ function viewQuality() {
       }).join('')}</tbody></table></div>
       <p class="note-strip mt">异常整改闭环后才形成放单依据（FRI → 放单出货）。</p>` : '<div class="empty">暂无验货记录</div>';
   }
+  const TITLES = { risk: '高风险点总览', cqv: 'CQV 开发样评估', audit: '验厂', insp: '验货（DUPRO / FRI）' };
+  const STAGE = { risk: 'PSF 阶段前置', cqv: '打样前', audit: '产前（节点 10）', insp: '尾期（节点 12 / 13）' };
   return `
-  <div class="page-head"><h1>质量管控</h1><span class="sub">平台型板块 · 与项目节点联动（同一份数据，两处入口）</span></div>
+  <div class="page-head"><h1>质量管控 · ${TITLES[tab] || TITLES.risk}</h1>
+    <span class="tag k">${STAGE[tab] || STAGE.risk}</span>
+    <span class="sub">平台型板块 · 与项目节点联动（同一份数据，两处入口）</span></div>
   <div class="grid g4">
-    <div class="card statcard warn click ${tab === 'risk' ? 'on' : ''}" data-act="qtab" data-t="risk">
+    <div class="card statcard warn click ${tab === 'risk' ? 'on' : ''}" data-act="goto" data-href="#/quality/risk">
       <div class="num">${risks.length}</div><div class="lbl">高风险点（PSF 前置）</div><div class="hint">打样前必达</div></div>
-    <div class="card statcard click ${tab === 'cqv' ? 'on' : ''}" data-act="qtab" data-t="cqv">
+    <div class="card statcard click ${tab === 'cqv' ? 'on' : ''}" data-act="goto" data-href="#/quality/cqv">
       <div class="num" style="color:var(--amber)">${cqvPending}</div><div class="lbl">CQV 待复评</div><div class="hint">开发样评估</div></div>
-    <div class="card statcard click ${tab === 'audit' ? 'on' : ''}" data-act="qtab" data-t="audit">
+    <div class="card statcard click ${tab === 'audit' ? 'on' : ''}" data-act="goto" data-href="#/quality/audit">
       <div class="num" style="color:var(--amber)">${auditIssue}</div><div class="lbl">验厂需关注</div><div class="hint">过期 / 待审 / 即将到期</div></div>
-    <div class="card statcard warn click ${tab === 'insp' ? 'on' : ''}" data-act="qtab" data-t="insp">
+    <div class="card statcard warn click ${tab === 'insp' ? 'on' : ''}" data-act="goto" data-href="#/quality/insp">
       <div class="num">${inspOpen}</div><div class="lbl">验货异常未闭环</div><div class="hint">影响放单</div></div>
   </div>
   <div class="card mt">
-    <div class="tabs">
-      <button class="${tab === 'risk' ? 'on' : ''}" data-act="qtab" data-t="risk">高风险点总览</button>
-      <button class="${tab === 'cqv' ? 'on' : ''}" data-act="qtab" data-t="cqv">CQV 开发样评估</button>
-      <button class="${tab === 'audit' ? 'on' : ''}" data-act="qtab" data-t="audit">验厂</button>
-      <button class="${tab === 'insp' ? 'on' : ''}" data-act="qtab" data-t="insp">验货（DUPRO / FRI）</button>
-    </div>
     ${body}
   </div>`;
 }
 
-/* ---------- 客户管理 ---------- */
-function viewClients() {
+/* ---------- 客户管理 · 品牌档案 ---------- */
+function viewClientProfile() {
   const c = db.client;
-  const F = ui.prodFilter;
-  const years = [...new Set(db.clientProducts.map(x => x.year))].sort();
-  const projects = [...new Set(db.clientProducts.map(x => x.project))];
-  const list = db.clientProducts.filter(x =>
-    (F.year === 'all' || String(x.year) === String(F.year)) &&
-    (F.project === 'all' || x.project === F.project) &&
-    (F.cat === 'all' || x.cat === F.cat) &&
-    (!F.q || x.name.includes(F.q) || x.artNo.toUpperCase().includes(F.q.toUpperCase())));
+  const E = ui.clientEdit && canEdit();
+  const inp = (path, val, ph) => E
+    ? `<input class="ipt" value="${esc(val)}" placeholder="${ph || ''}" data-chg="cp" data-path="${path}">`
+    : esc(val);
   return `
-  <div class="page-head"><h1>客户管理</h1><span class="sub">品牌档案 · 资产库 · 联系人 · 过往产品库</span></div>
+  <div class="page-head"><h1>客户管理 · 品牌档案</h1><span class="sub">开发前看标准 ｜ 业务员日常维护</span>
+    <span class="spacer"></span>
+    ${canEdit() ? `<button class="btn ${E ? 'mint' : ''}" data-act="cp-toggle">${E ? '✓ 完成编辑' : '✎ 编辑档案'}</button>` : ''}</div>
   <div class="grid g2">
     <div class="card"><h3>HEMA · 品牌概况</h3>
-      <p style="font-size:13px;color:var(--muted);margin:0 0 4px">${esc(c.profile.positioning)}</p>
-      <div class="kfacts">${c.profile.facts.map(f => `<div><span>${esc(f.k)}</span><b>${esc(f.v)}</b></div>`).join('')}</div>
+      ${E ? `<textarea class="ipt" data-chg="cp" data-path="profile.positioning">${esc(c.profile.positioning)}</textarea>`
+          : `<p style="font-size:13px;color:var(--muted);margin:0 0 4px">${esc(c.profile.positioning)}</p>`}
+      <div class="kfacts">${c.profile.facts.map((f, i) => `<div><span>${esc(f.k)}</span>
+        ${E ? `<input class="ipt ipt-inline" style="max-width:150px" value="${esc(f.v)}" data-chg="cp" data-path="profile.facts.${i}.v">` : `<b>${esc(f.v)}</b>`}</div>`).join('')}</div>
     </div>
     <div class="card"><h3>色彩资产库 <span class="tag k">设计 / 包装引用</span></h3>
-      <div class="color-grid">${c.profile.colors.map(x => `<div class="color-item">
-        <i style="background:${esc(x.hex)}"></i>
-        <div><div class="cn">${esc(x.name)} <span class="mono" style="color:var(--muted);font-size:10.5px">${esc(x.hex)}</span></div>
-        <div class="cu">${esc(x.usage)}</div></div>
+      <div class="color-grid">${c.profile.colors.map((x, i) => `<div class="color-item">
+        ${E ? `<input type="color" value="${esc(x.hex)}" data-chg="cp" data-path="profile.colors.${i}.hex" style="width:34px;height:34px;border:0;padding:0;background:none;cursor:pointer">`
+            : `<i style="background:${esc(x.hex)}"></i>`}
+        <div style="flex:1"><div class="cn">${inp(`profile.colors.${i}.name`, x.name)} ${E ? '' : `<span class="mono" style="color:var(--muted);font-size:10.5px">${esc(x.hex)}</span>`}</div>
+        <div class="cu">${inp(`profile.colors.${i}.usage`, x.usage)}</div></div>
+        ${E ? `<button class="del" data-act="cp-del" data-list="profile.colors" data-i="${i}">✕</button>` : ''}
       </div>`).join('')}</div>
+      ${E ? '<div class="add-row"><button class="btn sm" data-act="cp-add" data-list="profile.colors" data-tpl="color">＋ 添加色彩</button></div>' : ''}
     </div>
     <div class="card"><h3>材料资产库</h3>
       <div class="sec-title">偏好材料</div>
-      <div class="btnrow" style="margin-bottom:12px">${c.profile.materials.preferred.map(m => `<span class="tag m">${esc(m)}</span>`).join(' ')}</div>
-      <div class="sec-title">禁用清单</div>
-      <div class="btnrow">${c.profile.materials.banned.map(m => `<span class="tag r">⛔ ${esc(m)}</span>`).join(' ')}</div>
+      <div class="btnrow" style="margin-bottom:12px">${c.profile.materials.preferred.map((m, i) =>
+        `<span class="tag m">${esc(m)}${E ? `<span class="tx" data-act="cp-del" data-list="profile.materials.preferred" data-i="${i}">✕</span>` : ''}</span>`).join(' ')}</div>
+      ${E ? `<div class="add-row"><input class="ipt" id="add-mat-pref" placeholder="新增偏好材料">
+        <button class="btn sm" data-act="cp-add-input" data-list="profile.materials.preferred" data-src="add-mat-pref">添加</button></div>` : ''}
+      <div class="sec-title" style="margin-top:12px">禁用清单</div>
+      <div class="btnrow">${c.profile.materials.banned.map((m, i) =>
+        `<span class="tag r">⛔ ${esc(m)}${E ? `<span class="tx" data-act="cp-del" data-list="profile.materials.banned" data-i="${i}">✕</span>` : ''}</span>`).join(' ')}</div>
+      ${E ? `<div class="add-row"><input class="ipt" id="add-mat-ban" placeholder="新增禁用项">
+        <button class="btn sm" data-act="cp-add-input" data-list="profile.materials.banned" data-src="add-mat-ban">添加</button></div>` : ''}
     </div>
     <div class="card"><h3>标准与文件</h3>
-      ${c.profile.docs.map(dd => `<div class="file-item">📄 ${esc(dd.name)}
-        <span class="tag b">${esc(dd.ver)}</span>
-        <span style="margin-left:auto" class="mono">更新 ${esc(dd.date)}</span></div>`).join('')}
-      <p class="note-strip">高风险点从这些标准前置进 PSF——见质量管控「高风险点总览」。</p>
+      ${c.profile.docs.map((dd, i) => `<div class="file-item">📄 ${inp(`profile.docs.${i}.name`, dd.name)}
+        ${E ? `<input class="ipt ipt-inline" style="max-width:70px" value="${esc(dd.ver)}" data-chg="cp" data-path="profile.docs.${i}.ver">`
+            : `<span class="tag b">${esc(dd.ver)}</span>`}
+        ${E ? `<input class="ipt ipt-inline" type="date" style="max-width:140px" value="${esc(dd.date)}" data-chg="cp" data-path="profile.docs.${i}.date">
+               <button class="del" data-act="cp-del" data-list="profile.docs" data-i="${i}">✕</button>`
+            : `<span style="margin-left:auto" class="mono">更新 ${esc(dd.date)}</span>`}</div>`).join('')}
+      ${E ? '<div class="add-row"><button class="btn sm" data-act="cp-add" data-list="profile.docs" data-tpl="doc">＋ 添加文件</button></div>'
+          : '<p class="note-strip">高风险点从这些标准前置进 PSF——见质量管控「高风险点总览」。</p>'}
     </div>
     <div class="card"><h3>联系人与对接节点</h3>
-      ${c.contacts.map(x => `<div class="cmt"><div class="h">${avatarOf(x.name)}<span class="tag">${esc(x.role)}</span></div>
-        <p>${esc(x.note)} · 对接：${(x.nodes || []).map(nd => `<span class="tag k">${esc(nd)}</span>`).join(' ')}</p></div>`).join('')}
-      <p class="note-strip">不设「客户决策人」板块——只跟踪「是否已确认」。</p>
+      ${c.contacts.map((x, i) => `<div class="cmt"><div class="h">${avatarOf(x.name)}
+        ${E ? `<input class="ipt ipt-inline" style="max-width:110px" value="${esc(x.name)}" data-chg="cp" data-path="contacts.${i}.name">
+               <input class="ipt ipt-inline" style="max-width:150px" value="${esc(x.role)}" data-chg="cp" data-path="contacts.${i}.role">
+               <button class="del" data-act="cp-del" data-list="contacts" data-i="${i}" style="margin-left:auto">✕</button>`
+            : `<span class="tag">${esc(x.role)}</span>`}</div>
+        ${E ? `<input class="ipt" style="margin:4px 0" value="${esc(x.note)}" data-chg="cp" data-path="contacts.${i}.note">
+               <input class="ipt" value="${esc((x.nodes || []).join('，'))}" placeholder="对接节点（逗号分隔）" data-chg="cp-nodes" data-i="${i}">`
+            : `<p>${esc(x.note)} · 对接：${(x.nodes || []).map(nd => `<span class="tag k">${esc(nd)}</span>`).join(' ')}</p>`}
+      </div>`).join('')}
+      ${E ? '<div class="add-row"><button class="btn sm" data-act="cp-add" data-list="contacts" data-tpl="contact">＋ 添加联系人</button></div>'
+          : '<p class="note-strip">不设「客户决策人」板块——只跟踪「是否已确认」。</p>'}
     </div>
     <div class="card"><h3>术语映射 <span class="tag">底层逻辑一致 · 定制只改名</span></h3>
       <div class="tbl-wrap"><table class="tbl" style="min-width:0">
@@ -2043,13 +2175,38 @@ function viewClients() {
   </div>
   <div class="card mt"><h3>合作注意事项 <span class="tag r">会议沉淀 · 新人必读</span></h3>
     <div class="grid g2">
-      <div>${c.profile.notes.map(x => `<div class="risk-note">${esc(x)}</div>`).join('')}</div>
+      <div>${c.profile.notes.map((x, i) => E
+        ? `<div class="add-row" style="margin-top:6px"><input class="ipt" style="max-width:none;flex:1" value="${esc(x)}" data-chg="cp" data-path="profile.notes.${i}">
+           <button class="del" data-act="cp-del" data-list="profile.notes" data-i="${i}">✕</button></div>`
+        : `<div class="risk-note">${esc(x)}</div>`).join('')}
+        ${E ? `<div class="add-row"><input class="ipt" id="add-note" placeholder="新增注意事项">
+          <button class="btn sm" data-act="cp-add-input" data-list="profile.notes" data-src="add-note">添加</button></div>` : ''}
+      </div>
       <div><div class="sec-title">SOP 备注</div>
-        ${c.sop.map(x => `<div class="file-item">📌 ${esc(x)}</div>`).join('')}</div>
+        ${c.sop.map((x, i) => E
+          ? `<div class="add-row" style="margin-top:6px"><input class="ipt" style="max-width:none;flex:1" value="${esc(x)}" data-chg="cp" data-path="sop.${i}">
+             <button class="del" data-act="cp-del" data-list="sop" data-i="${i}">✕</button></div>`
+          : `<div class="file-item">📌 ${esc(x)}</div>`).join('')}
+        ${E ? `<div class="add-row"><input class="ipt" id="add-sop" placeholder="新增 SOP">
+          <button class="btn sm" data-act="cp-add-input" data-list="sop" data-src="add-sop">添加</button></div>` : ''}
+      </div>
     </div>
-  </div>
-  <div class="card mt">
-    <h3>过往产品库 <span class="tag">每季约 70% 老品换设计 · 新人可搜可复用</span></h3>
+  </div>`;
+}
+
+/* ---------- 客户管理 · 过往产品库 ---------- */
+function viewClientProducts() {
+  const F = ui.prodFilter;
+  const years = [...new Set(db.clientProducts.map(x => x.year))].sort();
+  const projects = [...new Set(db.clientProducts.map(x => x.project))];
+  const list = db.clientProducts.filter(x =>
+    (F.year === 'all' || String(x.year) === String(F.year)) &&
+    (F.project === 'all' || x.project === F.project) &&
+    (F.cat === 'all' || x.cat === F.cat) &&
+    (!F.q || x.name.includes(F.q) || x.artNo.toUpperCase().includes(F.q.toUpperCase())));
+  return `
+  <div class="page-head"><h1>客户管理 · 过往产品库</h1><span class="sub">每季约 70% 老品换设计 · 新人可搜可复用 ｜ 项目归档后自动沉淀</span></div>
+  <div class="card">
     <div class="filterbar">
       <select class="ipt" data-chg="pf-year"><option value="all">年份：全部</option>
         ${years.map(y => `<option ${String(F.year) === String(y) ? 'selected' : ''} value="${y}">年份：${y}</option>`).join('')}</select>
@@ -2247,6 +2404,12 @@ function renderOverlay() {
               <option value="u2" ${d.owner === 'u2' ? 'selected' : ''}>业务B</option></select></div>
           </div>
         </div>
+        <h3 style="font-size:14px;margin:14px 0 8px">客户 Brief 文件
+          <button class="btn sm" data-act="upload" data-kind="npBrief" style="margin-left:8px">＋ 上传 Brief</button></h3>
+        ${d.files.length ? d.files.map((f, i) => `<div class="file-item">${fileIcon(f.name)} ${esc(f.name)}
+          <span class="fmeta">${fmtSize(f.size)}</span>
+          <button class="del" data-act="np-file-del" data-i="${i}">✕</button></div>`).join('')
+        : '<div class="empty" style="padding:6px 0">尚未上传（将写入节点 01 的输入资料）</div>'}
         <h3 style="font-size:14px;margin:14px 0 8px">初始 SKU 清单（可空，后续在 Brief 节点补充）</h3>
         ${rows || '<div class="empty" style="padding:8px 0">尚未添加 SKU</div>'}
         <div class="btnrow mt">
@@ -2318,9 +2481,12 @@ Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
   if (o.kind === 'ppt') {
     return ovlShell(`${esc(p.name)} · 样品清单 PPT`, `照片上传后一键生成（演示） · 共 ${p.skus.length} 款 · ${nowStamp()}`, `
       <div class="prod-grid" style="grid-template-columns:repeat(2,1fr)">
-        ${p.skus.map(x => `<div class="slide"><div class="ph">${x.ph}</div>
+        ${p.skus.map((x, i) => {
+          const pho = p.photos && p.photos[i];
+          return `<div class="slide"><div class="ph ${pho ? 'img' : ''}">${pho ? `<img src="${pho.thumb}" alt="">` : x.ph}</div>
           <div class="a">${esc(x.artNo)}</div><b>${esc(x.name)}</b>
-          <div class="p">对客报价 $${x.quote.toFixed(2)} · ${CATS[x.cat]}</div></div>`).join('')}
+          <div class="p">对客报价 $${x.quote.toFixed(2)} · ${CATS[x.cat]}</div></div>`;
+        }).join('')}
       </div>`);
   }
 
@@ -2396,6 +2562,7 @@ function renderPanel() {
     <div class="panel">
       <div class="p-head"><h3>${esc(x.name)}</h3>
         <span class="mono" style="color:var(--amber);font-size:12px">${stars(x.rating)}</span>
+        ${canEdit() ? `<button class="btn sm" data-act="sup-edit-open" data-id="${x.id}">✎ 编辑</button>` : ''}
         <button class="x" data-act="panel-close">✕</button></div>
       <div class="p-body">
         <div class="sec-title">基本能力（越细，AI 匹配越准）</div>
@@ -2426,35 +2593,52 @@ function renderPanel() {
       </div>
     </div>`;
   }
-  if (pl.kind === 'supAdd') {
+  if (pl.kind === 'supAdd' || pl.kind === 'supEdit') {
     const d = pl.draft;
+    const isEdit = pl.kind === 'supEdit';
     return `
     <div class="panel-mask" data-act="panel-close"></div>
     <div class="panel">
-      <div class="p-head"><h3>新增供应商</h3><button class="x" data-act="panel-close">✕</button></div>
+      <div class="p-head"><h3>${isEdit ? '编辑供应商 · ' + esc(d.name) : '新增供应商'}</h3><button class="x" data-act="panel-close">✕</button></div>
       <div class="p-body">
-        <div class="form-row"><label>名称 *</label><input class="ipt" value="${esc(d.name)}" data-chg="sa-name"></div>
-        <div class="form-row"><label>品类 *</label><span class="chip-select">
-          ${Object.keys(CATS).map(c => `<label class="pick ${d.cats.includes(c) ? 'on' : ''}">
-            <input type="checkbox" ${d.cats.includes(c) ? 'checked' : ''} data-chg="sa-cat" data-c="${c}">${CATS[c]}</label>`).join('')}
-        </span></div>
-        <div class="form-row"><label>工艺</label><input class="ipt" placeholder="逗号分隔，如：车缝, 热转印" value="${esc(d.processes)}" data-chg="sa-processes"></div>
-        <div class="form-row"><label>周期（天）</label><input class="ipt" type="number" value="${esc(d.leadTimeDays)}" data-chg="sa-lead"></div>
-        <div class="form-row"><label>均价区间</label><input class="ipt" placeholder="$0.5 – 1.2" value="${esc(d.priceBand)}" data-chg="sa-price"></div>
-        <div class="form-row"><label>开模</label><select class="ipt" data-chg="sa-mold">
-          <option ${d.mold === '支持' ? 'selected' : ''}>支持</option><option ${d.mold === '不支持' ? 'selected' : ''}>不支持</option></select></div>
-        <div class="form-row"><label>MOQ</label><input class="ipt" value="${esc(d.moq)}" data-chg="sa-moq"></div>
-        <div class="form-row"><label>地区</label><input class="ipt" value="${esc(d.region)}" data-chg="sa-region"></div>
-        <div class="form-row"><label>验厂状态</label><select class="ipt" data-chg="sa-audit">
-          <option value="pending" ${d.auditStatus === 'pending' ? 'selected' : ''}>待审（TUV 排期）</option>
-          <option value="passed" ${d.auditStatus === 'passed' ? 'selected' : ''}>已通过</option></select></div>
-        <p class="note-strip">供应商名单持续增加、动态维护——保存后立即进入匹配池。</p>
+        ${supForm(d, isEdit)}
+        <p class="note-strip">${isEdit ? '信息维护越细，AI 匹配越准——业务员随手更新。' : '供应商名单持续增加、动态维护——保存后立即进入匹配池。'}</p>
       </div>
       <div class="p-foot"><button class="btn ghost" data-act="panel-close">取消</button>
-        <button class="btn pri" data-act="sup-add-create">保存供应商</button></div>
+        <button class="btn pri" data-act="${isEdit ? 'sup-edit-save' : 'sup-add-create'}">${isEdit ? '保存修改' : '保存供应商'}</button></div>
     </div>`;
   }
   return '';
+}
+
+function supForm(d, full) {
+  return `
+    <div class="form-row"><label>名称 *</label><input class="ipt" value="${esc(d.name)}" data-chg="sa-name"></div>
+    <div class="form-row"><label>品类 *</label><span class="chip-select">
+      ${Object.keys(CATS).map(c => `<label class="pick ${d.cats.includes(c) ? 'on' : ''}">
+        <input type="checkbox" ${d.cats.includes(c) ? 'checked' : ''} data-chg="sa-cat" data-c="${c}">${CATS[c]}</label>`).join('')}
+    </span></div>
+    <div class="form-row"><label>工艺</label><input class="ipt" placeholder="逗号分隔，如：车缝, 热转印" value="${esc(d.processes)}" data-chg="sa-processes"></div>
+    <div class="form-row"><label>周期（天）</label><input class="ipt" type="number" value="${esc(d.leadTimeDays)}" data-chg="sa-lead"></div>
+    <div class="form-row"><label>均价区间</label><input class="ipt" placeholder="$0.5 – 1.2" value="${esc(d.priceBand)}" data-chg="sa-price"></div>
+    <div class="form-row"><label>开模</label><select class="ipt" data-chg="sa-mold">
+      <option ${d.mold === '支持' ? 'selected' : ''}>支持</option><option ${d.mold === '不支持' ? 'selected' : ''}>不支持</option></select></div>
+    <div class="form-row"><label>MOQ</label><input class="ipt" value="${esc(d.moq)}" data-chg="sa-moq"></div>
+    <div class="form-row"><label>地区</label><input class="ipt" value="${esc(d.region)}" data-chg="sa-region"></div>
+    ${full ? `
+    <div class="form-row"><label>月产能</label><input class="ipt" value="${esc(d.capacity)}" data-chg="sa-capacity"></div>
+    <div class="form-row"><label>联系人</label><input class="ipt" value="${esc(d.contact)}" data-chg="sa-contact"></div>
+    <div class="form-row"><label>合作年限</label><input class="ipt" type="number" value="${esc(d.yearsCoop)}" data-chg="sa-years"></div>
+    <div class="form-row"><label>评级</label><select class="ipt" data-chg="sa-rating">
+      ${[5, 4, 3, 2, 1].map(r => `<option value="${r}" ${String(d.rating) === String(r) ? 'selected' : ''}>${'★'.repeat(r)}</option>`).join('')}</select></div>
+    <div class="form-row"><label>合作客户</label><span class="chip-select">
+      ${['HEMA', 'Migros'].map(c => `<label class="pick ${d.clients.includes(c) ? 'on' : ''}">
+        <input type="checkbox" ${d.clients.includes(c) ? 'checked' : ''} data-chg="sa-client" data-c="${c}">${c}</label>`).join('')}</span></div>
+    <div class="form-row"><label>验厂有效期</label><input class="ipt" type="date" value="${esc(d.auditExpiry)}" data-chg="sa-expiry"></div>` : ''}
+    <div class="form-row"><label>验厂状态</label><select class="ipt" data-chg="sa-audit">
+      <option value="pending" ${d.auditStatus === 'pending' ? 'selected' : ''}>待审（TUV 排期）</option>
+      <option value="passed" ${d.auditStatus === 'passed' ? 'selected' : ''}>已通过</option>
+      <option value="expired" ${d.auditStatus === 'expired' ? 'selected' : ''}>已过期</option></select></div>`;
 }
 
 /* ============================================================
@@ -2467,13 +2651,14 @@ function render() {
 
   // 视角守卫
   if (isClient() && !['projects'].includes(key)) { location.hash = '#/projects'; return; }
-  if (key === 'dashboard' && isClient()) { location.hash = '#/projects'; return; }
 
   let body = '';
   if (key === 'dashboard') body = viewDashboard();
+  else if (key === 'todos') body = viewTodos();
+  else if (key === 'archived') body = viewArchived();
   else if (key === 'suppliers') body = viewSuppliers();
-  else if (key === 'quality') body = viewQuality();
-  else if (key === 'clients') body = viewClients();
+  else if (key === 'quality') body = viewQuality(parts[1] || 'risk');
+  else if (key === 'clients') body = parts[1] === 'products' ? viewClientProducts() : viewClientProfile();
   else if (key === 'projects') {
     const p = parts[1] ? proj(parts[1]) : null;
     if (!p) body = isClient() ? viewClientHome() : viewHome();
@@ -2488,7 +2673,7 @@ function render() {
     } else body = isClient() ? viewClientProject(p) : viewProject(p);
   } else body = viewHome();
 
-  $('#app').innerHTML = shell(key, body) + renderPanel();
+  $('#app').innerHTML = shell(parts, body) + renderPanel();
   $('#overlay-root').innerHTML = renderOverlay();
 }
 
@@ -2512,6 +2697,67 @@ function ctx() {
 function addCmt(n, author, role, text) {
   n.comments.push({ author, role, time: nowStamp(), text });
 }
+/* ---------- 文件上传 ---------- */
+function fmtSize(b) {
+  if (!b && b !== 0) return '';
+  return b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
+}
+function fileIcon(name) {
+  const ext = (String(name).split('.').pop() || '').toLowerCase();
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) return '🖼️';
+  if (ext === 'pdf') return '📕';
+  if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
+  if (['ppt', 'pptx'].includes(ext)) return '📽️';
+  if (['ai', 'psd', 'eps'].includes(ext)) return '🎨';
+  if (['zip', 'rar', '7z'].includes(ext)) return '🗜️';
+  return '📄';
+}
+function attachFiles(files) {
+  const tgt = ui.uploadTarget;
+  ui.uploadTarget = null;
+  if (!tgt || !files || !files.length) return;
+  const list = Array.from(files);
+  if (tgt.kind === 'npBrief' && ui.newProj) {
+    list.forEach(f => ui.newProj.files.push({ name: f.name, size: f.size }));
+    render(); toast(list.length + ' 个 Brief 文件已添加', true);
+    return;
+  }
+  if (tgt.kind === 'node') {
+    const pp = proj(tgt.pid), nn = pp && nodeOf(pp, tgt.nid);
+    if (!nn) return;
+    const by = db.role === 'manager' ? '管理员' : person(PERSONA).name;
+    list.forEach(f => nn.inputs.push({ name: f.name, size: f.size, time: TODAY, by }));
+    saveDB(); render(); toast(list.length + ' 个文件已上传到节点 ' + tgt.nid, true);
+    return;
+  }
+  if (tgt.kind === 'photo') {
+    const pp = proj(tgt.pid);
+    if (!pp) return;
+    pp.photos = pp.photos || [];
+    const remain = 12 - pp.photos.length;
+    const imgs = list.filter(f => f.type && f.type.startsWith('image/')).slice(0, Math.max(0, remain));
+    if (!imgs.length) { toast('请选择图片文件（每项目最多 12 张）'); return; }
+    let done = 0;
+    imgs.forEach(f => {
+      const rd = new FileReader();
+      rd.onload = () => {
+        const im = new Image();
+        im.onload = () => {
+          const cv = document.createElement('canvas');
+          const sc = Math.min(1, 320 / im.width);
+          cv.width = Math.round(im.width * sc);
+          cv.height = Math.round(im.height * sc);
+          cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+          pp.photos.push({ name: f.name, thumb: cv.toDataURL('image/jpeg', 0.7) });
+          if (++done === imgs.length) { saveDB(); render(); toast(done + ' 张样品照片已上传', true); }
+        };
+        im.src = rd.result;
+      };
+      rd.readAsDataURL(f);
+    });
+  }
+}
+
 function doSubmitNode(n) {
   ui.submitConfirm = false;
   n.status = 'review';
@@ -2531,16 +2777,27 @@ document.addEventListener('click', e => {
   if (act === 'todo-mine') { ui.todoMine = t.dataset.v === '1'; render(); return; }
   if (act === 'bell') {
     ui.todoMine = true; ui.homeFilter = 'overdue';
-    if (location.hash === '#/projects' || !location.hash) render(); else location.hash = '#/projects';
+    if (location.hash === '#/todos') render(); else location.hash = '#/todos';
     return;
   }
+  if (act === 'goto-todos') { ui.homeFilter = t.dataset.f || 'all'; location.hash = '#/todos'; return; }
+  if (act === 'upload') {
+    ui.uploadTarget = t.dataset.kind === 'node' ? { kind: 'node', pid: t.dataset.pid, nid: t.dataset.nid }
+      : t.dataset.kind === 'photo' ? { kind: 'photo', pid: t.dataset.pid }
+      : { kind: 'npBrief' };
+    document.getElementById('fileInput').click();
+    return;
+  }
+  if (act === 'input-del' && n) { n.inputs.splice(+t.dataset.i, 1); saveDB(); render(); return; }
+  if (act === 'np-file-del') { ui.newProj.files.splice(+t.dataset.i, 1); render(); return; }
+  if (act === 'photo-del' && p) { p.photos.splice(+t.dataset.i, 1); saveDB(); render(); return; }
   if (act === 'gsearch-go') {
     const href = t.dataset.href; ui.searchQ = '';
     if (location.hash === href) render(); else location.hash = href;
     return;
   }
   if (act === 'gsearch-prod') { ui.searchQ = ''; ui.overlay = { kind: 'prod', id: t.dataset.id }; render(); return; }
-  if (act === 'np-open') { ui.newProj = { name: '', season: '', delivery: '', owner: PERSONA, skus: [] }; ui.overlay = { kind: 'newProj' }; render(); return; }
+  if (act === 'np-open') { ui.newProj = { name: '', season: '', delivery: '', owner: PERSONA, skus: [], files: [] }; ui.overlay = { kind: 'newProj' }; render(); return; }
   if (act === 'np-sku-add') { ui.newProj.skus.push({ name: '', cat: 'NB', target: '' }); render(); return; }
   if (act === 'np-sku-del') { ui.newProj.skus.splice(+t.dataset.i, 1); render(); return; }
   if (act === 'np-create') {
@@ -2574,6 +2831,8 @@ document.addEventListener('click', e => {
     n1.status = 'in_progress';
     n1.todos = [{ t: 'SKU 货号建档', done: skus.length > 0 }, { t: '按交期倒推时间线', done: true }, { t: '产品推荐方案', done: false }];
     n1.versions = [{ v: 'V1', time: TODAY, author: person(d.owner).name, note: '建项目，倒推生成 14 节点时间线' }];
+    n1.inputs = d.files.map(f => ({ name: f.name, size: f.size, time: TODAY, by: person(d.owner).name }));
+    npj.photos = [];
     skus.forEach(x => { db.psfs[x.id] = makePsf(x.id, x.cat, 'V1', false); });
     db.projects.push(npj);
     ui.overlay = null; ui.newProj = null;
@@ -2601,7 +2860,21 @@ document.addEventListener('click', e => {
   if (act === 'n-approve' && n) {
     n.status = 'done'; ui.rejectOpen = false;
     addCmt(n, n.reviewerId ? person(n.reviewerId).name : '管理员', '审批', '审批通过。');
-    saveDB(); render(); toast('审批通过，节点完成', true); return;
+    let msg = '审批通过，节点完成';
+    if (n.id === '14' && p && p.status === 'active') {
+      p.status = 'archived';
+      const yr = parseInt(p.deliveryDate.slice(0, 4), 10);
+      const pj = p.name.split(/\s+/)[0] || p.name;
+      p.skus.forEach(s => {
+        db.clientProducts.push({
+          id: 'ha-' + s.id, year: yr, project: pj, artNo: s.artNo, name: s.name,
+          cat: s.cat, ph: s.ph,
+          desc: db.psfs[s.id] ? db.psfs[s.id].sections.productDesc.zh : s.name
+        });
+      });
+      msg = '项目已归档：' + p.skus.length + ' 款产品沉淀入过往产品库';
+    }
+    saveDB(); render(); toast(msg, true); return;
   }
   if (act === 'n-reject' && n) { ui.rejectOpen = true; render(); return; }
   if (act === 'n-reject-cancel') { ui.rejectOpen = false; render(); return; }
@@ -2750,8 +3023,60 @@ document.addEventListener('click', e => {
     toast('已加入供应商库——名单动态维护，立即进入匹配池', true);
     return;
   }
-  if (act === 'qtab') { ui.qualityTab = t.dataset.t; render(); return; }
   if (act === 'cqv-filter') { ui.cqvFilter = t.dataset.f; render(); return; }
+  if (act === 'sup-edit-open') {
+    const x = supplier(t.dataset.id);
+    ui.panel = { kind: 'supEdit', id: x.id, draft: {
+      name: x.name, cats: [...x.categories], processes: x.processes.join(', '),
+      leadTimeDays: String(x.leadTimeDays), priceBand: x.priceBand, mold: x.mold,
+      moq: x.moq || '', region: x.region || '', auditStatus: x.auditStatus,
+      capacity: x.capacity || '', contact: x.contact || '', yearsCoop: String(x.yearsCoop || 0),
+      rating: String(x.rating), auditExpiry: x.auditExpiry || '', clients: [...x.clients]
+    } };
+    render(); return;
+  }
+  if (act === 'sup-edit-save' && ui.panel && ui.panel.kind === 'supEdit') {
+    const d = ui.panel.draft;
+    if (!d.name.trim()) { toast('名称必填'); return; }
+    if (!d.cats.length) { toast('至少选择一个品类'); return; }
+    const x = supplier(ui.panel.id);
+    Object.assign(x, {
+      name: d.name.trim(), categories: [...d.cats],
+      processes: d.processes.split(/[,，]/).map(v => v.trim()).filter(Boolean),
+      leadTimeDays: parseInt(d.leadTimeDays, 10) || x.leadTimeDays,
+      priceBand: d.priceBand.trim() || '—', mold: d.mold,
+      moq: d.moq.trim() || '—', region: d.region.trim() || '—',
+      capacity: d.capacity.trim() || '—', contact: d.contact.trim() || '—',
+      yearsCoop: parseInt(d.yearsCoop, 10) || 0,
+      rating: Math.min(5, Math.max(1, parseInt(d.rating, 10) || 3)),
+      auditStatus: d.auditStatus, auditExpiry: d.auditExpiry || null,
+      clients: d.clients.length ? [...d.clients] : ['HEMA']
+    });
+    ui.panel = { kind: 'supplier', id: x.id };
+    saveDB(); render(); toast('供应商信息已更新', true); return;
+  }
+  if (act === 'cp-toggle') { ui.clientEdit = !ui.clientEdit; render(); return; }
+  if (act === 'cp-add' || act === 'cp-del' || act === 'cp-add-input') {
+    const lp = t.dataset.list.split('.');
+    let obj = db.client;
+    for (let i = 0; i < lp.length - 1; i++) obj = obj[lp[i]];
+    const arr = obj[lp[lp.length - 1]];
+    if (act === 'cp-del') arr.splice(+t.dataset.i, 1);
+    else if (act === 'cp-add') {
+      const T = {
+        color: { hex: '#0567FF', name: '新色彩', usage: '用途说明' },
+        doc: { name: '新文件', ver: 'v1', date: TODAY },
+        contact: { name: '新联系人', role: '角色', note: '备注', nodes: [] }
+      };
+      arr.push(JSON.parse(JSON.stringify(T[t.dataset.tpl])));
+    } else {
+      const el = document.getElementById(t.dataset.src);
+      const v = el && el.value.trim();
+      if (!v) { toast('请输入内容'); return; }
+      arr.push(v);
+    }
+    saveDB(); render(); return;
+  }
   if (act === 'insp-close') {
     const rec = db.inspections.find(r => r.id === t.dataset.r);
     const it = rec && rec.items[+t.dataset.i];
@@ -2826,6 +3151,27 @@ document.addEventListener('change', e => {
   if (k === 'sa-moq') { ui.panel.draft.moq = t.value; return; }
   if (k === 'sa-region') { ui.panel.draft.region = t.value; return; }
   if (k === 'sa-audit') { ui.panel.draft.auditStatus = t.value; return; }
+  if (k === 'sa-capacity') { ui.panel.draft.capacity = t.value; return; }
+  if (k === 'sa-contact') { ui.panel.draft.contact = t.value; return; }
+  if (k === 'sa-years') { ui.panel.draft.yearsCoop = t.value; return; }
+  if (k === 'sa-rating') { ui.panel.draft.rating = t.value; return; }
+  if (k === 'sa-expiry') { ui.panel.draft.auditExpiry = t.value; return; }
+  if (k === 'sa-client') {
+    const c = t.dataset.c, d = ui.panel.draft;
+    d.clients = t.checked ? [...d.clients, c] : d.clients.filter(x => x !== c);
+    render(); return;
+  }
+  if (k === 'cp') {
+    const path = t.dataset.path.split('.');
+    let obj = db.client;
+    for (let i = 0; i < path.length - 1; i++) obj = obj[path[i]];
+    obj[path[path.length - 1]] = t.value;
+    saveDB(); return;
+  }
+  if (k === 'cp-nodes') {
+    db.client.contacts[+t.dataset.i].nodes = t.value.split(/[,，]/).map(x => x.trim()).filter(Boolean);
+    saveDB(); return;
+  }
   if (k === 'brief-filter') { ui.briefFilter = t.value; render(); return; }
   if (k === 'sup-client') { ui.supFilter.client = t.value; render(); return; }
   if (k === 'sup-cat') { ui.supFilter.cat = t.value; render(); return; }
@@ -2854,7 +3200,9 @@ document.addEventListener('input', e => {
 
 /* ---------- 初始化 ---------- */
 loadDB();
-window.addEventListener('hashchange', () => { ui.rejectOpen = false; ui.fsUnlockOpen = false; ui.psfUnlockOpen = false; ui.submitConfirm = false; ui.searchQ = ''; render(); });
+const fileInputEl = document.getElementById('fileInput');
+if (fileInputEl) fileInputEl.addEventListener('change', () => { attachFiles(fileInputEl.files); fileInputEl.value = ''; });
+window.addEventListener('hashchange', () => { ui.rejectOpen = false; ui.fsUnlockOpen = false; ui.psfUnlockOpen = false; ui.submitConfirm = false; ui.searchQ = ''; ui.clientEdit = false; render(); });
 render();
 </script>
 </body>
