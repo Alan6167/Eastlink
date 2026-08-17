@@ -1025,6 +1025,12 @@ const STATUS_LABEL = { pending: '未开始', in_progress: '进行中', review: '
 const SOP = [
   { node: '01', name: 'HEMA 开发推荐流程 Proposal + 客人来访选款接待',
     when: 'BTS 2027：第一轮 3.30–3.31 来访；第二轮 8.27–8.28 来访', notes: [] },
+  { node: '02', name: 'HEMA Artwork 设计与确认流程',
+    when: '以客人第一封邮件发的 timeline 为准',
+    notes: ['新模式由我方代做设计稿，HEMA 确认或回填修改意见',
+      '稿件内容直接从规格书提取，与 PSF 同源，避免设计与报价各管各导致信息对不上',
+      '客人在样品 comments 阶段会改稿件并出 revised PSF，稿件版本须同步更新并留痕',
+      '稿件下载后 24 小时内建档'] },
   { node: '03', name: 'HEMA SPEC / PSF 和 quality file 确认',
     when: '以客人第一封邮件发的 timeline 为准', notes: [] },
   { node: '04', name: 'HEMA 测试报价流程',
@@ -1048,6 +1054,17 @@ const SOP = [
   { node: '05', name: 'HEMA MSDS 提供流程',
     when: 'tender 上传系统时，同步提供',
     notes: ['MSDS 需要在 tender 阶段，按照客户的要求及时提供'] },
+  { node: '06', name: 'HEMA Benchmark 二轮竞价流程',
+    when: '以客人第一封邮件发的 timeline 为准',
+    notes: ['HEMA 给出目标价与修改 comments，最终定款：哪些款下给我方、哪些给竞争对手',
+      '按 comments 修改设计、样品、规格与报价，同步更新版本与差异记录',
+      '新模式预算已在 Brief 阶段前置，二轮竞价趋于弱化，HEMA 主要做确认动作'] },
+  { node: '07', name: 'HEMA FS 最终确认流程', when: '',
+    notes: ['供应链透明化：每一款产品由哪家工厂生产必须逐款填明',
+      'FS 相当于最终合同，确认后 HEMA 正式发放 PO',
+      'FS 须有版本记录与 Final 锁定，改动留痕——客户按 FS 追责（曾因装箱 3×3 / 3×4 描述不一致险担空运费）',
+      'Tender 阶段的供应商匹配结果直接带入 FS 工厂字段，不再手填',
+      '同阶段我方提供包材刀模线与封模线，HEMA 在 0.5–1 个月内交齐整项目包材设计稿'] },
   { node: '08', name: 'HEMA 包材设计和确认流程',
     when: '以客人第一封邮件发的 timeline 为准',
     notes: ['普遍不覆膜，不是塑料材质，不接受 PVC 材质；特殊情况需向客人说明！',
@@ -1072,6 +1089,11 @@ const SOP = [
       'comments 可以直接在微信群里发给对接人，并在群里催回复',
       '客人会在 comments 标注出 PP sample 和 Production sample approved 的状态'] },
   { node: '10', name: 'HEMA 验厂流程', when: '', notes: [] },
+  { node: '11', name: 'HEMA 大货生产与签样流程', when: '',
+    notes: ['按锁定的规格、包材与 PP Sample 组织大货生产',
+      '大货样确认后签样，签样作为中期验货与大货验货的比对基准',
+      '生产中的变更与偏差须记录回对应 SKU',
+      'Startpack 类产品需提前备齐内含全部产品的签样，供验货使用'] },
   { node: '12', name: 'HEMA 中期验货流程', when: '', notes: [] },
   { node: '13', name: 'HEMA 验货流程（含自检报告上传）', when: '',
     notes: ['在赛龙验货的产品，需要至少提前一周多订验货；BTS 出货季 TUV 还有可能排不上验货',
@@ -1869,7 +1891,7 @@ function nodeSopCard(n) {
   const list = sopOf(n.id);
   if (!list.length) return '';
   return `<div class="card mt sop-card ph-${nodeDef(n.id).phase}">
-    <h3>业务环节 SOP <span class="tag">${list.length} 个环节 · 来自 HEMA BTS 台账</span>
+    <h3>业务环节 SOP <span class="tag">${list.length} 个环节 · HEMA 流程规范</span>
       <span style="flex:1"></span>
       <a href="#/clients/sop" style="font-size:13px">查看完整手册 →</a></h3>
     ${list.map((s, i) => {
@@ -2552,7 +2574,7 @@ function viewClientSop() {
   <div class="page-head"><h1>客户管理 · SOP 手册</h1>
     <span class="tag b">HEMA · THEME 线</span>
     <span class="sub">${SOP.length} 个业务环节 · ${noteCount} 条注意事项 ｜ 新人通读，老人速查</span></div>
-  <p class="note-strip" style="margin-bottom:14px">来源：HEMA BTS 客户流程台账。各环节的 SOP 文件与项目资料按内部规范存取，此处只沉淀流程与规则。Brand 线的差异规则尚未整理，卡片标注 <span class="tag b">THEME</span> 以便日后并列补充。</p>
+  <p class="note-strip" style="margin-bottom:14px">来源：HEMA 客户流程台账与项目会议沉淀。各环节的 SOP 文件与项目资料按内部规范存取，此处只沉淀流程与规则。Brand 线的差异规则尚未整理，卡片标注 <span class="tag b">THEME</span> 以便日后并列补充。</p>
   <div class="filterbar">
     <input class="ipt search" placeholder="搜索环节 / 注意事项全文，如「PVC」「寄样」「汇率」…" value="${esc(ui.sopQ)}" data-chg="sop-q">
     <div class="tabs" style="margin:0;border:0">
