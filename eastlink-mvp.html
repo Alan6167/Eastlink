@@ -678,6 +678,100 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .empty { color: var(--muted); font-size: 13px; padding: 18px 0; text-align: center; }
 .note-strip { background: var(--surface-2); border-radius: 9px; padding: 8px 12px; font-size: 12px; color: var(--muted); }
 
+/* ---------- 表单行 / 选择芯片 ---------- */
+.form-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; margin-bottom: 9px; font-size: 13px; }
+.form-row > label { color: var(--muted); font-size: 12.5px; }
+.chip-select { display: flex; flex-wrap: wrap; gap: 6px; }
+label.pick {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px 9px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--muted);
+}
+label.pick input { margin-right: 4px; accent-color: var(--brand); }
+label.pick.on { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-ink); }
+.sku-row { display: grid; grid-template-columns: 96px 1fr 130px 90px 30px; gap: 7px; align-items: center; margin-bottom: 7px; }
+.sku-row .art { font: 650 11px/1.4 var(--mono); color: var(--brand-ink); }
+
+/* ---------- 客户档案 ---------- */
+.kfacts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 14px; font-size: 12.5px; margin-top: 10px; }
+.kfacts span { color: var(--muted); }
+.kfacts b { color: var(--ink); font-weight: 650; margin-left: 5px; }
+.color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.color-item { display: flex; gap: 9px; align-items: center; border: 1px solid var(--line); border-radius: 9px; padding: 7px 9px; }
+.color-item i { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--line); flex: 0 0 30px; }
+.color-item .cn { font-weight: 650; font-size: 12.5px; }
+.color-item .cu { color: var(--muted); font-size: 11px; }
+.risk-note { position: relative; padding-left: 16px; font-size: 13px; color: var(--muted); margin: 8px 0; line-height: 1.65; }
+.risk-note::before { content: ""; position: absolute; left: 2px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+
+/* ---------- 全局搜索 / 提醒铃铛 ---------- */
+.searchbox { position: relative; }
+.searchbox input {
+  width: 220px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5.5px 10px;
+  font-size: 12.5px;
+  background: #fff;
+}
+.searchbox input:focus { border-color: var(--brand); outline: none; }
+.search-drop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  box-shadow: 0 16px 40px rgba(9,20,45,.16);
+  z-index: 55;
+  overflow: hidden;
+}
+.search-item { display: flex; gap: 8px; align-items: center; padding: 8.5px 12px; font-size: 12.5px; cursor: pointer; }
+.search-item + .search-item { border-top: 1px solid var(--surface-2); }
+.search-item:hover { background: var(--surface-2); }
+.search-item .k {
+  font: 650 10px/1 var(--mono);
+  letter-spacing: .06em;
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+  border-radius: 5px;
+  padding: 3px 5px;
+  flex: 0 0 auto;
+}
+.search-item .sub { margin-left: auto; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.bell {
+  position: relative;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+.bell:hover { border-color: var(--brand); }
+.bell b {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  background: var(--red);
+  color: #fff;
+  font: 700 9.5px/1 var(--mono);
+  border-radius: 999px;
+  padding: 3px 5px;
+}
+
+/* ---------- 节点页 mini 导航条 ---------- */
+.node-minibar { display: flex; gap: 8px; align-items: center; margin: 0 0 12px; }
+.node-minibar .mini-segs { display: flex; gap: 3px; flex: 1; }
+.node-minibar .seg { height: 6px; }
+.node-minibar .seg.cur { height: 12px; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--brand); }
+
 /* ---------- print ---------- */
 @media print {
   body { background: #fff; }
@@ -727,7 +821,7 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
    ============================================================ */
 
 const TODAY = '2026-08-14';
-const DB_KEY = 'eastlink-mvp-v1';
+const DB_KEY = 'eastlink-mvp-v2';
 
 /* ---------- 工作流 14 节点定义 ---------- */
 const NODE_DEFS = [
@@ -753,6 +847,7 @@ const PHASES = {
 };
 const STATUS_LABEL = { pending: '未开始', in_progress: '进行中', review: '待审批', done: '已完成' };
 const CATS = { NB: '线圈本 / 本册', BG: '包袋', PN: '金属笔', CU: '水杯' };
+const CAT_PH = { NB: '📓', BG: '👜', PN: '🖊️', CU: '🥤' };
 
 /* ---------- 通用工具 ---------- */
 const $ = s => document.querySelector(s);
@@ -921,14 +1016,36 @@ function seed() {
   ];
 
   const suppliers = [
-    { id: 's1', name: '供应商A', categories: ['NB'], processes: ['线圈装订', '烫金', '四色印刷'], mold: '支持', leadTimeDays: 30, priceBand: '$0.8 – 1.5', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-03-15', certs: ['BSCI', 'FSC'], rating: 5 },
-    { id: 's2', name: '供应商B', categories: ['NB'], processes: ['胶装', '线圈装订'], mold: '支持', leadTimeDays: 45, priceBand: '$0.6 – 1.2', clients: ['HEMA', 'Migros'], auditStatus: 'passed', auditExpiry: '2026-12-01', certs: ['BSCI'], rating: 4 },
-    { id: 's3', name: '供应商C', categories: ['BG'], processes: ['车缝', '热转印'], mold: '不支持', leadTimeDays: 40, priceBand: '$2.5 – 4.0', clients: ['HEMA'], auditStatus: 'pending', auditExpiry: null, certs: ['BSCI'], rating: 4 },
-    { id: 's4', name: '供应商D', categories: ['BG'], processes: ['车缝', '织唛', '印花'], mold: '支持', leadTimeDays: 35, priceBand: '$3.0 – 5.0', clients: ['Migros'], auditStatus: 'passed', auditExpiry: '2027-01-20', certs: ['BSCI', 'ISO9001'], rating: 5 },
-    { id: 's5', name: '供应商E', categories: ['PN'], processes: ['阳极氧化', '丝印', '电镀'], mold: '支持', leadTimeDays: 30, priceBand: '$0.3 – 0.6', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-05-10', certs: ['BSCI'], rating: 4 },
-    { id: 's6', name: '供应商F', categories: ['PN', 'NB'], processes: ['丝印', '移印'], mold: '不支持', leadTimeDays: 25, priceBand: '$0.2 – 0.5', clients: ['HEMA', 'Migros'], auditStatus: 'expired', auditExpiry: '2026-06-30', certs: [], rating: 3 },
-    { id: 's7', name: '供应商G', categories: ['CU'], processes: ['真空焊接', '粉体喷涂', '激光雕刻'], mold: '支持', leadTimeDays: 45, priceBand: '$1.8 – 3.2', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-02-28', certs: ['BSCI', 'LFGB'], rating: 5 },
-    { id: 's8', name: '供应商H', categories: ['CU'], processes: ['注塑', '喷涂'], mold: '支持', leadTimeDays: 50, priceBand: '$1.5 – 2.8', clients: ['Migros'], auditStatus: 'passed', auditExpiry: '2026-11-15', certs: ['ISO9001'], rating: 4 }
+    { id: 's1', name: '供应商A', categories: ['NB'], processes: ['线圈装订', '烫金', '四色印刷'], mold: '支持', leadTimeDays: 30, priceBand: '$0.8 – 1.5', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-03-15', certs: ['BSCI', 'FSC'], rating: 5,
+      region: '宁波', capacity: '80 万册 / 月', moq: '3,000', yearsCoop: 6, contact: '联系人A',
+      audits: [{ date: '2026-03-10', type: 'BSCI', result: '通过', expiry: '2027-03-15' }, { date: '2025-03-02', type: '客户验厂（TUV）', result: '通过', expiry: '2026-03-10' }],
+      quotes: [{ artNo: 'HM-NB-001', price: '$0.95', date: '2026-08-10' }, { artNo: 'HM-NB-003', price: '$0.41', date: '2026-08-10' }] },
+    { id: 's2', name: '供应商B', categories: ['NB'], processes: ['胶装', '线圈装订'], mold: '支持', leadTimeDays: 45, priceBand: '$0.6 – 1.2', clients: ['HEMA', 'Migros'], auditStatus: 'passed', auditExpiry: '2026-10-05', certs: ['BSCI'], rating: 4,
+      region: '温州', capacity: '50 万册 / 月', moq: '5,000', yearsCoop: 4, contact: '联系人B',
+      audits: [{ date: '2025-09-28', type: 'BSCI', result: '通过', expiry: '2026-10-05' }],
+      quotes: [{ artNo: 'HM-NB-002', price: '$0.82', date: '2026-08-09' }] },
+    { id: 's3', name: '供应商C', categories: ['BG'], processes: ['车缝', '热转印'], mold: '不支持', leadTimeDays: 40, priceBand: '$2.5 – 4.0', clients: ['HEMA'], auditStatus: 'pending', auditExpiry: null, certs: ['BSCI'], rating: 4,
+      region: '泉州', capacity: '12 万只 / 月', moq: '2,000', yearsCoop: 2, contact: '联系人C',
+      audits: [{ date: '2026-07-30', type: '客户验厂（TUV）', result: '排期中', expiry: null }],
+      quotes: [{ artNo: 'HM-BG-001', price: '$2.80', date: '2026-08-11' }] },
+    { id: 's4', name: '供应商D', categories: ['BG'], processes: ['车缝', '织唛', '印花'], mold: '支持', leadTimeDays: 35, priceBand: '$3.0 – 5.0', clients: ['Migros'], auditStatus: 'passed', auditExpiry: '2027-01-20', certs: ['BSCI', 'ISO9001'], rating: 5,
+      region: '广州', capacity: '20 万只 / 月', moq: '3,000', yearsCoop: 5, contact: '联系人D',
+      audits: [{ date: '2026-01-15', type: 'BSCI', result: '通过', expiry: '2027-01-20' }], quotes: [] },
+    { id: 's5', name: '供应商E', categories: ['PN'], processes: ['阳极氧化', '丝印', '电镀'], mold: '支持', leadTimeDays: 30, priceBand: '$0.3 – 0.6', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-05-10', certs: ['BSCI'], rating: 4,
+      region: '温州', capacity: '300 万支 / 月', moq: '10,000', yearsCoop: 7, contact: '联系人E',
+      audits: [{ date: '2026-05-05', type: 'BSCI', result: '通过', expiry: '2027-05-10' }],
+      quotes: [{ artNo: 'HM-PN-001', price: '$0.31', date: '2026-08-08' }, { artNo: 'HM-PN-002', price: '$0.26', date: '2026-08-08' }] },
+    { id: 's6', name: '供应商F', categories: ['PN', 'NB'], processes: ['丝印', '移印'], mold: '不支持', leadTimeDays: 25, priceBand: '$0.2 – 0.5', clients: ['HEMA', 'Migros'], auditStatus: 'expired', auditExpiry: '2026-06-30', certs: [], rating: 3,
+      region: '义乌', capacity: '200 万支 / 月', moq: '10,000', yearsCoop: 3, contact: '联系人F',
+      audits: [{ date: '2025-06-25', type: 'BSCI', result: '通过', expiry: '2026-06-30' }],
+      quotes: [{ artNo: 'HM-NB-003', price: '$0.39', date: '2026-07-20' }] },
+    { id: 's7', name: '供应商G', categories: ['CU'], processes: ['真空焊接', '粉体喷涂', '激光雕刻'], mold: '支持', leadTimeDays: 45, priceBand: '$1.8 – 3.2', clients: ['HEMA'], auditStatus: 'passed', auditExpiry: '2027-02-28', certs: ['BSCI', 'LFGB'], rating: 5,
+      region: '永康', capacity: '30 万只 / 月', moq: '3,000', yearsCoop: 5, contact: '联系人G',
+      audits: [{ date: '2026-02-20', type: 'BSCI', result: '通过', expiry: '2027-02-28' }, { date: '2026-02-20', type: 'LFGB 体系审核', result: '通过', expiry: '2027-02-28' }],
+      quotes: [{ artNo: 'HM-CU-001', price: '$1.22', date: '2026-08-12' }, { artNo: 'HM-CU-002', price: '$2.15', date: '2026-08-12' }] },
+    { id: 's8', name: '供应商H', categories: ['CU'], processes: ['注塑', '喷涂'], mold: '支持', leadTimeDays: 50, priceBand: '$1.5 – 2.8', clients: ['Migros'], auditStatus: 'passed', auditExpiry: '2026-11-15', certs: ['ISO9001'], rating: 4,
+      region: '永康', capacity: '25 万只 / 月', moq: '5,000', yearsCoop: 2, contact: '联系人H',
+      audits: [{ date: '2025-11-10', type: 'ISO9001', result: '通过', expiry: '2026-11-15' }], quotes: [] }
   ];
 
   /* ----- 项目 1：BTS 2027（进行中，当前 Tender，含逾期演示） ----- */
@@ -1038,13 +1155,45 @@ function seed() {
     name: 'HEMA',
     profile: {
       positioning: '荷兰国民生活方式品牌：亲民价格 + 高设计感，SKU 覆盖文具、家居、出行',
-      colors: ['#E30613', '#FFFFFF', '#0567FF', '#F5D90A'],
-      materials: '偏好再生纸 / FSC 纸张、rPET 面料、食品级 PP；避免 PVC',
-      standards: 'QBP 手册 v3 · PPA 测试矩阵 · 供应链透明化（FS 填报工厂）'
+      facts: [
+        { k: '总部', v: '荷兰 · 阿姆斯特丹' },
+        { k: '合作年限', v: '6 年' },
+        { k: '年开发季', v: 'BTS · SIM · Gift' },
+        { k: '年 SKU 规模', v: '≈ 400 款' }
+      ],
+      colors: [
+        { hex: '#E30613', name: '品牌主红', usage: '品牌主色 / 包装主色' },
+        { hex: '#FFFFFF', name: '纯白', usage: '底色 / 留白' },
+        { hex: '#0567FF', name: '活力蓝', usage: 'BTS 系列辅色' },
+        { hex: '#F5D90A', name: '柠檬黄', usage: '促销 / 点缀色' }
+      ],
+      materials: {
+        preferred: ['再生纸 / FSC 纸张', 'rPET 面料', '食品级 PP', 'Tritan', '304 不锈钢'],
+        banned: ['PVC', '6P 邻苯超标塑化剂', '偶氮染料']
+      },
+      docs: [
+        { name: 'QBP 品质手册', ver: 'v3', date: '2026-05-12' },
+        { name: 'PPA 测试矩阵', ver: '2026', date: '2026-06-01' },
+        { name: '包装与唛头规范', ver: 'v2.1', date: '2026-03-18' }
+      ],
+      notes: [
+        '追责以 PSF Final 锁定版为准（曾因 3×3 / 3×4 装箱描述不一致险担空运费）',
+        '客户 PSF 常年不更新，双语最新版由我方维护',
+        '每季约 70% 为老品换设计——开发前先查过往产品库',
+        '包材设计稿在 FS 确认后 0.5–1 个月内交齐',
+        '供应链透明化：FS 中逐款填明生产工厂'
+      ]
     },
+    terms: [
+      { std: '03 PSF 规格书', client: 'PSF / Master File' },
+      { std: '05 一轮报价·寄样', client: 'Tender' },
+      { std: '06 二轮竞价', client: 'Benchmark' },
+      { std: '07 最终确认', client: 'FS（Finalization Sheet）' },
+      { std: '09 产前样', client: 'PP Sample' }
+    ],
     contacts: [
-      { name: 'HEMA 买手', role: '买手（Stationery）', note: '主对接人，Brief 与定款确认' },
-      { name: 'HEMA QA', role: 'FE Quality Team', note: '验货与品质异常对接' }
+      { name: 'HEMA 买手', role: '买手（Stationery）', note: '主对接人，Brief 与定款确认', nodes: ['Brief', 'Tender 定款', 'FS 确认'] },
+      { name: 'HEMA QA', role: 'FE Quality Team', note: '验货与品质异常对接', nodes: ['验货', '异常整改'] }
     ],
     sop: ['Artwork 下载后 24 小时内建档', 'PSF 以 Final 锁定版为准（追责依据）', '包材设计稿 FS 后 0.5–1 个月内交齐']
   };
@@ -1104,9 +1253,14 @@ const ui = {
   overlay: null,          // {kind, ...}
   panel: null,            // {kind, ...}
   psfLang: 'zh',
-  qualityTab: 'cqv',
+  qualityTab: 'risk',
+  cqvFilter: 'all',
   homeFilter: 'all',
-  supFilter: { client: 'all', cat: 'all', q: '' },
+  todoMine: true,
+  searchQ: '',
+  submitConfirm: false,
+  newProj: null,
+  supFilter: { client: 'all', cat: 'all', q: '', audit: 'all' },
   prodFilter: { year: 'all', project: 'all', cat: 'all', q: '' },
   briefFilter: '',
   rejectOpen: false
@@ -1135,6 +1289,35 @@ const ICONS = {
   clients: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 20c0-2.2-.8-4-2-5.2"/>'
 };
 const ROLE_LABEL = { sales: '内部业务视角', manager: '管理者视角', client: 'HEMA 客户视角' };
+const PERSONA = 'u1'; // sales 视角默认人格：业务A
+
+function myAlerts() {
+  let c = 0;
+  db.projects.forEach(p => p.nodes.forEach(n => {
+    if (n.ownerId === PERSONA && (isOverdue(n) || n.status === 'review')) c++;
+  }));
+  return c;
+}
+
+function searchDrop() {
+  const q = ui.searchQ.trim();
+  const Q = q.toUpperCase();
+  const res = [];
+  db.projects.forEach(p => {
+    if (p.name.toUpperCase().includes(Q)) res.push({ k: '项目', label: p.name, sub: p.season, act: 'gsearch-go', href: '#/projects/' + p.id });
+  });
+  db.projects.forEach(p => p.skus.forEach(s => {
+    if (s.artNo.toUpperCase().includes(Q) || s.name.includes(q)) res.push({ k: 'SKU', label: s.artNo + ' ' + s.name, sub: p.name, act: 'gsearch-go', href: `#/projects/${p.id}/psf/${s.id}` });
+  }));
+  db.clientProducts.forEach(x => {
+    if (x.artNo.toUpperCase().includes(Q) || x.name.includes(q)) res.push({ k: '老品', label: x.artNo + ' ' + x.name, sub: x.year + ' · ' + x.project, act: 'gsearch-prod', id: x.id });
+  });
+  const top = res.slice(0, 8);
+  return `<div class="search-drop">${top.length ? top.map(r => `
+    <div class="search-item" data-act="${r.act}" ${r.href ? `data-href="${r.href}"` : `data-id="${r.id}"`}>
+      <span class="k">${r.k}</span><span>${esc(r.label)}</span><span class="sub">${esc(r.sub)}</span>
+    </div>`).join('') : '<div class="search-item" style="color:var(--muted);cursor:default">无匹配结果</div>'}</div>`;
+}
 
 function navLink(href, key, routeKey, icon, label) {
   return `<a href="${href}" class="${routeKey === key ? 'on' : ''}">
@@ -1166,6 +1349,11 @@ function shell(routeKey, body) {
         <span class="role-badge r-${role}">${ROLE_LABEL[role] || ''}</span>
         <span class="today mono">今天 ${TODAY}</span>
         <span class="spacer"></span>
+        ${role !== 'client' ? `<span class="searchbox">
+          <input placeholder="搜索货号 / 项目 / 老品…" value="${esc(ui.searchQ)}" data-chg="gsearch" aria-label="全局搜索">
+          ${ui.searchQ.trim() ? searchDrop() : ''}
+        </span>
+        <button class="bell" data-act="bell" title="我的提醒：逾期 + 待审批">🔔${myAlerts() ? `<b>${myAlerts()}</b>` : ''}</button>` : ''}
         <select data-chg="clientFilter" title="客户筛选">
           <option>客户：HEMA</option>
           <option disabled>Migros（二期）</option>
@@ -1251,23 +1439,27 @@ function viewHome() {
   const projs = db.projects.filter(p => p.status === 'active');
   const allActive = [];
   projs.forEach(p => activeNodes(p).forEach(n => allActive.push({ p, n })));
-  const overdue = allActive.filter(x => isOverdue(x.n));
-  const reviews = allActive.filter(x => x.n.status === 'review');
-  allActive.sort((a, b) => (isOverdue(b.n) - isOverdue(a.n)) || (a.n.deadline < b.n.deadline ? -1 : 1));
+  const mineOn = db.role === 'sales' && ui.todoMine;
+  const scoped = mineOn ? allActive.filter(x => x.n.ownerId === PERSONA) : allActive;
+  const overdue = scoped.filter(x => isOverdue(x.n));
+  const reviews = scoped.filter(x => x.n.status === 'review');
+  scoped.sort((a, b) => (isOverdue(b.n) - isOverdue(a.n)) || (a.n.deadline < b.n.deadline ? -1 : 1));
 
   const F = ui.homeFilter;
-  const list = F === 'overdue' ? overdue : F === 'review' ? reviews : allActive;
+  const list = F === 'overdue' ? overdue : F === 'review' ? reviews : scoped;
   const worst = overdue.length
     ? overdue.reduce((a, b) => diffDays(a.n.deadline, TODAY) >= diffDays(b.n.deadline, TODAY) ? a : b)
     : null;
 
   return `
-  <div class="page-head"><h1>项目总览</h1><span class="sub">客户：HEMA ｜ 点击统计卡可筛选下方待办</span></div>
+  <div class="page-head"><h1>项目总览</h1><span class="sub">客户：HEMA ｜ 点击统计卡可筛选下方待办</span>
+    <span class="spacer"></span>
+    ${canEdit() ? '<button class="btn pri" data-act="np-open">＋ 新建项目</button>' : ''}</div>
   <div class="grid g4">
     <div class="card statcard brand"><div class="num">${projs.length}</div><div class="lbl">进行中项目</div>
       <div class="hint">${projs.reduce((s, p) => s + p.skus.length, 0)} 个 SKU 在手</div></div>
     <div class="card statcard click ${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">
-      <div class="num">${allActive.length}</div><div class="lbl">待处理节点</div><div class="hint">进行中 + 待审批</div></div>
+      <div class="num">${scoped.length}</div><div class="lbl">待处理节点${mineOn ? '（我的）' : ''}</div><div class="hint">进行中 + 待审批</div></div>
     <div class="card statcard click ${F === 'review' ? 'on' : ''}" data-act="home-filter" data-f="review">
       <div class="num" style="color:var(--amber)">${reviews.length}</div><div class="lbl">待审批 / 待客户确认</div>
       <div class="hint">卡在审批环节</div></div>
@@ -1287,8 +1479,12 @@ function viewHome() {
   <div class="card mt">
     <div class="todo-head">
       <h3 style="margin:0">待处理事项 <span class="tag">逾期置顶 · 按 deadline 排序</span></h3>
-      <div class="tabs">
-        <button class="${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">全部 ${allActive.length}</button>
+      ${db.role === 'sales' ? `<div class="tabs" style="margin-left:auto">
+        <button class="${mineOn ? 'on' : ''}" data-act="todo-mine" data-v="1">只看我的</button>
+        <button class="${!mineOn ? 'on' : ''}" data-act="todo-mine" data-v="0">全员</button>
+      </div>` : '<span style="margin-left:auto"></span>'}
+      <div class="tabs" style="margin:0">
+        <button class="${F === 'all' ? 'on' : ''}" data-act="home-filter" data-f="all">全部 ${scoped.length}</button>
         <button class="${F === 'review' ? 'on' : ''}" data-act="home-filter" data-f="review">待审批 ${reviews.length}</button>
         <button class="${F === 'overdue' ? 'on' : ''}" data-act="home-filter" data-f="overdue">仅逾期 ${overdue.length}</button>
       </div>
@@ -1328,6 +1524,34 @@ function viewProject(p) {
 }
 
 /* ---------- 节点详情 ---------- */
+function nextStepBar(p, n) {
+  const lastC = n.comments[n.comments.length - 1];
+  if (n.status === 'in_progress' && lastC && lastC.text.startsWith('【驳回】')) {
+    return `<div class="hintbar warn mt"><b>已被驳回</b><span>${esc(lastC.text.slice(4))}</span><span>—— 修改后重新提交审批</span></div>`;
+  }
+  if (n.status === 'pending') return `<div class="hintbar mt"><b>下一步</b>本节点尚未开始——点击右上角「开始节点」。</div>`;
+  if (n.status === 'in_progress') {
+    const tds = n.todos.filter(t => !t.done).length;
+    const ms = p.skus.length - doneCount(p, n);
+    return `<div class="hintbar mt"><b>下一步</b>${(tds || ms)
+      ? `还差 ${tds} 项待办、${ms} 个 SKU 未完成——完成后点「提交审批」。`
+      : '待办与 SKU 已全部完成——可以提交审批了。'}</div>`;
+  }
+  if (n.status === 'review') return `<div class="hintbar mt"><b>等待中</b>等待 ${esc(person(n.reviewerId || n.ownerId).name)} 审批 / 确认，业务侧无需操作。</div>`;
+  return '';
+}
+
+function nodeMinibar(p, n) {
+  const idx = p.nodes.findIndex(x => x.id === n.id);
+  const prev = p.nodes[idx - 1], next = p.nodes[idx + 1];
+  return `<div class="node-minibar">
+    <button class="btn sm" ${prev ? `data-act="goto" data-href="#/projects/${p.id}/node/${prev.id}"` : 'disabled'}>‹ ${prev ? prev.id + ' ' + nodeDef(prev.id).name : '上一节点'}</button>
+    <span class="mini-segs">${p.nodes.map(x => `<i class="seg f-${isOverdue(x) ? 'overdue' : x.status} ${x.id === n.id ? 'cur' : ''}"
+      title="${x.id} ${nodeDef(x.id).name} · ${STATUS_LABEL[x.status]}" data-act="goto" data-href="#/projects/${p.id}/node/${x.id}"></i>`).join('')}</span>
+    <button class="btn sm" ${next ? `data-act="goto" data-href="#/projects/${p.id}/node/${next.id}"` : 'disabled'}>${next ? next.id + ' ' + nodeDef(next.id).name : '下一节点'} ›</button>
+  </div>`;
+}
+
 function viewNode(p, n) {
   const def = nodeDef(n.id);
   const over = isOverdue(n);
@@ -1346,6 +1570,7 @@ function viewNode(p, n) {
 
   return `
   <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> / <b>${n.id} ${def.name}</b></div>
+  ${nodeMinibar(p, n)}
   <div class="card node-headcard">
     <span class="big"><span class="code">${def.code}</span>${def.name}</span>
     <span class="tag ${def.phase === 'dev' ? 'b' : def.phase === 'pre' ? 'k' : 'm'}">${PHASES[def.phase].label}</span>
@@ -1357,6 +1582,16 @@ function viewNode(p, n) {
     <span style="flex:1"></span>
     <span class="btnrow">${actions}</span>
   </div>
+  ${nextStepBar(p, n)}
+  ${ui.submitConfirm && n.status === 'in_progress' ? `
+  <div class="card mt reject-box">
+    <h3>确认提交审批？</h3>
+    <p style="margin:0 0 10px;font-size:13px;color:var(--muted)">本节点还有
+      <b style="color:var(--red)">${n.todos.filter(t => !t.done).length} 项待办</b>、
+      <b style="color:var(--red)">${p.skus.length - doneCount(p, n)} 个 SKU</b> 未完成。</p>
+    <div class="btnrow"><button class="btn pri" data-act="n-submit-force">仍要提交</button>
+    <button class="btn ghost" data-act="n-submit-cancel">继续处理</button></div>
+  </div>` : ''}
   ${ui.rejectOpen && n.status === 'review' ? `
   <div class="card mt reject-box">
     <h3>驳回原因（必填）</h3>
@@ -1378,7 +1613,9 @@ function viewNode(p, n) {
     </div>
   </div>
   <div class="card mt">
-    <h3>SKU 完成度 <span class="tag b">已完成 ${dc} / 共 ${p.skus.length}</span></h3>
+    <h3>SKU 完成度 <span class="tag b">已完成 ${dc} / 共 ${p.skus.length}</span>
+      <span style="flex:1"></span>
+      ${canEdit() && dc < p.skus.length ? '<button class="btn sm" data-act="sku-all">全部标记完成</button>' : ''}</h3>
     <div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>货号</th><th>品名</th><th>品类</th><th>本节点状态</th></tr></thead>
       <tbody>${p.skus.map(s => `
@@ -1582,20 +1819,50 @@ function viewPSF(p, s) {
 }
 
 /* ---------- 供应商管理 ---------- */
+function auditState(s) {
+  if (s.auditStatus === 'expired') return 'expired';
+  if (s.auditStatus === 'pending') return 'pending';
+  if (s.auditExpiry && diffDays(TODAY, s.auditExpiry) <= 90) return 'expiring';
+  return 'valid';
+}
+function auditPill(s) {
+  const st = auditState(s);
+  if (st === 'valid') return `<span class="tag m">验厂通过 · 至 ${esc(s.auditExpiry)}</span>`;
+  if (st === 'expiring') return `<span class="tag a">验厂即将到期 · ${esc(s.auditExpiry)}（剩 ${diffDays(TODAY, s.auditExpiry)} 天）</span>`;
+  if (st === 'pending') return '<span class="tag a">验厂待审（TUV 排期中）</span>';
+  return `<span class="tag r">验厂已过期 · ${esc(s.auditExpiry)}</span>`;
+}
+
 function viewSuppliers() {
   const F = ui.supFilter;
-  const list = db.suppliers.filter(s =>
+  const stateOf = auditState;
+  const all = db.suppliers;
+  const nValid = all.filter(s => stateOf(s) === 'valid').length;
+  const nExpiring = all.filter(s => stateOf(s) === 'expiring').length;
+  const nIssue = all.filter(s => stateOf(s) === 'expired' || stateOf(s) === 'pending').length;
+  const list = all.filter(s =>
     (F.client === 'all' || s.clients.includes(F.client)) &&
     (F.cat === 'all' || s.categories.includes(F.cat)) &&
+    (F.audit === 'all' || (F.audit === 'valid' ? stateOf(s) === 'valid'
+      : F.audit === 'expiring' ? stateOf(s) === 'expiring'
+      : (stateOf(s) === 'expired' || stateOf(s) === 'pending'))) &&
     (!F.q || s.name.includes(F.q) || s.categories.map(c => CATS[c]).join().includes(F.q)));
-  const auditPill = s => s.auditStatus === 'passed'
-    ? `<span class="tag m">验厂通过 · 至 ${esc(s.auditExpiry)}</span>`
-    : s.auditStatus === 'pending' ? '<span class="tag a">验厂待审</span>'
-    : `<span class="tag r">验厂过期 · ${esc(s.auditExpiry)}</span>`;
   return `
   <div class="page-head"><h1>供应商管理</h1><span class="sub">平台型板块 · 常驻维护 ｜ 信息越细，匹配越准</span>
-    <span class="spacer"></span><button class="btn" data-act="sup-import">导入供应商</button></div>
-  <div class="filterbar">
+    <span class="spacer"></span>
+    ${canEdit() ? '<button class="btn pri" data-act="sup-add-open">＋ 新增供应商</button>' : ''}
+    <button class="btn" data-act="sup-import">批量导入</button></div>
+  <div class="grid g4">
+    <div class="card statcard brand click ${F.audit === 'all' ? 'on' : ''}" data-act="sup-audit" data-f="all">
+      <div class="num">${all.length}</div><div class="lbl">供应商总数</div><div class="hint">名单动态维护</div></div>
+    <div class="card statcard mint click ${F.audit === 'valid' ? 'on' : ''}" data-act="sup-audit" data-f="valid">
+      <div class="num">${nValid}</div><div class="lbl">验厂有效</div><div class="hint">有效期 &gt; 90 天</div></div>
+    <div class="card statcard click ${F.audit === 'expiring' ? 'on' : ''}" data-act="sup-audit" data-f="expiring">
+      <div class="num" style="color:var(--amber)">${nExpiring}</div><div class="lbl">即将到期</div><div class="hint">90 天内需复审</div></div>
+    <div class="card statcard warn click ${F.audit === 'issue' ? 'on' : ''}" data-act="sup-audit" data-f="issue">
+      <div class="num">${nIssue}</div><div class="lbl">过期 / 待审</div><div class="hint">暂不可下单</div></div>
+  </div>
+  <div class="filterbar mt">
     <select class="ipt" data-chg="sup-client">
       <option value="all" ${F.client === 'all' ? 'selected' : ''}>客户：全部</option>
       <option value="HEMA" ${F.client === 'HEMA' ? 'selected' : ''}>客户：HEMA</option>
@@ -1606,7 +1873,7 @@ function viewSuppliers() {
       ${Object.keys(CATS).map(c => `<option value="${c}" ${F.cat === c ? 'selected' : ''}>品类：${CATS[c]}</option>`).join('')}
     </select>
     <input class="ipt search" placeholder="搜索供应商 / 品类…" value="${esc(F.q)}" data-chg="sup-q">
-    <span class="note-strip">命中 ${list.length} / ${db.suppliers.length} 家</span>
+    <span class="note-strip">命中 ${list.length} / ${all.length} 家</span>
   </div>
   <div class="grid g3">
     ${list.map(s => `<div class="card proj-card" data-act="sup-detail" data-id="${s.id}">
@@ -1616,19 +1883,55 @@ function viewSuppliers() {
         ${s.categories.map(c => `<span class="tag b">${CATS[c]}</span>`).join(' ')}
         ${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</div>
       <div class="meta">周期 <b class="mono">${s.leadTimeDays} 天</b> · 均价 <b class="mono">${esc(s.priceBand)}</b> · 开模 ${esc(s.mold)}</div>
+      <div class="meta">${esc(s.region || '—')} · 产能 ${esc(s.capacity || '—')} · MOQ ${esc(s.moq || '—')}</div>
       <div>${auditPill(s)}</div>
-    </div>`).join('')}
+    </div>`).join('') || '<div class="empty">无匹配供应商</div>'}
   </div>`;
 }
 
 /* ---------- 质量管控 ---------- */
+function riskRows() {
+  const rows = [];
+  db.projects.forEach(p => p.skus.forEach(s => {
+    const f = db.psfs[s.id];
+    if (!f) return;
+    f.sections.compliance.forEach(r => {
+      if (r.critical) rows.push({ p, s, f, r });
+    });
+  }));
+  return rows;
+}
+function inspClosed(it) { return it.result === 'fail' && it.fix && it.fix.startsWith('已闭环'); }
+
 function viewQuality() {
   const tab = ui.qualityTab;
+  const risks = riskRows();
+  const cqvPending = db.cqv.filter(r => r.result !== '通过').length;
+  const auditIssue = db.suppliers.filter(s => auditState(s) !== 'valid').length;
+  let inspOpen = 0;
+  db.inspections.forEach(r => r.items.forEach(it => { if (it.result === 'fail' && !inspClosed(it)) inspOpen++; }));
+
   let body = '';
-  if (tab === 'cqv') {
+  if (tab === 'risk') {
     body = `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>SKU</th><th>类型</th><th>高风险要求</th><th>来源</th><th>项目</th><th>PSF 版本</th><th></th></tr></thead>
+      <tbody>${risks.map(({ p, s, f, r }) => `<tr class="critical">
+        <td class="num">${esc(s.artNo)}</td><td>${esc(r.type)}</td><td><b>${esc(r.requirement)}</b></td>
+        <td><span class="tag">${esc(r.source)}</span></td><td>${esc(p.name)}</td>
+        <td>${f.locked ? '<span class="tag m">Final 锁定</span>' : `<span class="tag a">${esc(f.version)} 编辑中</span>`}</td>
+        <td><a href="#/projects/${p.id}/psf/${s.id}">打开 PSF</a></td></tr>`).join('')}</tbody></table></div>
+      <p class="note-strip mt">高风险点在 PSF 阶段前置录入（CQV 介入），打样前必须传达工厂——避免按最简工艺报价、到 FS 才返工。</p>`;
+  } else if (tab === 'cqv') {
+    const CF = ui.cqvFilter;
+    const list = db.cqv.filter(c => CF === 'all' || (CF === 'pass' ? c.result === '通过' : c.result !== '通过'));
+    body = `<div class="tabs" style="border:0;margin-bottom:8px">
+      <button class="${CF === 'all' ? 'on' : ''}" data-act="cqv-filter" data-f="all">全部 ${db.cqv.length}</button>
+      <button class="${CF === 'pass' ? 'on' : ''}" data-act="cqv-filter" data-f="pass">通过</button>
+      <button class="${CF === 'pending' ? 'on' : ''}" data-act="cqv-filter" data-f="pending">待复评 ${cqvPending}</button>
+    </div>
+    <div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>SKU</th><th>评估项</th><th>结论</th><th>备注</th><th>评估人</th><th>时间</th><th>项目 / 节点</th></tr></thead>
-      <tbody>${db.cqv.map(c => {
+      <tbody>${list.map(c => {
         const p = proj(c.projectId);
         return `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
         <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
@@ -1640,32 +1943,47 @@ function viewQuality() {
     body = `<div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>供应商</th><th>验厂状态</th><th>有效期</th><th>资质</th><th>合作客户</th></tr></thead>
       <tbody>${db.suppliers.map(s => `<tr>
-        <td><b>${esc(s.name)}</b></td>
-        <td>${s.auditStatus === 'passed' ? '<span class="tag m">通过</span>' : s.auditStatus === 'pending' ? '<span class="tag a">待审</span>' : '<span class="tag r">已过期</span>'}</td>
+        <td><a data-act="sup-detail" data-id="${s.id}" style="cursor:pointer"><b>${esc(s.name)}</b></a></td>
+        <td>${auditPill(s)}</td>
         <td class="num">${esc(s.auditExpiry || '—')}</td>
         <td>${s.certs.length ? s.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ') : '—'}</td>
         <td>${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</td></tr>`).join('')}</tbody></table></div>
-      <p class="note-strip mt">与供应商管理同源数据；验厂随 FS 确认启动、量产前完成（节点 10），第三方（TUV）执行。</p>`;
+      <p class="note-strip mt">与供应商管理同源数据；验厂随 FS 确认启动、量产前完成（节点 10），第三方（TUV）执行。点击供应商名可打开档案。</p>`;
   } else {
     const rows = [];
-    db.inspections.forEach(r => r.items.forEach(it => rows.push({ r, it })));
+    db.inspections.forEach(r => r.items.forEach((it, i) => rows.push({ r, it, i })));
     body = rows.length ? `<div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>项目</th><th>类型</th><th>时间 / 进度</th><th>检验项</th><th>结果</th><th>问题</th><th>整改</th><th></th></tr></thead>
-      <tbody>${rows.map(({ r, it }) => {
+      <tbody>${rows.map(({ r, it, i }) => {
         const p = proj(r.projectId);
-        return `<tr class="${it.result === 'fail' ? 'critical' : ''}">
+        const closed = inspClosed(it);
+        return `<tr class="${it.result === 'fail' && !closed ? 'critical' : ''}">
           <td>${esc(p.name)}</td><td><span class="tag k">${esc(r.kind)}</span></td>
           <td class="num">${esc(r.time)}<br><span style="color:var(--muted)">${esc(r.progress)}</span></td>
           <td>${esc(it.item)}</td>
-          <td>${it.result === 'pass' ? '<span class="tag m">PASS</span>' : '<span class="tag r">FAIL</span>'}</td>
+          <td>${it.result === 'pass' ? '<span class="tag m">PASS</span>' : closed ? '<span class="tag m">FAIL · 已闭环</span>' : '<span class="tag r">FAIL</span>'}</td>
           <td>${esc(it.issue) || '—'}</td><td>${esc(it.fix) || '—'}</td>
-          <td><a href="#/projects/${p.id}/node/${r.nodeId}">打开节点</a></td></tr>`;
-      }).join('')}</tbody></table></div>` : '<div class="empty">暂无验货记录</div>';
+          <td>${it.result === 'fail' && !closed && canEdit()
+            ? `<button class="btn sm mint" data-act="insp-close" data-r="${r.id}" data-i="${i}">标记已闭环</button>`
+            : `<a href="#/projects/${p.id}/node/${r.nodeId}">打开节点</a>`}</td></tr>`;
+      }).join('')}</tbody></table></div>
+      <p class="note-strip mt">异常整改闭环后才形成放单依据（FRI → 放单出货）。</p>` : '<div class="empty">暂无验货记录</div>';
   }
   return `
   <div class="page-head"><h1>质量管控</h1><span class="sub">平台型板块 · 与项目节点联动（同一份数据，两处入口）</span></div>
-  <div class="card">
+  <div class="grid g4">
+    <div class="card statcard warn click ${tab === 'risk' ? 'on' : ''}" data-act="qtab" data-t="risk">
+      <div class="num">${risks.length}</div><div class="lbl">高风险点（PSF 前置）</div><div class="hint">打样前必达</div></div>
+    <div class="card statcard click ${tab === 'cqv' ? 'on' : ''}" data-act="qtab" data-t="cqv">
+      <div class="num" style="color:var(--amber)">${cqvPending}</div><div class="lbl">CQV 待复评</div><div class="hint">开发样评估</div></div>
+    <div class="card statcard click ${tab === 'audit' ? 'on' : ''}" data-act="qtab" data-t="audit">
+      <div class="num" style="color:var(--amber)">${auditIssue}</div><div class="lbl">验厂需关注</div><div class="hint">过期 / 待审 / 即将到期</div></div>
+    <div class="card statcard warn click ${tab === 'insp' ? 'on' : ''}" data-act="qtab" data-t="insp">
+      <div class="num">${inspOpen}</div><div class="lbl">验货异常未闭环</div><div class="hint">影响放单</div></div>
+  </div>
+  <div class="card mt">
     <div class="tabs">
+      <button class="${tab === 'risk' ? 'on' : ''}" data-act="qtab" data-t="risk">高风险点总览</button>
       <button class="${tab === 'cqv' ? 'on' : ''}" data-act="qtab" data-t="cqv">CQV 开发样评估</button>
       <button class="${tab === 'audit' ? 'on' : ''}" data-act="qtab" data-t="audit">验厂</button>
       <button class="${tab === 'insp' ? 'on' : ''}" data-act="qtab" data-t="insp">验货（DUPRO / FRI）</button>
@@ -1686,20 +2004,48 @@ function viewClients() {
     (F.cat === 'all' || x.cat === F.cat) &&
     (!F.q || x.name.includes(F.q) || x.artNo.toUpperCase().includes(F.q.toUpperCase())));
   return `
-  <div class="page-head"><h1>客户管理</h1><span class="sub">品牌档案 · 联系人 · 过往产品库</span></div>
+  <div class="page-head"><h1>客户管理</h1><span class="sub">品牌档案 · 资产库 · 联系人 · 过往产品库</span></div>
   <div class="grid g2">
-    <div class="card"><h3>HEMA · 品牌档案</h3>
-      <p style="font-size:13px;color:var(--muted);margin:0 0 10px">${esc(c.profile.positioning)}</p>
-      <div class="kv" style="margin-bottom:6px">品牌色彩</div>
-      <div class="swatches">${c.profile.colors.map(x => `<i style="background:${esc(x)}" title="${esc(x)}"></i>`).join('')}</div>
-      <div class="kv mt">材料偏好</div><p style="font-size:13px;margin:2px 0 8px">${esc(c.profile.materials)}</p>
-      <div class="kv">标准体系</div><p style="font-size:13px;margin:2px 0 0">${esc(c.profile.standards)}</p>
+    <div class="card"><h3>HEMA · 品牌概况</h3>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 4px">${esc(c.profile.positioning)}</p>
+      <div class="kfacts">${c.profile.facts.map(f => `<div><span>${esc(f.k)}</span><b>${esc(f.v)}</b></div>`).join('')}</div>
     </div>
-    <div class="card"><h3>联系人 & SOP</h3>
-      ${c.contacts.map(x => `<div class="cmt"><div class="h">${avatarOf(x.name)}<span class="tag">${esc(x.role)}</span></div><p>${esc(x.note)}</p></div>`).join('')}
-      <div class="sec-title mt">SOP 备注</div>
-      ${c.sop.map(x => `<div class="file-item">📌 ${esc(x)}</div>`).join('')}
+    <div class="card"><h3>色彩资产库 <span class="tag k">设计 / 包装引用</span></h3>
+      <div class="color-grid">${c.profile.colors.map(x => `<div class="color-item">
+        <i style="background:${esc(x.hex)}"></i>
+        <div><div class="cn">${esc(x.name)} <span class="mono" style="color:var(--muted);font-size:10.5px">${esc(x.hex)}</span></div>
+        <div class="cu">${esc(x.usage)}</div></div>
+      </div>`).join('')}</div>
+    </div>
+    <div class="card"><h3>材料资产库</h3>
+      <div class="sec-title">偏好材料</div>
+      <div class="btnrow" style="margin-bottom:12px">${c.profile.materials.preferred.map(m => `<span class="tag m">${esc(m)}</span>`).join(' ')}</div>
+      <div class="sec-title">禁用清单</div>
+      <div class="btnrow">${c.profile.materials.banned.map(m => `<span class="tag r">⛔ ${esc(m)}</span>`).join(' ')}</div>
+    </div>
+    <div class="card"><h3>标准与文件</h3>
+      ${c.profile.docs.map(dd => `<div class="file-item">📄 ${esc(dd.name)}
+        <span class="tag b">${esc(dd.ver)}</span>
+        <span style="margin-left:auto" class="mono">更新 ${esc(dd.date)}</span></div>`).join('')}
+      <p class="note-strip">高风险点从这些标准前置进 PSF——见质量管控「高风险点总览」。</p>
+    </div>
+    <div class="card"><h3>联系人与对接节点</h3>
+      ${c.contacts.map(x => `<div class="cmt"><div class="h">${avatarOf(x.name)}<span class="tag">${esc(x.role)}</span></div>
+        <p>${esc(x.note)} · 对接：${(x.nodes || []).map(nd => `<span class="tag k">${esc(nd)}</span>`).join(' ')}</p></div>`).join('')}
       <p class="note-strip">不设「客户决策人」板块——只跟踪「是否已确认」。</p>
+    </div>
+    <div class="card"><h3>术语映射 <span class="tag">底层逻辑一致 · 定制只改名</span></h3>
+      <div class="tbl-wrap"><table class="tbl" style="min-width:0">
+        <thead><tr><th>平台标准节点</th><th>HEMA 术语</th></tr></thead>
+        <tbody>${c.terms.map(t => `<tr><td>${esc(t.std)}</td><td><b>${esc(t.client)}</b></td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="card mt"><h3>合作注意事项 <span class="tag r">会议沉淀 · 新人必读</span></h3>
+    <div class="grid g2">
+      <div>${c.profile.notes.map(x => `<div class="risk-note">${esc(x)}</div>`).join('')}</div>
+      <div><div class="sec-title">SOP 备注</div>
+        ${c.sop.map(x => `<div class="file-item">📌 ${esc(x)}</div>`).join('')}</div>
     </div>
   </div>
   <div class="card mt">
@@ -1863,6 +2209,55 @@ function renderOverlay() {
   const s = o.skuId && p ? skuOf(p, o.skuId) : null;
   const f = s ? db.psfs[s.id] : null;
 
+  if (o.kind === 'newProj') {
+    const d = ui.newProj;
+    const catCount = {};
+    db.projects.forEach(pp => pp.skus.forEach(x => { catCount[x.cat] = (catCount[x.cat] || 0) + 1; }));
+    const catSeen = {};
+    const rows = d.skus.map((x, i) => {
+      const k = x.cat || 'NB';
+      catSeen[k] = (catSeen[k] || 0) + 1;
+      const art = 'HM-' + k + '-' + String((catCount[k] || 0) + catSeen[k]).padStart(3, '0');
+      return `<div class="sku-row">
+        <span class="art">${art}</span>
+        <input class="ipt" placeholder="品名" value="${esc(x.name)}" data-chg="np-sku" data-f="name" data-i="${i}">
+        <select class="ipt" data-chg="np-sku" data-f="cat" data-i="${i}">
+          ${Object.keys(CATS).map(c => `<option value="${c}" ${k === c ? 'selected' : ''}>${CATS[c]}</option>`).join('')}
+        </select>
+        <input class="ipt" type="number" step="0.01" placeholder="目标价 $" value="${esc(x.target)}" data-chg="np-sku" data-f="target" data-i="${i}">
+        <button class="x" data-act="np-sku-del" data-i="${i}" title="删除">✕</button>
+      </div>`;
+    }).join('');
+    return `
+    <div class="ovl">
+      <div class="ovl-actions"><button class="btn" data-act="ovl-close">关闭</button></div>
+      <div class="sheet">
+        <div class="sheet-head"><span class="mk"><i></i><i></i></span><h2>新建项目</h2></div>
+        <div class="sheet-sub">填写交期后自动按最长时间线倒推生成 14 个节点 deadline；SKU 货号按品类编号自动生成（筛编号即得品类）。</div>
+        <div class="grid g2">
+          <div>
+            <div class="form-row"><label>项目名称 *</label><input class="ipt" placeholder="如 Gift 2027" value="${esc(d.name)}" data-chg="np-name"></div>
+            <div class="form-row"><label>客户</label><input class="ipt" value="HEMA" disabled></div>
+            <div class="form-row"><label>季节</label><input class="ipt" placeholder="如 2027 夏季" value="${esc(d.season)}" data-chg="np-season"></div>
+          </div>
+          <div>
+            <div class="form-row"><label>交期 *</label><input class="ipt" type="date" value="${esc(d.delivery)}" data-chg="np-delivery"></div>
+            <div class="form-row"><label>负责人</label><select class="ipt" data-chg="np-owner">
+              <option value="u1" ${d.owner === 'u1' ? 'selected' : ''}>业务A</option>
+              <option value="u2" ${d.owner === 'u2' ? 'selected' : ''}>业务B</option></select></div>
+          </div>
+        </div>
+        <h3 style="font-size:14px;margin:14px 0 8px">初始 SKU 清单（可空，后续在 Brief 节点补充）</h3>
+        ${rows || '<div class="empty" style="padding:8px 0">尚未添加 SKU</div>'}
+        <div class="btnrow mt">
+          <button class="btn" data-act="np-sku-add">＋ 添加 SKU</button>
+          <span style="flex:1"></span>
+          <button class="btn pri" data-act="np-create">创建项目并倒推时间线</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
   if (o.kind === 'import') {
     return `
     <div class="ovl">
@@ -1991,26 +2386,72 @@ function renderPanel() {
   }
   if (pl.kind === 'supplier') {
     const x = supplier(pl.id);
-    const coops = db.projects.filter(p => p.skus.some(k => k.cand.includes(x.id) || k.final === x.id));
+    const skuRows = [];
+    db.projects.forEach(p => p.skus.forEach(k => {
+      if (k.final === x.id) skuRows.push({ p, k, locked: true });
+      else if (k.cand.includes(x.id)) skuRows.push({ p, k, locked: false });
+    }));
     return `
     <div class="panel-mask" data-act="panel-close"></div>
     <div class="panel">
-      <div class="p-head"><h3>${esc(x.name)}</h3><button class="x" data-act="panel-close">✕</button></div>
+      <div class="p-head"><h3>${esc(x.name)}</h3>
+        <span class="mono" style="color:var(--amber);font-size:12px">${stars(x.rating)}</span>
+        <button class="x" data-act="panel-close">✕</button></div>
       <div class="p-body">
-        <div class="kv" style="margin-bottom:8px">评级 <span class="mono" style="color:var(--amber)">${stars(x.rating)}</span></div>
-        <div class="sec-title">能力信息（越细，AI 匹配越准）</div>
+        <div class="sec-title">基本能力（越细，AI 匹配越准）</div>
         <div class="meta" style="font-size:13px;display:grid;gap:6px">
           <div>品类：${x.categories.map(c => `<span class="tag b">${CATS[c]}</span>`).join(' ')}</div>
           <div>工艺：${x.processes.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>
           <div>开模：${esc(x.mold)} ｜ 周期：<b class="mono">${x.leadTimeDays} 天</b> ｜ 均价：<b class="mono">${esc(x.priceBand)}</b></div>
-          <div>合作客户：${x.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</div>
+          <div>地区：${esc(x.region || '—')} ｜ 月产能：<b class="mono">${esc(x.capacity || '—')}</b> ｜ MOQ：<b class="mono">${esc(x.moq || '—')}</b></div>
+          <div>合作：${x.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')} · ${x.yearsCoop || 0} 年 ｜ 联系人：${esc(x.contact || '—')}</div>
         </div>
-        <div class="sec-title mt">验厂 & 资质</div>
-        <div class="file-item">${x.auditStatus === 'passed' ? `✅ 验厂通过，有效期至 ${esc(x.auditExpiry)}` : x.auditStatus === 'pending' ? '🕐 验厂待审（TUV 排期中）' : `⚠️ 验厂已过期（${esc(x.auditExpiry)}），需重新安排`}</div>
-        ${x.certs.length ? `<div class="btnrow">${x.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>` : ''}
-        <div class="sec-title mt">参与项目</div>
-        ${coops.length ? coops.map(p => `<div class="file-item">📁 ${esc(p.name)} · ${p.skus.filter(k => k.cand.includes(x.id) || k.final === x.id).length} 款</div>`).join('') : '<div class="empty">暂无</div>'}
+        <div class="sec-title mt">验厂档案</div>
+        <div style="margin-bottom:8px">${auditPill(x)}</div>
+        ${(x.audits || []).length ? (x.audits || []).map(a => `<div class="ver">
+          <span class="v">${esc(a.type)}</span><span>${esc(a.result)}${a.expiry ? ` · 有效期至 ${esc(a.expiry)}` : ''}</span>
+          <span class="d">${esc(a.date)}</span></div>`).join('') : '<div class="empty">暂无验厂记录</div>'}
+        ${x.certs.length ? `<div class="btnrow mt">${x.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>` : ''}
+        <div class="sec-title mt">近期报价（内部）</div>
+        ${(x.quotes || []).length ? `<div class="tbl-wrap"><table class="tbl" style="min-width:0">
+          <thead><tr><th>货号</th><th>报价</th><th>日期</th></tr></thead>
+          <tbody>${(x.quotes || []).map(qt => `<tr><td class="num">${esc(qt.artNo)}</td>
+            <td class="num">${esc(qt.price)}</td><td class="num">${esc(qt.date)}</td></tr>`).join('')}</tbody>
+        </table></div>` : '<div class="empty">暂无报价记录</div>'}
+        <div class="sec-title mt">参与项目 · SKU 明细</div>
+        ${skuRows.length ? skuRows.map(r => `<div class="file-item" data-act="goto" data-href="#/projects/${r.p.id}" style="cursor:pointer">
+          📦 <span class="mono">${esc(r.k.artNo)}</span> ${esc(r.k.name)}
+          <span style="margin-left:auto">${r.locked ? '<span class="tag m">FS 锁定</span>' : '<span class="tag b">候选</span>'}
+          <span class="tag">${esc(r.p.name)}</span></span></div>`).join('') : '<div class="empty">暂无参与项目</div>'}
       </div>
+    </div>`;
+  }
+  if (pl.kind === 'supAdd') {
+    const d = pl.draft;
+    return `
+    <div class="panel-mask" data-act="panel-close"></div>
+    <div class="panel">
+      <div class="p-head"><h3>新增供应商</h3><button class="x" data-act="panel-close">✕</button></div>
+      <div class="p-body">
+        <div class="form-row"><label>名称 *</label><input class="ipt" value="${esc(d.name)}" data-chg="sa-name"></div>
+        <div class="form-row"><label>品类 *</label><span class="chip-select">
+          ${Object.keys(CATS).map(c => `<label class="pick ${d.cats.includes(c) ? 'on' : ''}">
+            <input type="checkbox" ${d.cats.includes(c) ? 'checked' : ''} data-chg="sa-cat" data-c="${c}">${CATS[c]}</label>`).join('')}
+        </span></div>
+        <div class="form-row"><label>工艺</label><input class="ipt" placeholder="逗号分隔，如：车缝, 热转印" value="${esc(d.processes)}" data-chg="sa-processes"></div>
+        <div class="form-row"><label>周期（天）</label><input class="ipt" type="number" value="${esc(d.leadTimeDays)}" data-chg="sa-lead"></div>
+        <div class="form-row"><label>均价区间</label><input class="ipt" placeholder="$0.5 – 1.2" value="${esc(d.priceBand)}" data-chg="sa-price"></div>
+        <div class="form-row"><label>开模</label><select class="ipt" data-chg="sa-mold">
+          <option ${d.mold === '支持' ? 'selected' : ''}>支持</option><option ${d.mold === '不支持' ? 'selected' : ''}>不支持</option></select></div>
+        <div class="form-row"><label>MOQ</label><input class="ipt" value="${esc(d.moq)}" data-chg="sa-moq"></div>
+        <div class="form-row"><label>地区</label><input class="ipt" value="${esc(d.region)}" data-chg="sa-region"></div>
+        <div class="form-row"><label>验厂状态</label><select class="ipt" data-chg="sa-audit">
+          <option value="pending" ${d.auditStatus === 'pending' ? 'selected' : ''}>待审（TUV 排期）</option>
+          <option value="passed" ${d.auditStatus === 'passed' ? 'selected' : ''}>已通过</option></select></div>
+        <p class="note-strip">供应商名单持续增加、动态维护——保存后立即进入匹配池。</p>
+      </div>
+      <div class="p-foot"><button class="btn ghost" data-act="panel-close">取消</button>
+        <button class="btn pri" data-act="sup-add-create">保存供应商</button></div>
     </div>`;
   }
   return '';
@@ -2071,6 +2512,12 @@ function ctx() {
 function addCmt(n, author, role, text) {
   n.comments.push({ author, role, time: nowStamp(), text });
 }
+function doSubmitNode(n) {
+  ui.submitConfirm = false;
+  n.status = 'review';
+  addCmt(n, person(n.ownerId).name, '业务', '已提交审批 / 待客户确认。');
+  saveDB(); render(); toast('已提交审批');
+}
 
 /* ---------- 事件：点击 ---------- */
 document.addEventListener('click', e => {
@@ -2081,6 +2528,60 @@ document.addEventListener('click', e => {
 
   if (act === 'goto') { location.hash = t.dataset.href; return; }
   if (act === 'home-filter') { ui.homeFilter = t.dataset.f; render(); return; }
+  if (act === 'todo-mine') { ui.todoMine = t.dataset.v === '1'; render(); return; }
+  if (act === 'bell') {
+    ui.todoMine = true; ui.homeFilter = 'overdue';
+    if (location.hash === '#/projects' || !location.hash) render(); else location.hash = '#/projects';
+    return;
+  }
+  if (act === 'gsearch-go') {
+    const href = t.dataset.href; ui.searchQ = '';
+    if (location.hash === href) render(); else location.hash = href;
+    return;
+  }
+  if (act === 'gsearch-prod') { ui.searchQ = ''; ui.overlay = { kind: 'prod', id: t.dataset.id }; render(); return; }
+  if (act === 'np-open') { ui.newProj = { name: '', season: '', delivery: '', owner: PERSONA, skus: [] }; ui.overlay = { kind: 'newProj' }; render(); return; }
+  if (act === 'np-sku-add') { ui.newProj.skus.push({ name: '', cat: 'NB', target: '' }); render(); return; }
+  if (act === 'np-sku-del') { ui.newProj.skus.splice(+t.dataset.i, 1); render(); return; }
+  if (act === 'np-create') {
+    const d = ui.newProj;
+    if (!d.name.trim()) { toast('项目名称必填'); return; }
+    if (!d.delivery) { toast('请选择交期'); return; }
+    if (d.delivery <= TODAY) { toast('交期必须晚于今天（' + TODAY + '）'); return; }
+    const pid = 'p' + (db.projects.reduce((m, x) => Math.max(m, parseInt(x.id.slice(1), 10) || 0), 0) + 1);
+    const catCount = {};
+    db.projects.forEach(pp => pp.skus.forEach(x => { catCount[x.cat] = (catCount[x.cat] || 0) + 1; }));
+    const skus = d.skus.filter(x => x.name.trim()).map((x, i) => {
+      const cat = x.cat || 'NB';
+      catCount[cat] = (catCount[cat] || 0) + 1;
+      const target = parseFloat(x.target) || 0;
+      return {
+        id: pid + 'k' + (i + 1),
+        artNo: 'HM-' + cat + '-' + String(catCount[cat]).padStart(3, '0'),
+        name: x.name.trim(), cat, ph: CAT_PH[cat] || '📦',
+        target, quote: +(target * 1.12).toFixed(2), cost: +(target * 0.78).toFixed(2),
+        cand: [], final: null
+      };
+    });
+    const npj = {
+      id: pid, name: d.name.trim(), client: 'HEMA', season: d.season.trim() || '—',
+      deliveryDate: d.delivery, createdDate: TODAY, ownerId: d.owner, status: 'active', currentNodeId: '01',
+      skus,
+      nodes: NODE_DEFS.map(x => makeNode(x.id, x.id === '04' ? 'u3' : d.owner, x.id === '04' ? 'u3' : (x.confirm ? 'u5' : null), skus))
+    };
+    recalcTimeline(npj);
+    const n1 = npj.nodes[0];
+    n1.status = 'in_progress';
+    n1.todos = [{ t: 'SKU 货号建档', done: skus.length > 0 }, { t: '按交期倒推时间线', done: true }, { t: '产品推荐方案', done: false }];
+    n1.versions = [{ v: 'V1', time: TODAY, author: person(d.owner).name, note: '建项目，倒推生成 14 节点时间线' }];
+    skus.forEach(x => { db.psfs[x.id] = makePsf(x.id, x.cat, 'V1', false); });
+    db.projects.push(npj);
+    ui.overlay = null; ui.newProj = null;
+    saveDB();
+    location.hash = '#/projects/' + pid;
+    toast('项目已创建：按交期 ' + d.delivery + ' 倒推生成 14 个节点 deadline', true);
+    return;
+  }
   if (act === 'reset') { resetDemo(); return; }
   if (act === 'print') { window.print(); return; }
   if (act === 'ovl-close') { ui.overlay = null; render(); return; }
@@ -2089,7 +2590,14 @@ document.addEventListener('click', e => {
 
   /* 节点状态流转 */
   if (act === 'n-start' && n) { n.status = 'in_progress'; addCmt(n, person(n.ownerId).name, '业务', '节点已开始。'); saveDB(); render(); return; }
-  if (act === 'n-submit' && n) { n.status = 'review'; addCmt(n, person(n.ownerId).name, '业务', '已提交审批 / 待客户确认。'); saveDB(); render(); toast('已提交审批'); return; }
+  if (act === 'n-submit' && n && p) {
+    const tds = n.todos.filter(x => !x.done).length;
+    const ms = p.skus.length - doneCount(p, n);
+    if (tds || ms) { ui.submitConfirm = true; render(); return; }
+    doSubmitNode(n); return;
+  }
+  if (act === 'n-submit-force' && n) { doSubmitNode(n); return; }
+  if (act === 'n-submit-cancel') { ui.submitConfirm = false; render(); return; }
   if (act === 'n-approve' && n) {
     n.status = 'done'; ui.rejectOpen = false;
     addCmt(n, n.reviewerId ? person(n.reviewerId).name : '管理员', '审批', '审批通过。');
@@ -2107,6 +2615,10 @@ document.addEventListener('click', e => {
   if (act === 'sku-toggle' && n && p) {
     const k = t.dataset.sku;
     n.skuDone[k] = !n.skuDone[k]; saveDB(); render(); return;
+  }
+  if (act === 'sku-all' && n && p) {
+    p.skus.forEach(x => { n.skuDone[x.id] = true; });
+    saveDB(); render(); toast('已将全部 SKU 标记为完成', true); return;
   }
   if (act === 'add-comment' && n) {
     const v = ($('#cmtBox') || {}).value || '';
@@ -2210,7 +2722,45 @@ document.addEventListener('click', e => {
   /* 供应商 / 质量 / 客户板块 */
   if (act === 'sup-detail') { ui.panel = { kind: 'supplier', id: t.dataset.id }; render(); return; }
   if (act === 'sup-import') { toast('批量导入为二期能力（演示占位）'); return; }
+  if (act === 'sup-audit') { ui.supFilter.audit = t.dataset.f; render(); return; }
+  if (act === 'sup-add-open') {
+    ui.panel = { kind: 'supAdd', draft: {
+      name: '供应商' + String.fromCharCode(65 + db.suppliers.length),
+      cats: [], processes: '', leadTimeDays: '', priceBand: '', mold: '支持',
+      moq: '', region: '', auditStatus: 'pending'
+    } };
+    render(); return;
+  }
+  if (act === 'sup-add-create' && ui.panel && ui.panel.kind === 'supAdd') {
+    const d = ui.panel.draft;
+    if (!d.name.trim()) { toast('供应商名称必填'); return; }
+    if (!d.cats.length) { toast('至少选择一个品类'); return; }
+    const sid = 's' + (db.suppliers.reduce((m, x) => Math.max(m, parseInt(x.id.slice(1), 10) || 0), 0) + 1);
+    db.suppliers.push({
+      id: sid, name: d.name.trim(), categories: [...d.cats],
+      processes: d.processes.split(/[,，]/).map(x => x.trim()).filter(Boolean),
+      mold: d.mold, leadTimeDays: parseInt(d.leadTimeDays, 10) || 30,
+      priceBand: d.priceBand.trim() || '—', clients: ['HEMA'],
+      auditStatus: d.auditStatus, auditExpiry: d.auditStatus === 'passed' ? addDays(TODAY, 365) : null,
+      certs: [], rating: 3,
+      region: d.region.trim() || '—', capacity: '—', moq: d.moq.trim() || '—',
+      yearsCoop: 0, contact: '—', audits: [], quotes: []
+    });
+    ui.panel = null; saveDB(); render();
+    toast('已加入供应商库——名单动态维护，立即进入匹配池', true);
+    return;
+  }
   if (act === 'qtab') { ui.qualityTab = t.dataset.t; render(); return; }
+  if (act === 'cqv-filter') { ui.cqvFilter = t.dataset.f; render(); return; }
+  if (act === 'insp-close') {
+    const rec = db.inspections.find(r => r.id === t.dataset.r);
+    const it = rec && rec.items[+t.dataset.i];
+    if (it) {
+      it.fix = '已闭环：' + (it.fix || '整改完成').replace(/^整改中[:：]\s*/, '');
+      saveDB(); render(); toast('异常已闭环，形成放单依据', true);
+    }
+    return;
+  }
   if (act === 'prod-detail') { ui.overlay = { kind: 'prod', id: t.dataset.id }; render(); return; }
   if (act === 'copy-desc') {
     const x = db.clientProducts.find(y => y.id === t.dataset.id);
@@ -2254,6 +2804,28 @@ document.addEventListener('change', e => {
     } else ui.panel.sel = sel.filter(x => x !== id);
     render(); return;
   }
+  if (k === 'np-name') { ui.newProj.name = t.value; return; }
+  if (k === 'np-season') { ui.newProj.season = t.value; return; }
+  if (k === 'np-delivery') { ui.newProj.delivery = t.value; return; }
+  if (k === 'np-owner') { ui.newProj.owner = t.value; return; }
+  if (k === 'np-sku') {
+    const r = ui.newProj.skus[+t.dataset.i];
+    if (r) { r[t.dataset.f] = t.value; if (t.dataset.f === 'cat') render(); }
+    return;
+  }
+  if (k === 'sa-name') { ui.panel.draft.name = t.value; return; }
+  if (k === 'sa-cat') {
+    const c = t.dataset.c, d = ui.panel.draft;
+    d.cats = t.checked ? [...d.cats, c] : d.cats.filter(x => x !== c);
+    render(); return;
+  }
+  if (k === 'sa-processes') { ui.panel.draft.processes = t.value; return; }
+  if (k === 'sa-lead') { ui.panel.draft.leadTimeDays = t.value; return; }
+  if (k === 'sa-price') { ui.panel.draft.priceBand = t.value; return; }
+  if (k === 'sa-mold') { ui.panel.draft.mold = t.value; return; }
+  if (k === 'sa-moq') { ui.panel.draft.moq = t.value; return; }
+  if (k === 'sa-region') { ui.panel.draft.region = t.value; return; }
+  if (k === 'sa-audit') { ui.panel.draft.auditStatus = t.value; return; }
   if (k === 'brief-filter') { ui.briefFilter = t.value; render(); return; }
   if (k === 'sup-client') { ui.supFilter.client = t.value; render(); return; }
   if (k === 'sup-cat') { ui.supFilter.cat = t.value; render(); return; }
@@ -2266,7 +2838,7 @@ document.addEventListener('change', e => {
 
 /* 输入即时筛选 */
 document.addEventListener('input', e => {
-  const t = e.target.closest('[data-chg="brief-filter"],[data-chg="sup-q"],[data-chg="pf-q"]');
+  const t = e.target.closest('[data-chg="brief-filter"],[data-chg="sup-q"],[data-chg="pf-q"],[data-chg="gsearch"]');
   if (!t) return;
   const k = t.dataset.chg;
   const v = t.value;
@@ -2274,6 +2846,7 @@ document.addEventListener('input', e => {
   if (k === 'brief-filter') ui.briefFilter = v;
   if (k === 'sup-q') ui.supFilter.q = v;
   if (k === 'pf-q') ui.prodFilter.q = v;
+  if (k === 'gsearch') ui.searchQ = v;
   render();
   const nt = document.querySelector(`[data-chg="${k}"]`);
   if (nt) { nt.focus(); nt.setSelectionRange(st, st); }
@@ -2281,7 +2854,7 @@ document.addEventListener('input', e => {
 
 /* ---------- 初始化 ---------- */
 loadDB();
-window.addEventListener('hashchange', () => { ui.rejectOpen = false; ui.fsUnlockOpen = false; ui.psfUnlockOpen = false; render(); });
+window.addEventListener('hashchange', () => { ui.rejectOpen = false; ui.fsUnlockOpen = false; ui.psfUnlockOpen = false; ui.submitConfirm = false; ui.searchQ = ''; render(); });
 render();
 </script>
 </body>
