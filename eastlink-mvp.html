@@ -1020,44 +1020,34 @@ const PHASES = {
   end: { label: '尾期阶段', en: 'Production & Shipment' }
 };
 const STATUS_LABEL = { pending: '未开始', in_progress: '进行中', review: '待审批', done: '已完成' };
-/* ---------- HEMA BTS 业务环节 SOP（录自业务七部台账，THEME 线）---------- */
-const NAS = '\\\\192.168.5.7\\业务七部';
+/* ---------- HEMA BTS 业务环节 SOP（录自客户流程台账，THEME 线；
+   只保留流程与规则，不含任何文件路径）---------- */
 const SOP = [
   { node: '01', name: 'HEMA 开发推荐流程 Proposal + 客人来访选款接待',
-    when: 'BTS 2027：第一轮 3.30–3.31 来访；第二轮 8.27–8.28 来访', notes: [],
-    projPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 会议\\2026\\2026-03-3031 stationery & gifting' },
+    when: 'BTS 2027：第一轮 3.30–3.31 来访；第二轮 8.27–8.28 来访', notes: [] },
   { node: '03', name: 'HEMA SPEC / PSF 和 quality file 确认',
-    when: '以客人第一封邮件发的 timeline 为准', notes: [],
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\spec' },
+    when: '以客人第一封邮件发的 timeline 为准', notes: [] },
   { node: '04', name: 'HEMA 测试报价流程',
     when: '以客人第一封邮件发的 timeline 为准',
     notes: ['测试报价可按 FCM、Textile、TOY、NON TOY 类型发给客人确认报价和项目',
       '报给客人的美金价汇率 6.5 左右往上取整（需考虑可能重测等费用）',
-      '测试报价可以在 PP 样开始阶段就让测试组启动'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA TCF',
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\测试\\客人反馈' },
+      '测试报价可以在 PP 样开始阶段就让测试组启动'] },
   { node: '05', name: 'HEMA Tender 报价流程',
-    when: '以客人第一封邮件发的 timeline 为准', notes: ['注意系统报价关闭时间！'],
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\报价' },
+    when: '以客人第一封邮件发的 timeline 为准', notes: ['注意系统报价关闭时间！'] },
   { node: '05', name: 'HEMA 寄样流程',
     when: '以客人第一封邮件发的 timeline 为准',
     notes: ['Offer 样数量：荷兰 / 上海办各 1 套，展示盒里不含产品',
       'PP 样数量：荷兰 / 上海办各 1 套，展示盒里不含产品',
       '大货样数量：2 套给荷兰，1 套给上海办，1 套给 TUV 验货',
       '等大货样到齐后，再寄 1 套拍照样给上海办',
-      '寄样信息及相应文件见群里压缩包'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 寄样',
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\寄样' },
+      '寄样信息及相应文件见群里压缩包'] },
   { node: '05', name: 'FTY 供应链表格填写',
     when: '以客人第一封邮件发的 timeline 为准',
     notes: ['FPP 要为验厂工厂，也是验货的工厂',
-      'Producer / Component 的工厂有 BSCI 的，也需要标注出来'],
-    projPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 订单选择供应商审批\\发送HEMA审批\\BTS 2026' },
+      'Producer / Component 的工厂有 BSCI 的，也需要标注出来'] },
   { node: '05', name: 'HEMA MSDS 提供流程',
     when: 'tender 上传系统时，同步提供',
-    notes: ['MSDS 需要在 tender 阶段，按照客户的要求及时提供'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA REACH 注册',
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\SDS' },
+    notes: ['MSDS 需要在 tender 阶段，按照客户的要求及时提供'] },
   { node: '08', name: 'HEMA 包材设计和确认流程',
     when: '以客人第一封邮件发的 timeline 为准',
     notes: ['普遍不覆膜，不是塑料材质，不接受 PVC 材质；特殊情况需向客人说明！',
@@ -1070,57 +1060,40 @@ const SOP = [
       '展示盒：Theme—2mm 灰板裱 157g 铜版纸 / 单 E 瓦裱灰底白；BTS—单 E 瓦裱灰底白',
       '橡皮包纸：128g 铜版纸，双面覆膜（要和客人说明！）',
       '不干胶：金属笔上为 PET 可移覆亮膜；条形 / 蝴蝶标—PP 合成可移（塑料材质需向客人说明）；笔记本—玻卡可移；其他—基本上铜版纸可移（PVC 袋子—蓝泰可移；EVA 袋子—铜版纸可移）',
-      '皮质笔 / 毛球笔入展示盒：先上一层热收缩膜，再贴不干胶，需向客人说明'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 包材设计要求与模板',
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\包材' },
+      '皮质笔 / 毛球笔入展示盒：先上一层热收缩膜，再贴不干胶，需向客人说明'] },
   { node: '08', name: 'HEMA 下单流程', when: '',
     notes: ['仔细核对 PO，如果有问题及时表格和邮件发给对接人调整订单'] },
   { node: '08', name: 'HEMA 建资料流程（含 Startpack）', when: '',
-    notes: ['可以从订单表里找往年产品的项目编号和 SKU，然后去 SAP 里查找客户产品资料'],
-    projPath: '见订单表和 SAP 的产品资料描述' },
+    notes: ['可以从订单表里找往年产品的项目编号和 SKU，然后去 SAP 里查找客户产品资料'] },
   { node: '08', name: 'HEMA CPS 填写', when: '', notes: [] },
   { node: '09', name: 'HEMA 产前 / 大货样样品反馈-邮件', when: '',
     notes: ['如果有图片放到 comments 里，需要再新建一个 sheet，标注 SKU 和品名，把图片放进去',
       '样品寄出后，需要在 comments 里写上寄出时间',
       'comments 可以直接在微信群里发给对接人，并在群里催回复',
-      '客人会在 comments 标注出 PP sample 和 Production sample approved 的状态'],
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\comments' },
-  { node: '10', name: 'HEMA 验厂流程', when: '', notes: [],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 验厂',
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\验厂' },
+      '客人会在 comments 标注出 PP sample 和 Production sample approved 的状态'] },
+  { node: '10', name: 'HEMA 验厂流程', when: '', notes: [] },
   { node: '12', name: 'HEMA 中期验货流程', when: '', notes: [] },
   { node: '13', name: 'HEMA 验货流程（含自检报告上传）', when: '',
     notes: ['在赛龙验货的产品，需要至少提前一周多订验货；BTS 出货季 TUV 还有可能排不上验货',
       'Startpack 验货时，需要提供里面所有产品的签样',
-      '在外面的工厂验货时，需提前告知工厂验货时间，准备好公关费、签样；验货结束后让工厂提供签字单子照片'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 验货' },
-  { node: '13', name: 'HEMA TCF 上传流程', when: '', notes: [],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA TCF',
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\测试\\TCF' },
+      '在外面的工厂验货时，需提前告知工厂验货时间，准备好公关费、签样；验货结束后让工厂提供签字单子照片'] },
+  { node: '13', name: 'HEMA TCF 上传流程', when: '', notes: [] },
   { node: '14', name: 'HEMA 订舱流程', when: 'CDD 前 45 天',
-    notes: ['如果有需要商检的木制产品，最好订在一个柜子里'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 装柜' },
+    notes: ['如果有需要商检的木制产品，最好订在一个柜子里'] },
   { node: '14', name: 'HEMA 箱单发票登记', when: '出运后收到开船件就要立马核对，并登记到收汇表里',
-    notes: [], sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 收汇' },
+    notes: [], refs: true },
   { node: '15', name: 'HEMA 收汇流程', when: '', notes: [] },
   { node: '15', name: 'HEMA 免罚金 + 出运证据操作流程',
-    when: '一般在出运后，看对接人会不会发来邮件或信息', notes: [],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA 免罚金+出运证据' },
+    when: '一般在出运后，看对接人会不会发来邮件或信息', notes: [] },
   { node: '15', name: 'Product-PIM 产品表格填写', when: '',
-    notes: ['可以参照往年的产品填写'],
-    projPath: NAS + '\\BU028\\项目开发\\…\\Product information, materials and quality marks - BTS 2026' },
+    notes: ['可以参照往年的产品填写'] },
   { node: '15', name: 'Package-PIM 包材表格填写', when: '', notes: ['可以参照往年的产品填写'] },
-  { node: '15', name: 'HEMA 测试收汇流程', when: '', notes: ['出运后，及时做测试发票并且收汇'],
-    projPath: NAS + '\\BU028\\项目开发\\…\\BTS 2026\\其他\\测试\\2026 BTS Theme测试发票' },
-  { node: '15', name: 'HEMA GRS / RCS TC 操作流程', when: '', notes: ['出运后，及时开 TC'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA GRS' },
+  { node: '15', name: 'HEMA 测试收汇流程', when: '', notes: ['出运后，及时做测试发票并且收汇'] },
+  { node: '15', name: 'HEMA GRS / RCS TC 操作流程', when: '', notes: ['出运后，及时开 TC'] },
   { node: '15', name: 'HEMA BCI 棉流程', when: '出运后 1 个月左右',
-    notes: ['出运后 1 个月左右，要填写对应的 BCI 棉文件；HEMA 组的群里会有人通知填写'],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA BCI 棉' },
-  { node: '15', name: 'HEMA EUDR 申请流程', when: '', notes: [],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA EUDR' },
-  { node: '15', name: 'HEMA FSC 发票登记流程', when: '', notes: [],
-    sopPath: NAS + '\\资料\\客户资料\\HEMA\\HEMA FSC' }
+    notes: ['出运后 1 个月左右，要填写对应的 BCI 棉文件；HEMA 组的群里会有人通知填写'] },
+  { node: '15', name: 'HEMA EUDR 申请流程', when: '', notes: [] },
+  { node: '15', name: 'HEMA FSC 发票登记流程', when: '', notes: [] }
 ];
 const sopOf = nid => SOP.filter(s => s.node === nid);
 
@@ -1888,14 +1861,9 @@ function nextStepBar(p, n) {
 
 /* ---------- 业务环节 SOP 渲染 ---------- */
 const WARN_RE = /不接受|需向客人说明|要和客人说明|注意|提前一周|排不上|立马|及时|催|必须|要考虑/;
-function sopPathRow(label, path) {
-  return `<div class="sop-path"><b>${label}</b><span>${esc(path)}</span>
-    <button class="btn sm" data-act="copy-path" data-p="${esc(path)}">复制</button></div>`;
-}
 function sopNotes(s) {
   return s.notes.map(t => `<div class="sop-note ${WARN_RE.test(t) ? 'warn' : ''}">${esc(t)}</div>`).join('')
-    + (s.sopPath ? sopPathRow('SOP 文件', s.sopPath) : '')
-    + (s.projPath ? sopPathRow('项目路径', s.projPath) : '');
+    + '<div class="sop-path"><b>参考资料</b><span>本环节有对应的 SOP 文件与项目归档资料，按内部规范存取</span></div>';
 }
 function nodeSopCard(n) {
   const list = sopOf(n.id);
@@ -1907,7 +1875,7 @@ function nodeSopCard(n) {
     ${list.map((s, i) => {
       const key = n.id + '-' + i;
       const open = ui.sopOpen === key;
-      const has = s.notes.length || s.sopPath || s.projPath;
+      const has = s.notes.length > 0;
       return `<div class="sop-item">
         <div class="sop-head" ${has ? `data-act="sop-toggle" data-k="${key}"` : ''}>
           <span class="sop-name">${esc(s.name)}</span>
@@ -2584,7 +2552,7 @@ function viewClientSop() {
   <div class="page-head"><h1>客户管理 · SOP 手册</h1>
     <span class="tag b">HEMA · THEME 线</span>
     <span class="sub">${SOP.length} 个业务环节 · ${noteCount} 条注意事项 ｜ 新人通读，老人速查</span></div>
-  <p class="note-strip" style="margin-bottom:14px">来源：业务七部 HEMA BTS 台账。Brand 线的差异规则尚未整理，卡片标注 <span class="tag b">THEME</span> 以便日后并列补充。</p>
+  <p class="note-strip" style="margin-bottom:14px">来源：HEMA BTS 客户流程台账。各环节的 SOP 文件与项目资料按内部规范存取，此处只沉淀流程与规则。Brand 线的差异规则尚未整理，卡片标注 <span class="tag b">THEME</span> 以便日后并列补充。</p>
   <div class="filterbar">
     <input class="ipt search" placeholder="搜索环节 / 注意事项全文，如「PVC」「寄样」「汇率」…" value="${esc(ui.sopQ)}" data-chg="sop-q">
     <div class="tabs" style="margin:0;border:0">
@@ -2603,7 +2571,8 @@ function viewClientSop() {
         ${s.when ? `<span class="sop-when">⏱ ${esc(s.when)}</span>` : ''}
         <span style="margin-left:auto"><span class="tag">THEME</span></span>
       </div>
-      ${(s.notes.length || s.sopPath || s.projPath) ? `<div class="sop-body">${sopNotes(s)}</div>` : '<div class="sop-body" style="color:var(--muted);font-size:13px">按标准流程执行，暂无特别注意事项</div>'}
+      ${s.notes.length ? `<div class="sop-body">${sopNotes(s)}</div>`
+        : '<div class="sop-body" style="color:var(--muted);font-size:13.5px">按标准流程执行，暂无特别注意事项；参考相关 SOP 文件</div>'}
     </div>`).join('')}` : '').join('')}
   ${list.length ? '' : '<div class="card mt"><div class="empty">无匹配环节，换个关键词试试</div></div>'}`;
 }
@@ -3441,13 +3410,6 @@ document.addEventListener('click', e => {
   }
   if (act === 'sop-toggle') { ui.sopOpen = ui.sopOpen === t.dataset.k ? null : t.dataset.k; render(); return; }
   if (act === 'sop-phase') { ui.sopPhase = t.dataset.p; render(); return; }
-  if (act === 'copy-path') {
-    const v = t.dataset.p;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(v).then(() => toast('路径已复制，可直接粘贴到资源管理器', true), () => toast('复制失败'));
-    } else toast('当前环境不支持剪贴板');
-    return;
-  }
   if (act === 'cqv-filter') { ui.cqvFilter = t.dataset.f; render(); return; }
   if (act === 'sup-edit-open') {
     const x = supplier(t.dataset.id);
