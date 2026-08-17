@@ -35,7 +35,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 400 14px/1.65 -apple-system, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+  font: 400 15px/1.7 -apple-system, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
 }
 a { color: var(--brand-ink); text-decoration: none; }
 button { font: inherit; cursor: pointer; }
@@ -46,7 +46,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
 /* ---------- shell: sidebar + main ---------- */
 .shell { display: flex; min-height: 100vh; }
 .sidebar {
-  flex: 0 0 210px;
+  flex: 0 0 224px;
   position: sticky;
   top: 0;
   height: 100vh;
@@ -62,13 +62,13 @@ input, select, textarea { font: inherit; color: var(--ink); }
   align-items: center;
   gap: 8px;
   font-weight: 800;
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: .02em;
   padding: 0 8px 14px;
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(255,255,255,.16);
 }
-.logo-tag { font: 650 9.5px/1 var(--mono); letter-spacing: .1em; background: rgba(255,255,255,.18); border-radius: 999px; padding: 4px 7px; }
+.logo-tag { font: 650 10.5px/1 var(--mono); letter-spacing: .1em; background: rgba(255,255,255,.18); border-radius: 999px; padding: 4px 7px; }
 .side-nav { display: flex; flex-direction: column; gap: 2px; }
 .side-nav a {
   position: relative;
@@ -78,7 +78,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
   padding: 9px 11px;
   border-radius: 9px;
   color: rgba(255,255,255,.82);
-  font-size: 13.5px;
+  font-size: 14.5px;
   font-weight: 550;
 }
 .side-nav a svg { flex: 0 0 16px; width: 16px; height: 16px; opacity: .9; }
@@ -97,7 +97,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
 }
 .side-nav a.on svg { opacity: 1; }
 .side-group { display: flex; flex-direction: column; }
-.side-parent .chev { margin-left: auto; font-size: 10px; opacity: .7; transition: transform .15s ease; }
+.side-parent .chev { margin-left: auto; font-size: 11px; opacity: .7; transition: transform .15s ease; }
 .side-group.open .side-parent .chev { transform: rotate(180deg); }
 .side-nav a.grp-on { color: #fff; }
 .side-subs {
@@ -109,14 +109,14 @@ input, select, textarea { font: inherit; color: var(--ink); }
   border-left: 1px solid rgba(255,255,255,.22);
 }
 .side-group.open .side-subs { display: flex; }
-.side-nav a.sub { padding: 6.5px 9px; font-size: 12.5px; border-radius: 7px; color: rgba(255,255,255,.72); }
+.side-nav a.sub { padding: 6.5px 9px; font-size: 13.5px; border-radius: 7px; color: rgba(255,255,255,.72); }
 .side-nav a.sub.on { background: rgba(255,255,255,.2); color: #fff; font-weight: 650; }
 .side-nav a.sub.on::before { display: none; }
 .sub-badge {
   margin-left: auto;
   background: var(--red);
   color: #fff;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 10.5px/1 var(--mono);
   border-radius: 999px;
   padding: 3px 6px;
 }
@@ -128,7 +128,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
   border: 1px solid rgba(255,255,255,.3);
   border-radius: 8px;
   padding: 7px 10px;
-  font-size: 12.5px;
+  font-size: 13.5px;
 }
 .btn-reset:hover { background: rgba(255,255,255,.12); }
 .main { flex: 1; min-width: 0; }
@@ -151,11 +151,11 @@ input, select, textarea { font: inherit; color: var(--ink); }
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 5px 8px;
-  font-size: 12.5px;
+  font-size: 13.5px;
 }
 .mainbar select:hover { border-color: var(--brand); }
 .role-badge {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 650;
   border-radius: 999px;
   padding: 4px 10px;
@@ -164,15 +164,15 @@ input, select, textarea { font: inherit; color: var(--ink); }
 }
 .role-badge.r-client { background: var(--sky-soft); color: var(--sky-text); }
 .role-badge.r-manager { background: var(--mint-soft); color: var(--mint-text); }
-.mainbar .today { font-size: 12px; color: var(--muted); }
+.mainbar .today { font-size: 13px; color: var(--muted); }
 
 /* ---------- layout ---------- */
 .view { max-width: 1180px; margin: 0 auto; padding: 22px 24px 80px; }
 .page-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; margin-bottom: 16px; }
-.page-head h1 { margin: 0; font-size: 21px; font-weight: 750; letter-spacing: .01em; }
-.page-head .sub { color: var(--muted); font-size: 13px; }
+.page-head h1 { margin: 0; font-size: 23px; font-weight: 750; letter-spacing: .01em; }
+.page-head .sub { color: var(--muted); font-size: 14px; }
 .page-head .spacer { flex: 1; }
-.crumb { font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+.crumb { font-size: 13px; color: var(--muted); margin: 3px 0 10px; }
 .crumb a { color: var(--muted); }
 .crumb a:hover { color: var(--brand-ink); }
 .crumb b { color: var(--ink); font-weight: 600; }
@@ -185,15 +185,15 @@ input, select, textarea { font: inherit; color: var(--ink); }
   padding: 16px 18px;
   box-shadow: var(--shadow);
 }
-.card h3 { margin: 0 0 10px; font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.card h3 { margin: 0 0 10px; font-size: 15.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .grid { display: grid; gap: 13px; }
 .g4 { grid-template-columns: repeat(4, 1fr); }
 .g3 { grid-template-columns: repeat(3, 1fr); }
 .g2 { grid-template-columns: 1fr 1fr; }
 .mt { margin-top: 14px; }
 .statcard { padding: 14px 16px; }
-.statcard .num { font: 750 26px/1.15 var(--mono); letter-spacing: -.01em; }
-.statcard .lbl { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.statcard .num { font: 750 28px/1.15 var(--mono); letter-spacing: -.01em; }
+.statcard .lbl { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
 .statcard.warn .num { color: var(--red); }
 .statcard.brand .num { color: var(--brand-ink); }
 .statcard.mint .num { color: var(--mint-text); }
@@ -203,7 +203,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 650;
   border-radius: 999px;
   padding: 3px 9px;
@@ -217,7 +217,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
 .pill.s-overdue { background: var(--red-soft); color: var(--red); }
 .tag {
   display: inline-block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   border-radius: 6px;
   padding: 2.5px 7px;
@@ -238,12 +238,12 @@ input, select, textarea { font: inherit; color: var(--ink); }
   border-radius: 7px;
   background: var(--brand-soft);
   color: var(--brand-ink);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
   vertical-align: -5px;
   margin-right: 5px;
 }
-.who { display: inline-flex; align-items: center; font-size: 12.5px; color: var(--ink); font-weight: 550; margin-right: 10px; }
+.who { display: inline-flex; align-items: center; font-size: 13.5px; color: var(--ink); font-weight: 550; margin-right: 10px; }
 
 /* ---------- buttons ---------- */
 .btn {
@@ -254,7 +254,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--ink);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   padding: 6px 12px;
 }
@@ -264,16 +264,16 @@ input, select, textarea { font: inherit; color: var(--ink); }
 .btn.mint { background: var(--mint-soft); border-color: var(--mint); color: var(--mint-text); }
 .btn.danger { background: var(--red-soft); border-color: transparent; color: var(--red); }
 .btn.ghost { background: transparent; }
-.btn.sm { padding: 3.5px 9px; font-size: 12px; border-radius: 7px; }
+.btn.sm { padding: 3.5px 9px; font-size: 13px; border-radius: 7px; }
 .btn[disabled] { opacity: .45; cursor: not-allowed; pointer-events: none; }
 .btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
 /* ---------- tables ---------- */
 .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
-table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 700px; }
 .tbl th {
   text-align: left;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 650;
   letter-spacing: .04em;
   color: var(--muted);
@@ -292,12 +292,13 @@ input.ipt, select.ipt, textarea.ipt {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 6px 9px;
-  font-size: 13px;
+  font-size: 14px;
   background: #fff;
 }
 textarea.ipt { resize: vertical; min-height: 60px; }
 input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--brand); outline: none; }
-.ipt-inline { width: auto; }
+/* 特异性须压过 input.ipt / select.ipt 的 width:100% */
+input.ipt-inline, select.ipt-inline, textarea.ipt-inline { width: auto; }
 .filterbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 13px; }
 .filterbar .ipt { width: auto; min-width: 130px; }
 .filterbar .search { min-width: 200px; }
@@ -306,8 +307,8 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
 .proj-card { cursor: pointer; transition: border-color .15s ease; }
 .proj-card:hover { border-color: var(--brand); }
 .proj-card .top { display: flex; align-items: baseline; gap: 10px; }
-.proj-card .name { font-size: 15.5px; font-weight: 750; }
-.proj-card .meta { color: var(--muted); font-size: 12.5px; margin: 6px 0 10px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.proj-card .name { font-size: 16.5px; font-weight: 750; }
+.proj-card .meta { color: var(--muted); font-size: 13.5px; margin: 6px 0 10px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .mini-flow { display: flex; gap: 3px; }
 .mini-flow i {
   height: 8px;
@@ -326,7 +327,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
 .statcard.click { cursor: pointer; transition: border-color .15s ease; }
 .statcard.click:hover { border-color: var(--brand); }
 .statcard.on { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand), var(--shadow); }
-.statcard .hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.statcard .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .riskbar {
   display: flex;
   flex-wrap: wrap;
@@ -336,22 +337,22 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   color: var(--red);
   border-radius: 11px;
   padding: 11px 15px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
-.riskbar .go { margin-left: auto; font-size: 12.5px; font-weight: 650; }
+.riskbar .go { margin-left: auto; font-size: 13.5px; font-weight: 650; }
 .riskbar .cool { color: #8A3B3E; font-weight: 500; }
 .prow { cursor: pointer; transition: border-color .15s ease; }
 .prow:hover { border-color: var(--brand); }
 .prow-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
-.prow-head .name { font-size: 16px; font-weight: 750; }
+.prow-head .name { font-size: 17px; font-weight: 750; }
 .prow-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 20px;
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 13.5px;
   margin: 9px 0 12px;
 }
 .prow-meta b { color: var(--ink); font-family: var(--mono); font-weight: 650; }
@@ -380,7 +381,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   gap: 4px 8px;
   align-items: center;
   margin-top: 11px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   color: var(--muted);
 }
 .flow-legend b { color: var(--ink); }
@@ -388,7 +389,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   display: flex;
   gap: 10px;
   margin-top: 5px;
-  font: 550 9.5px/1 var(--mono);
+  font: 550 10.5px/1 var(--mono);
   letter-spacing: .1em;
   color: var(--muted);
   text-transform: uppercase;
@@ -398,7 +399,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
 .phase-ticks span.g-end { flex: 4; }
 .todo-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 4px; }
 .todo-head .tabs { margin: 0 0 0 auto; border: 0; }
-.todo-head .tabs button { padding: 5px 11px; font-size: 12.5px; }
+.todo-head .tabs button { padding: 5px 11px; font-size: 13.5px; }
 
 /* ---------- todo list ---------- */
 .todo-item {
@@ -408,22 +409,22 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   padding: 9px 4px;
   border-top: 1px dashed var(--line-dash);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
 }
 .todo-item:first-of-type { border-top: 0; }
 .todo-item:hover .t-name { color: var(--brand-ink); }
 .todo-item .t-name { font-weight: 600; }
-.todo-item .t-proj { color: var(--muted); font-size: 12px; }
-.todo-item .t-dl { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.todo-item .t-proj { color: var(--muted); font-size: 13px; }
+.todo-item .t-dl { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
 .todo-item .t-dl.over { color: var(--red); font-weight: 700; }
 
 /* ---------- workflow lanes ---------- */
 .lanes { display: grid; gap: 0; }
 .lane { padding: 12px 0; }
 .lane + .lane { border-top: 1px dashed var(--line-dash); }
-.lane-tag { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700; margin-bottom: 9px; }
+.lane-tag { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 700; margin-bottom: 9px; }
 .lane-tag i { width: 10px; height: 10px; border-radius: 2.5px; }
-.lane-tag span { font: 550 10px/1 var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+.lane-tag span { font: 550 11px/1 var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
 .lane.ph-dev .lane-tag i { background: var(--brand); }
 .lane.ph-pre .lane-tag i { background: var(--sky); }
 .lane.ph-end .lane-tag i { background: var(--mint); }
@@ -444,7 +445,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
 .nchip.cur { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); background: var(--brand-soft); }
 .nchip.disabled { cursor: default; }
 .nchip.disabled:hover { border-color: var(--line); }
-.nchip .l1 { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; }
+.nchip .l1 { display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; }
 .nchip .no {
   display: inline-grid;
   place-items: center;
@@ -452,12 +453,12 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   height: 19px;
   border-radius: 5px;
   color: #fff;
-  font: 700 10px/1 var(--mono);
+  font: 700 11px/1 var(--mono);
 }
 .ph-dev .nchip .no { background: var(--brand); }
 .ph-pre .nchip .no { background: var(--sky); color: #08405F; }
 .ph-end .nchip .no { background: var(--mint); color: #06331F; }
-.nchip .l2 { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--muted); font-family: var(--mono); }
+.nchip .l2 { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); font-family: var(--mono); }
 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
 .dot.s-pending { background: var(--line-dash); }
 .dot.s-in_progress { background: var(--brand); }
@@ -472,7 +473,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   background: var(--brand-soft);
   border-radius: 10px;
   padding: 10px 14px;
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 13px;
 }
 .hintbar b { color: var(--brand-ink); }
@@ -480,14 +481,11 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
 .hintbar.warn b { color: var(--red); }
 
 /* ---------- node detail ---------- */
-.node-headcard { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
-.node-headcard .big { font-size: 18px; font-weight: 750; display: flex; align-items: center; gap: 10px; }
-.node-headcard .code { font: 700 12px/1 var(--mono); letter-spacing: .1em; color: var(--brand-ink); text-transform: uppercase; }
-.kv { font-size: 12.5px; color: var(--muted); }
+.kv { font-size: 13.5px; color: var(--muted); }
 .kv b { color: var(--ink); font-family: var(--mono); font-weight: 650; }
 .kv b.over { color: var(--red); }
 .sec-title {
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 700;
   letter-spacing: .08em;
   color: var(--muted);
@@ -499,31 +497,31 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   padding: 6px 9px;
   border: 1px dashed var(--line-dash);
   border-radius: 8px;
   color: var(--muted);
   margin-bottom: 6px;
 }
-.chk { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 13px; cursor: pointer; }
+.chk { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 14px; cursor: pointer; }
 .chk input { margin-top: 3px; accent-color: var(--brand); }
 .chk.done span { color: var(--muted); text-decoration: line-through; }
-.cmt { border-top: 1px dashed var(--line-dash); padding: 9px 0; font-size: 13px; }
+.cmt { border-top: 1px dashed var(--line-dash); padding: 9px 0; font-size: 14px; }
 .cmt:first-of-type { border-top: 0; }
 .cmt .h { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
-.cmt .t { color: var(--muted); font-size: 11px; font-family: var(--mono); margin-left: auto; }
+.cmt .t { color: var(--muted); font-size: 12px; font-family: var(--mono); margin-left: auto; }
 .cmt p { margin: 0; color: #3E4F6E; }
-.ver { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px dashed var(--line-dash); font-size: 12.5px; }
+.ver { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px dashed var(--line-dash); font-size: 13.5px; }
 .ver:first-of-type { border-top: 0; }
-.ver .v { font: 700 11px/1.6 var(--mono); color: var(--brand-ink); min-width: 42px; }
-.ver .d { color: var(--muted); font-family: var(--mono); font-size: 11px; margin-left: auto; white-space: nowrap; }
+.ver .v { font: 700 12px/1.6 var(--mono); color: var(--brand-ink); min-width: 42px; }
+.ver .d { color: var(--muted); font-family: var(--mono); font-size: 12px; margin-left: auto; white-space: nowrap; }
 .reject-box { margin-top: 8px; }
 
 /* ---------- psf ---------- */
 .psf-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 13px; }
 .lang-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
-.lang-toggle button { border: 0; background: var(--surface); padding: 5px 13px; font-size: 12.5px; font-weight: 650; color: var(--muted); }
+.lang-toggle button { border: 0; background: var(--surface); padding: 5px 13px; font-size: 13.5px; font-weight: 650; color: var(--muted); }
 .lang-toggle button.on { background: var(--brand); color: #fff; }
 .psf-sec { margin-top: 14px; }
 .psf-sec .tbl td input.cell {
@@ -532,7 +530,7 @@ input.ipt:focus, textarea.ipt:focus, select.ipt:focus { border-color: var(--bran
   background: transparent;
   border-radius: 6px;
   padding: 3px 6px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .psf-sec .tbl td input.cell:hover { border-color: var(--line); background: #fff; }
 .psf-sec .tbl td input.cell:focus { border-color: var(--brand); background: #fff; outline: none; }
@@ -542,12 +540,12 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .badge-final {
   background: var(--mint);
   color: #06331F;
-  font: 750 10.5px/1 var(--mono);
+  font: 750 11.5px/1 var(--mono);
   letter-spacing: .08em;
   border-radius: 999px;
   padding: 5px 10px;
 }
-.badge-lock { background: var(--surface-2); color: var(--muted); font-size: 11.5px; border-radius: 999px; padding: 4px 10px; font-weight: 650; }
+.badge-lock { background: var(--surface-2); color: var(--muted); font-size: 12.5px; border-radius: 999px; padding: 4px 10px; font-weight: 650; }
 
 /* ---------- side panel ---------- */
 .panel-mask { position: fixed; inset: 0; background: rgba(9,20,45,.35); z-index: 60; }
@@ -565,12 +563,12 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .panel .p-head h3 { margin: 0; font-size: 15px; }
 .panel .p-body { padding: 14px 18px; overflow-y: auto; flex: 1; }
 .panel .p-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; gap: 8px; justify-content: flex-end; }
-.x { margin-left: auto; border: 0; background: var(--surface-2); border-radius: 8px; width: 28px; height: 28px; font-size: 14px; color: var(--muted); }
+.x { margin-left: auto; border: 0; background: var(--surface-2); border-radius: 8px; width: 28px; height: 28px; font-size: 15px; color: var(--muted); }
 .sup-row { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 9px; display: flex; gap: 10px; align-items: flex-start; }
 .sup-row.on { border-color: var(--brand); background: var(--brand-soft); }
 .sup-row input { margin-top: 3px; accent-color: var(--brand); }
-.sup-row .s-name { font-weight: 700; font-size: 13.5px; }
-.sup-row .s-meta { color: var(--muted); font-size: 12px; margin-top: 2px; display: flex; flex-wrap: wrap; gap: 3px 10px; }
+.sup-row .s-name { font-weight: 700; font-size: 14.5px; }
+.sup-row .s-meta { color: var(--muted); font-size: 13px; margin-top: 2px; display: flex; flex-wrap: wrap; gap: 3px 10px; }
 
 /* ---------- overlay / sheet ---------- */
 .ovl { position: fixed; inset: 0; background: rgba(9,20,45,.45); z-index: 70; overflow-y: auto; padding: 30px 16px; }
@@ -584,18 +582,18 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
   color: #0D1E3A;
 }
 .sheet-head { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #0567FF; padding-bottom: 12px; margin-bottom: 16px; }
-.sheet-head h2 { margin: 0; font-size: 18px; }
+.sheet-head h2 { margin: 0; font-size: 19px; }
 .sheet-head .mk { display: flex; gap: 5px; }
 .sheet-head .mk i { width: 12px; height: 12px; border-radius: 3px; display: block; }
 .sheet-head .mk i:first-child { background: #57BEEF; }
 .sheet-head .mk i:last-child { background: #3CD68B; }
-.sheet-sub { color: #51648A; font-size: 12px; margin: -10px 0 14px; }
+.sheet-sub { color: #51648A; font-size: 13px; margin: -10px 0 14px; }
 .ovl-actions { max-width: 880px; margin: 0 auto 12px; display: flex; justify-content: flex-end; gap: 8px; }
 .ovl-actions .btn { background: #fff; }
 .slide { border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
-.slide .ph { font-size: 42px; background: var(--surface-2); border-radius: 10px; width: 100%; padding: 22px 0; }
-.slide .a { font: 700 12px/1.4 var(--mono); color: var(--brand-ink); }
-.slide .p { font-size: 12.5px; color: var(--muted); }
+.slide .ph { font-size: 44px; background: var(--surface-2); border-radius: 10px; width: 100%; padding: 22px 0; }
+.slide .a { font: 700 13px/1.4 var(--mono); color: var(--brand-ink); }
+.slide .p { font-size: 13.5px; color: var(--muted); }
 .spin {
   width: 26px; height: 26px;
   border: 3px solid var(--brand-soft);
@@ -618,17 +616,17 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 
 /* ---------- matrix (dashboard) ---------- */
 .matrix-wrap { overflow-x: auto; }
-.matrix { border-collapse: collapse; font-size: 12px; min-width: 760px; width: 100%; }
-.matrix th { font: 650 10px/1.3 var(--mono); color: var(--muted); padding: 5px 3px; text-align: center; }
+.matrix { border-collapse: collapse; font-size: 13px; min-width: 760px; width: 100%; }
+.matrix th { font: 650 11px/1.3 var(--mono); color: var(--muted); padding: 5px 3px; text-align: center; }
 .matrix td { padding: 4px 3px; }
-.matrix td.pname { font-weight: 700; font-size: 13px; white-space: nowrap; padding-right: 12px; }
+.matrix td.pname { font-weight: 700; font-size: 14px; white-space: nowrap; padding-right: 12px; }
 .mcell {
   height: 26px;
   border-radius: 6px;
   background: var(--surface-2);
   display: grid;
   place-items: center;
-  font: 650 9.5px/1 var(--mono);
+  font: 650 10.5px/1 var(--mono);
   color: transparent;
   cursor: pointer;
 }
@@ -636,7 +634,7 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .mcell.s-in_progress { background: var(--brand); color: #fff; }
 .mcell.s-review { background: var(--amber); color: #5B3E06; }
 .mcell.ov { box-shadow: inset 0 0 0 2px var(--red); }
-.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 10px; }
 .legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; vertical-align: -2px; margin-right: 5px; }
 
 /* ---------- tabs ---------- */
@@ -645,7 +643,7 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
   border: 0;
   background: transparent;
   padding: 8px 14px;
-  font-size: 13.5px;
+  font-size: 14.5px;
   font-weight: 650;
   color: var(--muted);
   border-bottom: 2px solid transparent;
@@ -666,21 +664,21 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
   transition: border-color .15s ease;
 }
 .prod:hover { border-color: var(--brand); }
-.prod .ph { font-size: 34px; text-align: center; background: var(--surface-2); border-radius: 9px; padding: 14px 0; margin-bottom: 8px; }
-.prod .a { font: 700 11px/1.5 var(--mono); color: var(--brand-ink); }
-.prod .n { font-weight: 650; font-size: 13px; }
-.prod .m { color: var(--muted); font-size: 11.5px; }
+.prod .ph { font-size: 36px; text-align: center; background: var(--surface-2); border-radius: 9px; padding: 14px 0; margin-bottom: 8px; }
+.prod .a { font: 700 12px/1.5 var(--mono); color: var(--brand-ink); }
+.prod .n { font-weight: 650; font-size: 14px; }
+.prod .m { color: var(--muted); font-size: 12.5px; }
 
 /* ---------- client (HEMA) view ---------- */
 .confirm-card { border: 1px solid var(--amber); background: var(--amber-soft); border-radius: 12px; padding: 14px 16px; }
-.confirm-card h4 { margin: 0 0 6px; font-size: 14px; }
-.confirm-card p { margin: 0 0 10px; font-size: 12.5px; color: #6B4E0E; }
+.confirm-card h4 { margin: 0 0 6px; font-size: 15px; }
+.confirm-card p { margin: 0 0 10px; font-size: 13.5px; color: #6B4E0E; }
 .client-banner {
   background: var(--sky-soft);
   color: var(--sky-text);
   border-radius: 10px;
   padding: 9px 14px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   margin-bottom: 14px;
 }
@@ -692,15 +690,15 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
   color: #fff;
   border-radius: 10px;
   padding: 10px 18px;
-  font-size: 13px;
+  font-size: 14px;
   box-shadow: 0 12px 30px rgba(9,20,45,.35);
   animation: tin .2s ease;
 }
 .toast.ok { background: #0C7A4A; }
 @keyframes tin { from { opacity: 0; transform: translateY(8px); } }
 
-.empty { color: var(--muted); font-size: 13px; padding: 18px 0; text-align: center; }
-.note-strip { background: var(--surface-2); border-radius: 9px; padding: 8px 12px; font-size: 12px; color: var(--muted); }
+.empty { color: var(--muted); font-size: 14px; padding: 18px 0; text-align: center; }
+.note-strip { background: var(--surface-2); border-radius: 9px; padding: 8px 12px; font-size: 13px; color: var(--muted); }
 
 /* ---------- 文件上传 / 照片墙 / 档案编辑 ---------- */
 .file-item .del {
@@ -709,11 +707,11 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   padding: 2px 4px;
 }
 .file-item .del:hover { color: var(--red); }
-.file-item .fmeta { margin-left: auto; font: 500 11px/1.4 var(--mono); color: var(--muted); white-space: nowrap; }
+.file-item .fmeta { margin-left: auto; font: 500 12px/1.4 var(--mono); color: var(--muted); white-space: nowrap; }
 .prod .ph.img { padding: 0; overflow: hidden; height: 88px; }
 .prod .ph.img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .tag .tx { margin-left: 5px; cursor: pointer; opacity: .65; }
@@ -722,42 +720,42 @@ tr.critical td:first-child { border-left: 3px solid var(--red); }
 .add-row .ipt { max-width: 200px; }
 
 /* ---------- 表单行 / 选择芯片 ---------- */
-.form-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; margin-bottom: 9px; font-size: 13px; }
-.form-row > label { color: var(--muted); font-size: 12.5px; }
+.form-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; margin-bottom: 9px; font-size: 14px; }
+.form-row > label { color: var(--muted); font-size: 13.5px; }
 .chip-select { display: flex; flex-wrap: wrap; gap: 6px; }
 label.pick {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 4px 9px;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
   color: var(--muted);
 }
 label.pick input { margin-right: 4px; accent-color: var(--brand); }
 label.pick.on { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-ink); }
-.sku-row { display: grid; grid-template-columns: 96px 1fr 130px 90px 30px; gap: 7px; align-items: center; margin-bottom: 7px; }
-.sku-row .art { font: 650 11px/1.4 var(--mono); color: var(--brand-ink); }
+.sku-row { display: grid; grid-template-columns: 104px 1fr 140px 96px 30px; gap: 7px; align-items: center; margin-bottom: 7px; }
+.sku-row .art { font: 650 12px/1.4 var(--mono); color: var(--brand-ink); }
 
 /* ---------- 客户档案 ---------- */
-.kfacts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 14px; font-size: 12.5px; margin-top: 10px; }
+.kfacts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 14px; font-size: 13.5px; margin-top: 10px; }
 .kfacts span { color: var(--muted); }
 .kfacts b { color: var(--ink); font-weight: 650; margin-left: 5px; }
 .color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .color-item { display: flex; gap: 9px; align-items: center; border: 1px solid var(--line); border-radius: 9px; padding: 7px 9px; }
 .color-item i { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--line); flex: 0 0 30px; }
-.color-item .cn { font-weight: 650; font-size: 12.5px; }
-.color-item .cu { color: var(--muted); font-size: 11px; }
-.risk-note { position: relative; padding-left: 16px; font-size: 13px; color: var(--muted); margin: 8px 0; line-height: 1.65; }
+.color-item .cn { font-weight: 650; font-size: 13.5px; }
+.color-item .cu { color: var(--muted); font-size: 12px; }
+.risk-note { position: relative; padding-left: 16px; font-size: 14px; color: var(--muted); margin: 8px 0; line-height: 1.65; }
 .risk-note::before { content: ""; position: absolute; left: 2px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
 
 /* ---------- 全局搜索 / 提醒铃铛 ---------- */
 .searchbox { position: relative; }
 .searchbox input {
-  width: 220px;
+  width: 240px;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 5.5px 10px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   background: #fff;
 }
 .searchbox input:focus { border-color: var(--brand); outline: none; }
@@ -773,11 +771,11 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
   z-index: 55;
   overflow: hidden;
 }
-.search-item { display: flex; gap: 8px; align-items: center; padding: 8.5px 12px; font-size: 12.5px; cursor: pointer; }
+.search-item { display: flex; gap: 8px; align-items: center; padding: 8.5px 12px; font-size: 13.5px; cursor: pointer; }
 .search-item + .search-item { border-top: 1px solid var(--surface-2); }
 .search-item:hover { background: var(--surface-2); }
 .search-item .k {
-  font: 650 10px/1 var(--mono);
+  font: 650 11px/1 var(--mono);
   letter-spacing: .06em;
   color: var(--brand-ink);
   background: var(--brand-soft);
@@ -785,7 +783,7 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
   padding: 3px 5px;
   flex: 0 0 auto;
 }
-.search-item .sub { margin-left: auto; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.search-item .sub { margin-left: auto; color: var(--muted); font-size: 12px; white-space: nowrap; }
 .bell {
   position: relative;
   border: 1px solid var(--line);
@@ -795,7 +793,7 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
   height: 30px;
   display: grid;
   place-items: center;
-  font-size: 14px;
+  font-size: 15px;
 }
 .bell:hover { border-color: var(--brand); }
 .bell b {
@@ -804,16 +802,88 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
   right: -7px;
   background: var(--red);
   color: #fff;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 10.5px/1 var(--mono);
   border-radius: 999px;
   padding: 3px 5px;
 }
 
-/* ---------- 节点页 mini 导航条 ---------- */
-.node-minibar { display: flex; gap: 8px; align-items: center; margin: 0 0 12px; }
-.node-minibar .mini-segs { display: flex; gap: 3px; flex: 1; }
-.node-minibar .seg { height: 6px; }
-.node-minibar .seg.cur { height: 12px; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--brand); }
+/* ---------- 节点标题区 ---------- */
+.node-title { margin-bottom: 16px; }
+.node-title .t-row { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 12px; }
+.node-title .t-no {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--brand);
+  color: #fff;
+  font: 750 15px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.node-title.ph-pre .t-no { background: var(--sky); color: #08405F; }
+.node-title.ph-end .t-no { background: var(--mint); color: #06331F; }
+.node-title h1 { margin: 0; font-size: 24px; font-weight: 750; letter-spacing: .01em; }
+.node-title .t-code {
+  font: 700 13px/1 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+.node-title .t-acts { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+.node-title .t-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 20px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 10px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.node-title .t-meta b { color: var(--ink); font-family: var(--mono); font-weight: 650; }
+.node-title .t-meta b.over { color: var(--red); }
+
+/* ---------- 流程节点卡（带编号格） ---------- */
+.nflow-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.nflow-head h3 { margin: 0; font-size: 15.5px; font-weight: 700; }
+.nflow-head .navs { margin-left: auto; display: flex; gap: 6px; }
+.nflow { display: flex; gap: 16px; flex-wrap: wrap; }
+.nflow-grp { display: flex; flex-direction: column; gap: 6px; }
+.nflow-cells { display: flex; gap: 4px; }
+.nflow-grp .lbl {
+  font: 550 11px/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ncell {
+  min-width: 36px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font: 700 12.5px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  border: 1px solid transparent;
+  color: var(--muted);
+  background: var(--surface-2);
+  transition: transform .12s ease, border-color .12s ease;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+.ncell:hover { transform: translateY(-2px); border-color: var(--brand); }
+.ncell.f-done { background: var(--mint); color: #06331F; }
+.ncell.f-in_progress { background: var(--brand); color: #fff; }
+.ncell.f-review { background: var(--amber); color: #5B3E06; }
+.ncell.f-overdue { background: var(--red); color: #fff; }
+.ncell.cur { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--brand); font-weight: 750; }
+.ncell.cur .cname { margin-left: 6px; font-family: inherit; font-size: 12.5px; }
 
 /* ---------- print ---------- */
 @media print {
@@ -852,6 +922,8 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
   .mainbar { padding: 0 14px; flex-wrap: wrap; height: auto; min-height: 50px; }
   .view { padding: 16px 14px 60px; }
   .prow-meta { gap: 4px 14px; }
+  .nflow { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .node-title .t-acts { margin-left: 0; width: 100%; }
 }
 </style>
 </head>
@@ -1541,7 +1613,7 @@ function viewHome() {
     <span class="cool">最紧急：${esc(worst.p.name)} · ${worst.n.id} ${nodeDef(worst.n.id).name} · ${esc(person(worst.n.ownerId).name)}</span>
     <span class="go">立即处理 →</span></div>` : ''}
 
-  <div class="page-head" style="margin:26px 0 0"><h1 style="font-size:16px">项目</h1>
+  <div class="page-head" style="margin:26px 0 0"><h1 style="font-size:17px">项目</h1>
     <span class="sub">点击节点条上任一段可直接进入该节点</span></div>
   ${projs.map(projectRow).join('') || '<div class="card mt"><div class="empty">暂无进行中项目，点右上角「＋ 新建项目」开始。</div></div>'}`;
 }
@@ -1609,12 +1681,14 @@ function viewProject(p) {
   const cur = currentNode(p);
   const overs = p.nodes.filter(isOverdue);
   return `
-  <div class="crumb"><a href="#/projects">项目管理</a> / <b>${esc(p.name)}</b></div>
-  <div class="page-head">
+  <div class="page-head" style="margin-bottom:0">
     <h1>${esc(p.name)}</h1>
     <span class="tag b">${esc(p.client)}</span><span class="tag">${esc(p.season)}</span>
-    <span class="sub">交期 ${p.deliveryDate} ｜ 负责人 ${esc(person(p.ownerId).name)} ｜ SKU ${p.skus.length} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</span>
+    <span class="spacer"></span>
+    <button class="btn" data-act="goto" data-href="#/quality/risk/${p.id}">本项目质量</button>
   </div>
+  <div class="crumb"><a href="#/projects">项目管理</a> / <b>${esc(p.name)}</b></div>
+  <p class="sub" style="color:var(--muted);font-size:13.5px;margin:0 0 16px">交期 ${p.deliveryDate} ｜ 负责人 ${esc(person(p.ownerId).name)} ｜ SKU ${p.skus.length} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/14</p>
   <div class="card">
     <h3>工作流 <span class="tag">三大阶段 · 14 节点 · 点击进入节点</span></h3>
     ${lanesHtml(p, true)}
@@ -1643,14 +1717,30 @@ function nextStepBar(p, n) {
   return '';
 }
 
-function nodeMinibar(p, n) {
+function nodeFlowCard(p, n) {
   const idx = p.nodes.findIndex(x => x.id === n.id);
   const prev = p.nodes[idx - 1], next = p.nodes[idx + 1];
-  return `<div class="node-minibar">
-    <button class="btn sm" ${prev ? `data-act="goto" data-href="#/projects/${p.id}/node/${prev.id}"` : 'disabled'}>‹ ${prev ? prev.id + ' ' + nodeDef(prev.id).name : '上一节点'}</button>
-    <span class="mini-segs">${p.nodes.map(x => `<i class="seg f-${isOverdue(x) ? 'overdue' : x.status} ${x.id === n.id ? 'cur' : ''}"
-      title="${x.id} ${nodeDef(x.id).name} · ${STATUS_LABEL[x.status]}" data-act="goto" data-href="#/projects/${p.id}/node/${x.id}"></i>`).join('')}</span>
-    <button class="btn sm" ${next ? `data-act="goto" data-href="#/projects/${p.id}/node/${next.id}"` : 'disabled'}>${next ? next.id + ' ' + nodeDef(next.id).name : '下一节点'} ›</button>
+  const groups = { dev: [], pre: [], end: [] };
+  p.nodes.forEach(x => groups[nodeDef(x.id).phase].push(x));
+  const LBL = { dev: '开发 01–07', pre: '产前 08–10', end: '尾期 11–14' };
+  return `<div class="card">
+    <div class="nflow-head">
+      <h3>项目流程 <span class="tag">14 节点 · 点击任一格跳转</span></h3>
+      <span class="navs">
+        <button class="btn sm" ${prev ? `data-act="goto" data-href="#/projects/${p.id}/node/${prev.id}"` : 'disabled'}>‹ ${prev ? prev.id + ' ' + nodeDef(prev.id).name : '已是首节点'}</button>
+        <button class="btn sm" ${next ? `data-act="goto" data-href="#/projects/${p.id}/node/${next.id}"` : 'disabled'}>${next ? next.id + ' ' + nodeDef(next.id).name : '已是末节点'} ›</button>
+      </span>
+    </div>
+    <div class="nflow">
+      ${['dev', 'pre', 'end'].map(ph => `<div class="nflow-grp">
+        <div class="nflow-cells">
+          ${groups[ph].map(x => `<div class="ncell f-${isOverdue(x) ? 'overdue' : x.status} ${x.id === n.id ? 'cur' : ''}"
+            title="${x.id} ${nodeDef(x.id).name} · ${STATUS_LABEL[x.status]}${isOverdue(x) ? ' · 已逾期' : ''}"
+            data-act="goto" data-href="#/projects/${p.id}/node/${x.id}">${x.id}${x.id === n.id ? `<span class="cname">${nodeDef(x.id).name}</span>` : ''}</div>`).join('')}
+        </div>
+        <span class="lbl">${LBL[ph]}</span>
+      </div>`).join('')}
+    </div>
   </div>`;
 }
 
@@ -1670,25 +1760,32 @@ function viewNode(p, n) {
     else actions = `<span class="badge-final">节点已完成</span>`;
   }
 
+  const step = p.nodes.findIndex(x => x.id === n.id) + 1;
   return `
-  <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> / <b>${n.id} ${def.name}</b></div>
-  ${nodeMinibar(p, n)}
-  <div class="card node-headcard">
-    <span class="big"><span class="code">${def.code}</span>${def.name}</span>
-    <span class="tag ${def.phase === 'dev' ? 'b' : def.phase === 'pre' ? 'k' : 'm'}">${PHASES[def.phase].label}</span>
-    ${statusPill(n)}
-    <span class="kv">deadline <b class="${over ? 'over' : ''}">${n.deadline}</b>
-      ${n.status === 'done' ? '' : over ? `<b class="over">（逾期 ${diffDays(n.deadline, TODAY)} 天）</b>` : `（剩 ${days} 天）`}</span>
-    <span class="kv">负责人 ${avatarOf(person(n.ownerId).name)}</span>
-    ${n.reviewerId ? `<span class="kv">审批 / 确认 ${avatarOf(person(n.reviewerId).name)}</span>` : ''}
-    <span style="flex:1"></span>
-    <span class="btnrow">${actions}</span>
+  <div class="node-title ph-${def.phase}">
+    <div class="t-row">
+      <span class="t-no">${n.id}</span>
+      <h1>${def.name}</h1>
+      <span class="t-code">${def.code}</span>
+      ${statusPill(n)}
+      <span class="t-acts">${actions}</span>
+    </div>
+    <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> / <b>${n.id} ${def.name}</b></div>
+    <div class="t-meta">
+      <span class="tag ${def.phase === 'dev' ? 'b' : def.phase === 'pre' ? 'k' : 'm'}">${PHASES[def.phase].label}</span>
+      <span>第 <b>${step}</b> / 14 步</span>
+      <span>deadline <b class="${over ? 'over' : ''}">${n.deadline}</b>
+        ${n.status === 'done' ? '' : over ? `<b class="over">逾期 ${diffDays(n.deadline, TODAY)} 天</b>` : `（剩 ${days} 天）`}</span>
+      <span>负责人 ${avatarOf(person(n.ownerId).name)}</span>
+      ${n.reviewerId ? `<span>审批 / 确认 ${avatarOf(person(n.reviewerId).name)}</span>` : ''}
+    </div>
   </div>
+  ${nodeFlowCard(p, n)}
   ${nextStepBar(p, n)}
   ${ui.submitConfirm && n.status === 'in_progress' ? `
   <div class="card mt reject-box">
     <h3>确认提交审批？</h3>
-    <p style="margin:0 0 10px;font-size:13px;color:var(--muted)">本节点还有
+    <p style="margin:0 0 10px;font-size:14px;color:var(--muted)">本节点还有
       <b style="color:var(--red)">${n.todos.filter(t => !t.done).length} 项待办</b>、
       <b style="color:var(--red)">${p.skus.length - doneCount(p, n)} 个 SKU</b> 未完成。</p>
     <div class="btnrow"><button class="btn pri" data-act="n-submit-force">仍要提交</button>
@@ -1881,13 +1978,13 @@ function viewPSF(p, s) {
   const L = ui.psfLang;
   const sec = f.sections;
   return `
-  <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> /
-    <a href="#/projects/${p.id}/node/03">03 规格书</a> / <b>${esc(s.artNo)}</b></div>
-  <div class="page-head"><h1>${s.ph} ${esc(s.artNo)} · ${esc(s.name)}</h1>
+  <div class="page-head" style="margin-bottom:0"><h1>${s.ph} ${esc(s.artNo)} · ${esc(s.name)}</h1>
     <span class="tag">${CATS[s.cat]}</span>
     <span class="tag b mono">版本 ${esc(f.version)}</span>
     ${f.locked ? '<span class="badge-final">FINAL 已锁定</span>' : '<span class="tag a">编辑中</span>'}
   </div>
+  <div class="crumb"><a href="#/projects">项目管理</a> / <a href="#/projects/${p.id}">${esc(p.name)}</a> /
+    <a href="#/projects/${p.id}/node/03">03 规格书</a> / <b>${esc(s.artNo)}</b></div>
   <div class="psf-bar">
     <span class="lang-toggle">
       <button class="${L === 'zh' ? 'on' : ''}" data-act="psf-lang" data-l="zh">中文</button>
@@ -1992,7 +2089,7 @@ function viewSuppliers() {
   <div class="grid g3">
     ${list.map(s => `<div class="card proj-card" data-act="sup-detail" data-id="${s.id}">
       <div class="top"><span class="name">${esc(s.name)}</span>
-        <span class="mono" style="color:var(--amber);font-size:12px">${stars(s.rating)}</span></div>
+        <span class="mono" style="color:var(--amber);font-size:13px">${stars(s.rating)}</span></div>
       <div class="meta" style="margin-top:8px">
         ${s.categories.map(c => `<span class="tag b">${CATS[c]}</span>`).join(' ')}
         ${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</div>
@@ -2016,33 +2113,51 @@ function riskRows() {
   return rows;
 }
 function inspClosed(it) { return it.result === 'fail' && it.fix && it.fix.startsWith('已闭环'); }
+function projectSupplierIds(p) {
+  const ids = new Set();
+  p.skus.forEach(s => { (s.cand || []).forEach(id => ids.add(id)); if (s.final) ids.add(s.final); });
+  return ids;
+}
+function projectSkusOf(p, supId) {
+  return p.skus.filter(s => s.final === supId || (s.cand || []).includes(supId))
+    .map(s => ({ artNo: s.artNo, locked: s.final === supId }));
+}
 
-function viewQuality(tab) {
-  const risks = riskRows();
-  const cqvPending = db.cqv.filter(r => r.result !== '通过').length;
-  const auditIssue = db.suppliers.filter(s => auditState(s) !== 'valid').length;
+function viewQuality(tab, pid) {
+  const P = pid && pid !== 'all' ? proj(pid) : null;
+  const pname = P ? P.name : '';
+  const risks = riskRows().filter(x => !P || x.p.id === P.id);
+  const cqvAll = db.cqv.filter(c => !P || c.projectId === P.id);
+  const supIds = P ? projectSupplierIds(P) : null;
+  const sups = db.suppliers.filter(s => !supIds || supIds.has(s.id));
+  const inspRecs = db.inspections.filter(r => !P || r.projectId === P.id);
+
+  const cqvPending = cqvAll.filter(r => r.result !== '通过').length;
+  const auditIssue = sups.filter(s => auditState(s) !== 'valid').length;
   let inspOpen = 0;
-  db.inspections.forEach(r => r.items.forEach(it => { if (it.result === 'fail' && !inspClosed(it)) inspOpen++; }));
+  inspRecs.forEach(r => r.items.forEach(it => { if (it.result === 'fail' && !inspClosed(it)) inspOpen++; }));
+  const suffix = P ? '/' + P.id : '';
 
   let body = '';
   if (tab === 'risk') {
-    body = `<div class="tbl-wrap"><table class="tbl">
+    body = risks.length ? `<div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>SKU</th><th>类型</th><th>高风险要求</th><th>来源</th><th>项目</th><th>PSF 版本</th><th></th></tr></thead>
       <tbody>${risks.map(({ p, s, f, r }) => `<tr class="critical">
         <td class="num">${esc(s.artNo)}</td><td>${esc(r.type)}</td><td><b>${esc(r.requirement)}</b></td>
         <td><span class="tag">${esc(r.source)}</span></td><td>${esc(p.name)}</td>
         <td>${f.locked ? '<span class="tag m">Final 锁定</span>' : `<span class="tag a">${esc(f.version)} 编辑中</span>`}</td>
         <td><a href="#/projects/${p.id}/psf/${s.id}">打开 PSF</a></td></tr>`).join('')}</tbody></table></div>
-      <p class="note-strip mt">高风险点在 PSF 阶段前置录入（CQV 介入），打样前必须传达工厂——避免按最简工艺报价、到 FS 才返工。</p>`;
+      <p class="note-strip mt">高风险点在 PSF 阶段前置录入（CQV 介入），打样前必须传达工厂——避免按最简工艺报价、到 FS 才返工。</p>`
+      : `<div class="empty">${P ? esc(pname) + ' 暂无高风险点（PSF 中尚未标记 critical 项）' : '暂无高风险点'}</div>`;
   } else if (tab === 'cqv') {
     const CF = ui.cqvFilter;
-    const list = db.cqv.filter(c => CF === 'all' || (CF === 'pass' ? c.result === '通过' : c.result !== '通过'));
+    const list = cqvAll.filter(c => CF === 'all' || (CF === 'pass' ? c.result === '通过' : c.result !== '通过'));
     body = `<div class="tabs" style="border:0;margin-bottom:8px">
-      <button class="${CF === 'all' ? 'on' : ''}" data-act="cqv-filter" data-f="all">全部 ${db.cqv.length}</button>
+      <button class="${CF === 'all' ? 'on' : ''}" data-act="cqv-filter" data-f="all">全部 ${cqvAll.length}</button>
       <button class="${CF === 'pass' ? 'on' : ''}" data-act="cqv-filter" data-f="pass">通过</button>
       <button class="${CF === 'pending' ? 'on' : ''}" data-act="cqv-filter" data-f="pending">待复评 ${cqvPending}</button>
     </div>
-    <div class="tbl-wrap"><table class="tbl">
+    ${list.length ? `<div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>SKU</th><th>评估项</th><th>结论</th><th>备注</th><th>评估人</th><th>时间</th><th>项目 / 节点</th></tr></thead>
       <tbody>${list.map(c => {
         const p = proj(c.projectId);
@@ -2050,21 +2165,24 @@ function viewQuality(tab) {
         <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
         <td>${esc(c.note)}</td><td>${esc(c.by)}</td><td class="num">${esc(c.time)}</td>
         <td><a href="#/projects/${p.id}/node/${c.nodeId}">${esc(p.name)} · ${c.nodeId} ${nodeDef(c.nodeId).name}</a></td></tr>`;
-      }).join('')}</tbody></table></div>
+      }).join('')}</tbody></table></div>`
+      : `<div class="empty">${P ? esc(pname) + ' 暂无 CQV 评估记录（开发样评估在寄样前进行）' : '暂无评估记录'}</div>`}
       <p class="note-strip mt">质量管控从开发样评估开始——「前期没问题，后期都是小异常」。</p>`;
   } else if (tab === 'audit') {
-    body = `<div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>供应商</th><th>验厂状态</th><th>有效期</th><th>资质</th><th>合作客户</th></tr></thead>
-      <tbody>${db.suppliers.map(s => `<tr>
+    body = sups.length ? `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>供应商</th><th>验厂状态</th><th>有效期</th><th>资质</th>${P ? '<th>本项目 SKU</th>' : '<th>合作客户</th>'}</tr></thead>
+      <tbody>${sups.map(s => `<tr>
         <td><a data-act="sup-detail" data-id="${s.id}" style="cursor:pointer"><b>${esc(s.name)}</b></a></td>
         <td>${auditPill(s)}</td>
         <td class="num">${esc(s.auditExpiry || '—')}</td>
         <td>${s.certs.length ? s.certs.map(c => `<span class="tag">${esc(c)}</span>`).join(' ') : '—'}</td>
-        <td>${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</td></tr>`).join('')}</tbody></table></div>
-      <p class="note-strip mt">与供应商管理同源数据；验厂随 FS 确认启动、量产前完成（节点 10），第三方（TUV）执行。点击供应商名可打开档案。</p>`;
+        ${P ? `<td>${projectSkusOf(P, s.id).map(k => `<span class="tag ${k.locked ? 'm' : 'b'}">${esc(k.artNo)}${k.locked ? ' ✓' : ''}</span>`).join(' ')}</td>`
+            : `<td>${s.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')}</td>`}</tr>`).join('')}</tbody></table></div>
+      <p class="note-strip mt">${P ? '仅显示本项目已匹配 / 锁定（✓）的供应商；' : ''}与供应商管理同源数据；验厂随 FS 确认启动、量产前完成（节点 10），第三方（TUV）执行。点击供应商名可打开档案。</p>`
+      : `<div class="empty">${esc(pname)} 尚未匹配供应商（在 05 Tender 节点完成匹配后显示）</div>`;
   } else {
     const rows = [];
-    db.inspections.forEach(r => r.items.forEach((it, i) => rows.push({ r, it, i })));
+    inspRecs.forEach(r => r.items.forEach((it, i) => rows.push({ r, it, i })));
     body = rows.length ? `<div class="tbl-wrap"><table class="tbl">
       <thead><tr><th>项目</th><th>类型</th><th>时间 / 进度</th><th>检验项</th><th>结果</th><th>问题</th><th>整改</th><th></th></tr></thead>
       <tbody>${rows.map(({ r, it, i }) => {
@@ -2080,22 +2198,29 @@ function viewQuality(tab) {
             ? `<button class="btn sm mint" data-act="insp-close" data-r="${r.id}" data-i="${i}">标记已闭环</button>`
             : `<a href="#/projects/${p.id}/node/${r.nodeId}">打开节点</a>`}</td></tr>`;
       }).join('')}</tbody></table></div>
-      <p class="note-strip mt">异常整改闭环后才形成放单依据（FRI → 放单出货）。</p>` : '<div class="empty">暂无验货记录</div>';
+      <p class="note-strip mt">异常整改闭环后才形成放单依据（FRI → 放单出货）。</p>`
+      : `<div class="empty">${P ? esc(pname) + ' 暂无验货记录（尾期节点 12 / 13 尚未开始）' : '暂无验货记录'}</div>`;
   }
   const TITLES = { risk: '高风险点总览', cqv: 'CQV 开发样评估', audit: '验厂', insp: '验货（DUPRO / FRI）' };
   const STAGE = { risk: 'PSF 阶段前置', cqv: '打样前', audit: '产前（节点 10）', insp: '尾期（节点 12 / 13）' };
   return `
   <div class="page-head"><h1>质量管控 · ${TITLES[tab] || TITLES.risk}</h1>
     <span class="tag k">${STAGE[tab] || STAGE.risk}</span>
-    <span class="sub">平台型板块 · 与项目节点联动（同一份数据，两处入口）</span></div>
+    <span class="spacer"></span>
+    <select class="ipt ipt-inline" data-chg="q-proj" data-tab="${tab}" title="按项目筛选">
+      <option value="all" ${!P ? 'selected' : ''}>全部项目</option>
+      ${db.projects.map(x => `<option value="${x.id}" ${P && P.id === x.id ? 'selected' : ''}>${esc(x.name)}${x.status === 'archived' ? '（已归档）' : ''}</option>`).join('')}
+    </select></div>
+  ${P ? `<div class="note-strip" style="margin-bottom:13px">仅显示 <b>${esc(pname)}</b> 的质量数据${tab === 'audit' ? '；验厂按本项目已匹配 / 锁定的供应商统计' : ''}　·
+    <a href="#/quality/${tab}">清除筛选，看全部项目 →</a></div>` : ''}
   <div class="grid g4">
-    <div class="card statcard warn click ${tab === 'risk' ? 'on' : ''}" data-act="goto" data-href="#/quality/risk">
+    <div class="card statcard warn click ${tab === 'risk' ? 'on' : ''}" data-act="goto" data-href="#/quality/risk${suffix}">
       <div class="num">${risks.length}</div><div class="lbl">高风险点（PSF 前置）</div><div class="hint">打样前必达</div></div>
-    <div class="card statcard click ${tab === 'cqv' ? 'on' : ''}" data-act="goto" data-href="#/quality/cqv">
+    <div class="card statcard click ${tab === 'cqv' ? 'on' : ''}" data-act="goto" data-href="#/quality/cqv${suffix}">
       <div class="num" style="color:var(--amber)">${cqvPending}</div><div class="lbl">CQV 待复评</div><div class="hint">开发样评估</div></div>
-    <div class="card statcard click ${tab === 'audit' ? 'on' : ''}" data-act="goto" data-href="#/quality/audit">
+    <div class="card statcard click ${tab === 'audit' ? 'on' : ''}" data-act="goto" data-href="#/quality/audit${suffix}">
       <div class="num" style="color:var(--amber)">${auditIssue}</div><div class="lbl">验厂需关注</div><div class="hint">过期 / 待审 / 即将到期</div></div>
-    <div class="card statcard warn click ${tab === 'insp' ? 'on' : ''}" data-act="goto" data-href="#/quality/insp">
+    <div class="card statcard warn click ${tab === 'insp' ? 'on' : ''}" data-act="goto" data-href="#/quality/insp${suffix}">
       <div class="num">${inspOpen}</div><div class="lbl">验货异常未闭环</div><div class="hint">影响放单</div></div>
   </div>
   <div class="card mt">
@@ -2117,7 +2242,7 @@ function viewClientProfile() {
   <div class="grid g2">
     <div class="card"><h3>HEMA · 品牌概况</h3>
       ${E ? `<textarea class="ipt" data-chg="cp" data-path="profile.positioning">${esc(c.profile.positioning)}</textarea>`
-          : `<p style="font-size:13px;color:var(--muted);margin:0 0 4px">${esc(c.profile.positioning)}</p>`}
+          : `<p style="font-size:14px;color:var(--muted);margin:0 0 4px">${esc(c.profile.positioning)}</p>`}
       <div class="kfacts">${c.profile.facts.map((f, i) => `<div><span>${esc(f.k)}</span>
         ${E ? `<input class="ipt ipt-inline" style="max-width:150px" value="${esc(f.v)}" data-chg="cp" data-path="profile.facts.${i}.v">` : `<b>${esc(f.v)}</b>`}</div>`).join('')}</div>
     </div>
@@ -2125,7 +2250,7 @@ function viewClientProfile() {
       <div class="color-grid">${c.profile.colors.map((x, i) => `<div class="color-item">
         ${E ? `<input type="color" value="${esc(x.hex)}" data-chg="cp" data-path="profile.colors.${i}.hex" style="width:34px;height:34px;border:0;padding:0;background:none;cursor:pointer">`
             : `<i style="background:${esc(x.hex)}"></i>`}
-        <div style="flex:1"><div class="cn">${inp(`profile.colors.${i}.name`, x.name)} ${E ? '' : `<span class="mono" style="color:var(--muted);font-size:10.5px">${esc(x.hex)}</span>`}</div>
+        <div style="flex:1"><div class="cn">${inp(`profile.colors.${i}.name`, x.name)} ${E ? '' : `<span class="mono" style="color:var(--muted);font-size:11.5px">${esc(x.hex)}</span>`}</div>
         <div class="cu">${inp(`profile.colors.${i}.usage`, x.usage)}</div></div>
         ${E ? `<button class="del" data-act="cp-del" data-list="profile.colors" data-i="${i}">✕</button>` : ''}
       </div>`).join('')}</div>
@@ -2404,13 +2529,13 @@ function renderOverlay() {
               <option value="u2" ${d.owner === 'u2' ? 'selected' : ''}>业务B</option></select></div>
           </div>
         </div>
-        <h3 style="font-size:14px;margin:14px 0 8px">客户 Brief 文件
+        <h3 style="font-size:15px;margin:14px 0 8px">客户 Brief 文件
           <button class="btn sm" data-act="upload" data-kind="npBrief" style="margin-left:8px">＋ 上传 Brief</button></h3>
         ${d.files.length ? d.files.map((f, i) => `<div class="file-item">${fileIcon(f.name)} ${esc(f.name)}
           <span class="fmeta">${fmtSize(f.size)}</span>
           <button class="del" data-act="np-file-del" data-i="${i}">✕</button></div>`).join('')
         : '<div class="empty" style="padding:6px 0">尚未上传（将写入节点 01 的输入资料）</div>'}
-        <h3 style="font-size:14px;margin:14px 0 8px">初始 SKU 清单（可空，后续在 Brief 节点补充）</h3>
+        <h3 style="font-size:15px;margin:14px 0 8px">初始 SKU 清单（可空，后续在 Brief 节点补充）</h3>
         ${rows || '<div class="empty" style="padding:8px 0">尚未添加 SKU</div>'}
         <div class="btnrow mt">
           <button class="btn" data-act="np-sku-add">＋ 添加 SKU</button>
@@ -2445,7 +2570,7 @@ Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
       <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th>货号</th><th>图</th><th>品名 / 描述</th><th>对客报价</th><th>包装</th><th>备注</th></tr></thead>
         <tbody><tr>
-          <td class="num">${esc(s.artNo)}</td><td style="font-size:26px">${s.ph}</td>
+          <td class="num">${esc(s.artNo)}</td><td style="font-size:28px">${s.ph}</td>
           <td><b>${esc(s.name)}</b><br><span style="color:var(--muted)">${esc(f.sections.productDesc.zh)}</span></td>
           <td class="num"><b>$${s.quote.toFixed(2)}</b></td>
           <td>${f.sections.packaging.map(x => esc(x.item)).join(' / ')}</td>
@@ -2456,12 +2581,12 @@ Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
 
   if (o.kind === 'order') {
     return ovlShell('下单资料（构件清单 + 包装清单）', `本地 AI 按公司模板从 Final 规格书生成（演示） · ${esc(s.artNo)}`, `
-      <h3 style="font-size:14px">产品描述</h3>
-      <p style="font-size:13px">${esc(f.sections.productDesc.zh)}</p>
-      <h3 style="font-size:14px">构件清单</h3>
+      <h3 style="font-size:15px">产品描述</h3>
+      <p style="font-size:14px">${esc(f.sections.productDesc.zh)}</p>
+      <h3 style="font-size:15px">构件清单</h3>
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>部件</th><th>规格</th></tr></thead>
         <tbody>${f.sections.construction.map(r => `<tr><td>${esc(r.part)}</td><td>${esc(r.zh)}</td></tr>`).join('')}</tbody></table></div>
-      <h3 style="font-size:14px" class="mt">包装清单</h3>
+      <h3 style="font-size:15px" class="mt">包装清单</h3>
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>包材项</th><th>规格</th></tr></thead>
         <tbody>${f.sections.packaging.map(r => `<tr><td>${esc(r.item)}</td><td>${esc(r.zh)}</td></tr>`).join('')}</tbody></table></div>
       <p class="note-strip mt">资料审核员只需复核差异字段——「一处录入，多处复用」。</p>`);
@@ -2469,7 +2594,7 @@ Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
 
   if (o.kind === 'en') {
     return ovlShell('PSF — Product Specification (EN)', `${esc(s.artNo)} · ${esc(s.name)} · Version ${esc(f.version)}${f.locked ? ' · FINAL' : ''}`, `
-      <p style="font-size:13px"><b>Description:</b> ${esc(f.sections.productDesc.en)}</p>
+      <p style="font-size:14px"><b>Description:</b> ${esc(f.sections.productDesc.en)}</p>
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Part</th><th>Specification</th></tr></thead>
         <tbody>${f.sections.construction.map(r => `<tr><td>${esc(r.part)}</td><td>${esc(r.en)}</td></tr>`).join('')}</tbody></table></div>
       <div class="tbl-wrap mt"><table class="tbl"><thead><tr><th>Packaging</th><th>Specification</th></tr></thead>
@@ -2495,7 +2620,7 @@ Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
     return ovlShell('分供应商报价单', `按候选供应商分组导出 · 多家可做的款式同时出现在各家单中 · 内部文件（含成本，不对客户展示）`, `
       ${sups.length ? sups.map(sp => {
         const items = p.skus.filter(k => k.cand.includes(sp.id));
-        return `<h3 style="font-size:14px" class="mt">${esc(sp.name)} <span class="tag">周期 ${sp.leadTimeDays} 天</span> <span class="tag">共 ${items.length} 款</span></h3>
+        return `<h3 style="font-size:15px" class="mt">${esc(sp.name)} <span class="tag">周期 ${sp.leadTimeDays} 天</span> <span class="tag">共 ${items.length} 款</span></h3>
         <div class="tbl-wrap"><table class="tbl">
           <thead><tr><th>货号</th><th>品名</th><th>目标价</th><th>对客报价</th><th>内部成本</th></tr></thead>
           <tbody>${items.map(k => `<tr><td class="num">${esc(k.artNo)}</td><td>${k.ph} ${esc(k.name)}</td>
@@ -2515,9 +2640,9 @@ Compliance: REACH Annex XVII; EN71-3 migration; FSC paper</div>
   if (o.kind === 'prod') {
     const x = db.clientProducts.find(y => y.id === o.id);
     return ovlShell(`${esc(x.artNo)} · ${esc(x.name)}`, `${x.year} · ${esc(x.project)} · ${CATS[x.cat]} · 过往产品库`, `
-      <div style="font-size:50px;text-align:center;background:var(--surface-2);border-radius:12px;padding:26px 0">${x.ph}</div>
-      <h3 style="font-size:14px" class="mt">可复用标准描述</h3>
-      <p style="font-size:13.5px;background:var(--mint-soft);border-radius:10px;padding:12px 14px">${esc(x.desc)}</p>
+      <div style="font-size:52px;text-align:center;background:var(--surface-2);border-radius:12px;padding:26px 0">${x.ph}</div>
+      <h3 style="font-size:15px" class="mt">可复用标准描述</h3>
+      <p style="font-size:14.5px;background:var(--mint-soft);border-radius:10px;padding:12px 14px">${esc(x.desc)}</p>
       <div class="btnrow"><button class="btn pri" data-act="copy-desc" data-id="${x.id}">📋 复制标准描述</button></div>
       <p class="note-strip mt">老品换设计时直接复用描述，改参数即可——不再依赖老员工记忆。</p>`);
   }
@@ -2539,7 +2664,7 @@ function renderPanel() {
         ${hits.map(x => `
           <label class="sup-row ${pl.sel.includes(x.id) ? 'on' : ''}">
             <input type="checkbox" ${pl.sel.includes(x.id) ? 'checked' : ''} data-chg="match-sel" data-id="${x.id}">
-            <div><div class="s-name">${esc(x.name)} <span class="mono" style="color:var(--amber);font-size:11px">${stars(x.rating)}</span></div>
+            <div><div class="s-name">${esc(x.name)} <span class="mono" style="color:var(--amber);font-size:12px">${stars(x.rating)}</span></div>
               <div class="s-meta"><span>周期 ${x.leadTimeDays} 天</span><span>均价 ${esc(x.priceBand)}</span><span>开模 ${esc(x.mold)}</span>
                 <span>${x.auditStatus === 'passed' ? '验厂✓' : x.auditStatus === 'pending' ? '验厂待审' : '<b style="color:var(--red)">验厂过期</b>'}</span></div>
               <div class="s-meta">${x.clients.map(c => `<span class="tag k">${esc(c)}</span>`).join(' ')} ${x.processes.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>
@@ -2561,12 +2686,12 @@ function renderPanel() {
     <div class="panel-mask" data-act="panel-close"></div>
     <div class="panel">
       <div class="p-head"><h3>${esc(x.name)}</h3>
-        <span class="mono" style="color:var(--amber);font-size:12px">${stars(x.rating)}</span>
+        <span class="mono" style="color:var(--amber);font-size:13px">${stars(x.rating)}</span>
         ${canEdit() ? `<button class="btn sm" data-act="sup-edit-open" data-id="${x.id}">✎ 编辑</button>` : ''}
         <button class="x" data-act="panel-close">✕</button></div>
       <div class="p-body">
         <div class="sec-title">基本能力（越细，AI 匹配越准）</div>
-        <div class="meta" style="font-size:13px;display:grid;gap:6px">
+        <div class="meta" style="font-size:14px;display:grid;gap:6px">
           <div>品类：${x.categories.map(c => `<span class="tag b">${CATS[c]}</span>`).join(' ')}</div>
           <div>工艺：${x.processes.map(c => `<span class="tag">${esc(c)}</span>`).join(' ')}</div>
           <div>开模：${esc(x.mold)} ｜ 周期：<b class="mono">${x.leadTimeDays} 天</b> ｜ 均价：<b class="mono">${esc(x.priceBand)}</b></div>
@@ -2657,7 +2782,7 @@ function render() {
   else if (key === 'todos') body = viewTodos();
   else if (key === 'archived') body = viewArchived();
   else if (key === 'suppliers') body = viewSuppliers();
-  else if (key === 'quality') body = viewQuality(parts[1] || 'risk');
+  else if (key === 'quality') body = viewQuality(parts[1] || 'risk', parts[2] || 'all');
   else if (key === 'clients') body = parts[1] === 'products' ? viewClientProducts() : viewClientProfile();
   else if (key === 'projects') {
     const p = parts[1] ? proj(parts[1]) : null;
@@ -3171,6 +3296,11 @@ document.addEventListener('change', e => {
   if (k === 'cp-nodes') {
     db.client.contacts[+t.dataset.i].nodes = t.value.split(/[,，]/).map(x => x.trim()).filter(Boolean);
     saveDB(); return;
+  }
+  if (k === 'q-proj') {
+    const v = t.value;
+    location.hash = '#/quality/' + (t.dataset.tab || 'risk') + (v === 'all' ? '' : '/' + v);
+    return;
   }
   if (k === 'brief-filter') { ui.briefFilter = t.value; render(); return; }
   if (k === 'sup-client') { ui.supFilter.client = t.value; render(); return; }
