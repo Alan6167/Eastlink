@@ -994,7 +994,7 @@ label.pick.on { border-color: var(--brand); background: var(--brand-soft); color
    ============================================================ */
 
 const TODAY = '2026-08-14';
-const DB_KEY = 'eastlink-mvp-v5';
+const DB_KEY = 'eastlink-mvp-v6';
 
 /* ---------- 工作流 15 节点定义 ---------- */
 const NODE_DEFS = [
@@ -1006,13 +1006,13 @@ const NODE_DEFS = [
   { id: '06', code: 'Benchmark', name: '二轮竞价',   phase: 'dev', dur: 7,  confirm: true  },
   { id: '07', code: 'FS',        name: '最终确认',   phase: 'dev', dur: 5,  confirm: true  },
   { id: '08', code: 'PO',        name: 'PO·包材确认', phase: 'pre', dur: 20, confirm: true },
-  { id: '09', code: 'PPSample',  name: '产前样确认', phase: 'pre', dur: 10, confirm: true  },
+  { id: '09', code: 'PP Sample',  name: '产前样确认', phase: 'pre', dur: 10, confirm: true  },
   { id: '10', code: 'Audit',     name: '验厂',       phase: 'pre', dur: 7,  confirm: false },
   { id: '11', code: 'Bulk',      name: '大货·签样',  phase: 'end', dur: 30, confirm: false },
   { id: '12', code: 'DUPRO',     name: '中期验货',   phase: 'end', dur: 0,  confirm: false },
   { id: '13', code: 'FRI',       name: '大货验货',   phase: 'end', dur: 3,  confirm: false },
-  { id: '14', code: 'Ship',      name: '出运',       phase: 'end', dur: 7,  confirm: false },
-  { id: '15', code: 'Closeout',  name: '收汇与合规收尾', phase: 'end', dur: 30, confirm: false }
+  { id: '14', code: 'Shipment',  name: '出运',       phase: 'end', dur: 7,  confirm: false },
+  { id: '15', code: 'Closing',   name: '收汇与合规收尾', phase: 'end', dur: 30, confirm: false }
 ];
 const PHASES = {
   dev: { label: '开发阶段', en: 'Development' },
@@ -1020,8 +1020,7 @@ const PHASES = {
   end: { label: '尾期阶段', en: 'Production & Shipment' }
 };
 const STATUS_LABEL = { pending: '未开始', in_progress: '进行中', review: '待审批', done: '已完成' };
-/* ---------- HEMA BTS 业务环节 SOP（录自客户流程台账，THEME 线；
-   只保留流程与规则，不含任何文件路径）---------- */
+/* ---------- HEMA 全流程业务环节与执行要求（THEME 线，不含文件路径）---------- */
 const SOP = [
   { node: '01', name: 'HEMA 开发推荐流程 Proposal + 客人来访选款接待',
     when: 'BTS 2027：第一轮 3.30–3.31 来访；第二轮 8.27–8.28 来访', notes: [] },
@@ -1373,17 +1372,17 @@ function seed() {
   pn('05').todos = [{ t: '供应商匹配（10 款）', done: false }, { t: '一轮报价汇总', done: false }, { t: 'CQV 开发样评估', done: false }, { t: '样品拍照 + 寄样', done: false }];
   p1.currentNodeId = '05';
 
-  /* ----- 项目 2：SIM 2026（大货阶段，含 DUPRO 记录） ----- */
+  /* ----- 项目 2：Theme 2026（大货阶段，含 DUPRO 记录） ----- */
   const p2Skus = [
-    { id: 'm1', artNo: 'HM-NB-101', name: 'SIM 线圈本', cat: 'NB', ph: '📓', target: 1.10, quote: 1.25, cost: 0.88, cand: ['s1'], final: 's1' },
-    { id: 'm2', artNo: 'HM-NB-102', name: 'SIM 练习本', cat: 'NB', ph: '📗', target: 0.48, quote: 0.55, cost: 0.36, cand: ['s2'], final: 's2' },
-    { id: 'm3', artNo: 'HM-PN-101', name: 'SIM 圆珠笔', cat: 'PN', ph: '🖊️', target: 0.38, quote: 0.44, cost: 0.28, cand: ['s5'], final: 's5' },
-    { id: 'm4', artNo: 'HM-BG-101', name: 'SIM 笔袋', cat: 'BG', ph: '👝', target: 1.20, quote: 1.38, cost: 0.95, cand: ['s3'], final: 's3' },
-    { id: 'm5', artNo: 'HM-CU-101', name: 'SIM 水壶', cat: 'CU', ph: '🥤', target: 1.55, quote: 1.72, cost: 1.18, cand: ['s7'], final: 's7' },
-    { id: 'm6', artNo: 'HM-NB-103', name: 'SIM 素描本', cat: 'NB', ph: '🎨', target: 0.95, quote: 1.08, cost: 0.74, cand: ['s1'], final: 's1' }
+    { id: 'm1', artNo: 'HM-NB-101', name: 'Theme 线圈本', cat: 'NB', ph: '📓', target: 1.10, quote: 1.25, cost: 0.88, cand: ['s1'], final: 's1' },
+    { id: 'm2', artNo: 'HM-NB-102', name: 'Theme 练习本', cat: 'NB', ph: '📗', target: 0.48, quote: 0.55, cost: 0.36, cand: ['s2'], final: 's2' },
+    { id: 'm3', artNo: 'HM-PN-101', name: 'Theme 圆珠笔', cat: 'PN', ph: '🖊️', target: 0.38, quote: 0.44, cost: 0.28, cand: ['s5'], final: 's5' },
+    { id: 'm4', artNo: 'HM-BG-101', name: 'Theme 笔袋', cat: 'BG', ph: '👝', target: 1.20, quote: 1.38, cost: 0.95, cand: ['s3'], final: 's3' },
+    { id: 'm5', artNo: 'HM-CU-101', name: 'Theme 水壶', cat: 'CU', ph: '🥤', target: 1.55, quote: 1.72, cost: 1.18, cand: ['s7'], final: 's7' },
+    { id: 'm6', artNo: 'HM-NB-103', name: 'Theme 素描本', cat: 'NB', ph: '🎨', target: 0.95, quote: 1.08, cost: 0.74, cand: ['s1'], final: 's1' }
   ];
   const p2 = {
-    id: 'p2', name: 'SIM 2026', client: 'HEMA', season: '2026 秋季', deliveryDate: '2026-09-30',
+    id: 'p2', name: 'Theme 2026', client: 'HEMA', season: '2026 秋季', deliveryDate: '2026-09-30',
     createdDate: '2026-04-10', ownerId: 'u2', status: 'active',
     skus: p2Skus, nodes: NODE_DEFS.map(d => makeNode(d.id, 'u2', d.confirm ? 'u5' : null, p2Skus))
   };
@@ -1434,7 +1433,7 @@ function seed() {
       facts: [
         { k: '总部', v: '荷兰 · 阿姆斯特丹' },
         { k: '合作年限', v: '6 年' },
-        { k: '年开发季', v: 'BTS · SIM · Gift' },
+        { k: '年开发季', v: 'BTS · Theme · Gift' },
         { k: '年 SKU 规模', v: '≈ 400 款' }
       ],
       colors: [
@@ -1480,19 +1479,19 @@ function seed() {
     { id: 'h4', year: 2024, project: 'Gift', artNo: 'HM-CU-G24-01', name: '保温杯 450ml', cat: 'CU', ph: '☕', desc: '304 双层真空，LFGB，粉体喷涂' },
     { id: 'h5', year: 2025, project: 'BTS', artNo: 'HM-NB-B25-01', name: '口袋笔记本', cat: 'NB', ph: '📒', desc: 'A6 胶装 48 张，圆角，四色封面' },
     { id: 'h6', year: 2025, project: 'BTS', artNo: 'HM-PN-B25-01', name: '金属圆珠笔', cat: 'PN', ph: '🖊️', desc: '铝合金杆阳极氧化，1.0mm 黑芯' },
-    { id: 'h7', year: 2025, project: 'SIM', artNo: 'HM-BG-S25-01', name: '时尚托特包', cat: 'BG', ph: '👜', desc: '12oz 帆布，织唛标，底部加固' },
-    { id: 'h8', year: 2025, project: 'SIM', artNo: 'HM-CU-S25-01', name: '塑料水杯', cat: 'CU', ph: '🥤', desc: '食品级 PP 500ml，刻度线，防漏盖' },
+    { id: 'h7', year: 2025, project: 'Theme', artNo: 'HM-BG-T25-01', name: '时尚托特包', cat: 'BG', ph: '👜', desc: '12oz 帆布，织唛标，底部加固' },
+    { id: 'h8', year: 2025, project: 'Theme', artNo: 'HM-CU-T25-01', name: '塑料水杯', cat: 'CU', ph: '🥤', desc: '食品级 PP 500ml，刻度线，防漏盖' },
     { id: 'h9', year: 2026, project: 'BTS', artNo: 'HM-NB-B26-01', name: '精装笔记本', cat: 'NB', ph: '📕', desc: '布面精装 A5，烫金书名，丝带书签' },
     { id: 'h10', year: 2026, project: 'BTS', artNo: 'HM-PN-B26-01', name: '按动中性笔', cat: 'PN', ph: '✒️', desc: '0.5mm 黑芯，橡胶握手，笔帽通气孔' },
     { id: 'h11', year: 2026, project: 'Gift', artNo: 'HM-BG-G26-01', name: '帆布购物袋', cat: 'BG', ph: '🛍️', desc: '10oz 帆布，丝印单色，可折叠' },
-    { id: 'h12', year: 2026, project: 'SIM', artNo: 'HM-CU-S26-01', name: '儿童水壶', cat: 'CU', ph: '🍼', desc: 'Tritan 材质 400ml，吸管盖，密封测试' }
+    { id: 'h12', year: 2026, project: 'Theme', artNo: 'HM-CU-T26-01', name: '儿童水壶', cat: 'CU', ph: '🍼', desc: 'Tritan 材质 400ml，吸管盖，密封测试' }
   ];
 
   // 高风险点：p2（已进大货）的要求视为均已传达工厂；p1 仅锁定版已传达
   p2Skus.forEach(s => { const f = psfs[s.id]; f.sections.compliance.forEach(r => { if (r.critical) r.told = true; }); });
   p1Skus.forEach(s => { const f = psfs[s.id]; if (f.locked) f.sections.compliance.forEach(r => { if (r.critical) r.told = true; }); });
 
-  // 未预置待办的节点，用台账里的业务环节自动生成 checklist
+  // 未预置待办的节点，用业务环节自动生成 checklist
   [p1, p2].forEach(pp => pp.nodes.forEach(nn => {
     if (!nn.todos.length) nn.todos = sopOf(nn.id).map(s => ({ t: s.name, done: nn.status === 'done' }));
   }));
@@ -1544,6 +1543,7 @@ const ui = {
   sopPhase: 'all',
   cqvDraft: null,
   auditEdit: null,
+  archiveConfirm: null,
   clientEdit: false,
   uploadTarget: null,
   homeFilter: 'all',
@@ -1832,7 +1832,7 @@ function viewTodos() {
 function viewArchived() {
   const list = db.projects.filter(p => p.status === 'archived');
   return `
-  <div class="page-head"><h1>已归档项目</h1><span class="sub">出运·归档（节点 14）完成后进入此处，规格与资料沉淀到过往产品库</span></div>
+  <div class="page-head"><h1>已归档项目</h1><span class="sub">出运后完成收汇与合规收尾（节点 15）即进入此处，产品资料同步收录进过往产品库</span></div>
   ${list.length ? list.map(p => `
     <div class="card prow mt" data-act="goto" data-href="#/projects/${p.id}">
       <div class="prow-head"><span class="name">${esc(p.name)}</span>
@@ -1840,7 +1840,7 @@ function viewArchived() {
       <div class="prow-meta">
         <span>交期 <b>${p.deliveryDate}</b></span><span>SKU <b>${p.skus.length}</b></span>
         <span>负责人 ${avatarOf(person(p.ownerId).name)}</span>
-        <span>✓ ${p.skus.length} 款产品已沉淀入<a href="#/clients/products" onclick="event.stopPropagation()">过往产品库</a></span>
+        <span>✓ ${p.skus.length} 款产品已收录进<a href="#/clients/products" onclick="event.stopPropagation()">过往产品库</a></span>
       </div>
     </div>`).join('')
   : '<div class="card mt"><div class="empty">暂无归档项目。项目走完「14 出运·归档」并审批通过后，会自动移入此处。</div></div>'}`;
@@ -1850,15 +1850,29 @@ function viewArchived() {
 function viewProject(p) {
   const cur = currentNode(p);
   const overs = p.nodes.filter(isOverdue);
+  const doneNodes = p.nodes.filter(n => n.status === 'done').length;
+  const allDone = doneNodes === p.nodes.length;
   return `
   <div class="page-head" style="margin-bottom:0">
     <h1>${esc(p.name)}</h1>
     <span class="tag b">${esc(p.client)}</span><span class="tag">${esc(p.season)}</span>
     <span class="spacer"></span>
     <button class="btn" data-act="goto" data-href="#/quality/risk/${p.id}">本项目质量</button>
+    ${canEdit() && p.status === 'active' ? (allDone
+      ? `<button class="btn pri" data-act="proj-archive" data-id="${p.id}">归档项目</button>`
+      : `<button class="btn" disabled title="还有 ${p.nodes.length - doneNodes} 个节点未完成">归档项目</button>`) : ''}
+    ${p.status === 'archived' ? '<span class="tag m">已归档</span>' : ''}
   </div>
   <div class="crumb"><a href="#/projects">项目管理</a> / <b>${esc(p.name)}</b></div>
   <p class="sub" style="color:var(--muted);font-size:13.5px;margin:0 0 16px">交期 ${p.deliveryDate} ｜ 负责人 ${esc(person(p.ownerId).name)} ｜ SKU ${p.skus.length} ｜ 节点完成 ${p.nodes.filter(n => n.status === 'done').length}/${p.nodes.length}</p>
+  ${ui.archiveConfirm === p.id ? `<div class="card reject-box" style="margin-bottom:14px">
+    <h3>确认归档「${esc(p.name)}」？</h3>
+    <p style="margin:0 0 10px;font-size:14px;color:var(--muted)">归档后：项目移入「已归档项目」，
+      <b style="color:var(--ink)">${p.skus.length} 款产品</b>的规格资料收录进过往产品库供日后复用；
+      该项目不再出现在项目总览与待办中。</p>
+    <div class="btnrow"><button class="btn pri" data-act="proj-archive-confirm" data-id="${p.id}">确认归档</button>
+    <button class="btn ghost" data-act="proj-archive-cancel">取消</button></div>
+  </div>` : ''}
   <div class="card">
     <h3>工作流 <span class="tag">三大阶段 · ${NODE_DEFS.length} 节点 · 点击进入节点</span></h3>
     ${lanesHtml(p, true)}
@@ -2051,7 +2065,7 @@ function specificArea(p, n) {
   return '';
 }
 
-/* 08 包材：把台账里的克重 / 材质规则做成速查表 */
+/* 08 包材：克重 / 材质规则速查表 */
 function areaPackaging() {
   const s = SOP.find(x => x.name.indexOf('包材设计') >= 0);
   const rows = s.notes.filter(t => /^(彩盒|背卡|腰封|吊牌|卡头|展示盒|橡皮包纸|不干胶)/.test(t))
@@ -2144,7 +2158,7 @@ function areaTender(p, n) {
       <tbody>${cqvs.map(c => `<tr><td class="num">${esc(c.sku)}</td><td>${esc(c.item)}</td>
         <td>${c.result === '通过' ? '<span class="tag m">通过</span>' : `<span class="tag a">${esc(c.result)}</span>`}</td>
         <td>${esc(c.note)}</td><td>${esc(c.by)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">暂无评估记录</div>'}
-    <h3 class="mt">寄样套数速查 <span class="tag">照台账执行，漏寄要补运费</span></h3>
+    <h3 class="mt">寄样套数速查 <span class="tag">按客户要求执行，漏寄要补运费</span></h3>
     <div class="tbl-wrap"><table class="tbl" style="min-width:0">
       <thead><tr><th style="width:130px">样品类型</th><th>寄送要求</th></tr></thead>
       <tbody>
@@ -2576,7 +2590,7 @@ function viewClientProfile() {
       </table></div>
     </div>
   </div>
-  <div class="card mt"><h3>合作注意事项 <span class="tag r">会议沉淀 · 新人必读</span></h3>
+  <div class="card mt"><h3>合作注意事项 <span class="tag r">新人必读</span></h3>
     <div class="grid g2">
       <div>${c.profile.notes.map((x, i) => E
         ? `<div class="add-row" style="margin-top:6px"><input class="ipt" style="max-width:none;flex:1" value="${esc(x)}" data-chg="cp" data-path="profile.notes.${i}">
@@ -2612,7 +2626,7 @@ function viewClientSop() {
   <div class="page-head"><h1>客户管理 · SOP 手册</h1>
     <span class="tag b">HEMA · THEME 线</span>
     <span class="sub">${SOP.length} 个业务环节 · ${noteCount} 条注意事项 ｜ 新人通读，老人速查</span></div>
-  <p class="note-strip" style="margin-bottom:14px">来源：HEMA 客户流程台账与项目会议沉淀。各环节的 SOP 文件与项目资料按内部规范存取，此处只沉淀流程与规则。Brand 线的差异规则尚未整理，卡片标注 <span class="tag b">THEME</span> 以便日后并列补充。</p>
+  <p class="note-strip" style="margin-bottom:14px">HEMA 全流程业务环节与执行要求，按开发 / 中期 / 尾期三阶段排列。各环节的 SOP 文件与项目资料按内部规范存取。Brand 线规则待补充，卡片标注 <span class="tag b">THEME</span> 以便日后并列呈现。</p>
   <div class="filterbar">
     <input class="ipt search" placeholder="搜索环节 / 注意事项全文，如「PVC」「寄样」「汇率」…" value="${esc(ui.sopQ)}" data-chg="sop-q">
     <div class="tabs" style="margin:0;border:0">
@@ -2648,7 +2662,7 @@ function viewClientProducts() {
     (F.cat === 'all' || x.cat === F.cat) &&
     (!F.q || x.name.includes(F.q) || x.artNo.toUpperCase().includes(F.q.toUpperCase())));
   return `
-  <div class="page-head"><h1>客户管理 · 过往产品库</h1><span class="sub">每季约 70% 老品换设计 · 新人可搜可复用 ｜ 项目归档后自动沉淀</span></div>
+  <div class="page-head"><h1>客户管理 · 过往产品库</h1><span class="sub">每季约 70% 老品换设计 · 新人可搜可复用 ｜ 项目归档后自动收录</span></div>
   <div class="card">
     <div class="filterbar">
       <select class="ipt" data-chg="pf-year"><option value="all">年份：全部</option>
@@ -3336,19 +3350,7 @@ document.addEventListener('click', e => {
     n.status = 'done'; ui.rejectOpen = false;
     addCmt(n, n.reviewerId ? person(n.reviewerId).name : '管理员', '审批', '审批通过。');
     let msg = '审批通过，节点完成';
-    if (n.id === '15' && p && p.status === 'active') {
-      p.status = 'archived';
-      const yr = parseInt(p.deliveryDate.slice(0, 4), 10);
-      const pj = p.name.split(/\s+/)[0] || p.name;
-      p.skus.forEach(s => {
-        db.clientProducts.push({
-          id: 'ha-' + s.id, year: yr, project: pj, artNo: s.artNo, name: s.name,
-          cat: s.cat, ph: s.ph,
-          desc: db.psfs[s.id] ? db.psfs[s.id].sections.productDesc.zh : s.name
-        });
-      });
-      msg = '项目已归档：' + p.skus.length + ' 款产品沉淀入过往产品库';
-    }
+    if (n.id === '15' && p && p.status === 'active') msg = '收尾节点已完成——可在项目页点「归档项目」正式结项';
     saveDB(); render(); toast(msg, true); return;
   }
   if (act === 'n-reject' && n) { ui.rejectOpen = true; render(); return; }
@@ -3500,6 +3502,28 @@ document.addEventListener('click', e => {
   }
   if (act === 'sop-toggle') { ui.sopOpen = ui.sopOpen === t.dataset.k ? null : t.dataset.k; render(); return; }
   if (act === 'sop-phase') { ui.sopPhase = t.dataset.p; render(); return; }
+  if (act === 'proj-archive') { ui.archiveConfirm = t.dataset.id; render(); return; }
+  if (act === 'proj-archive-cancel') { ui.archiveConfirm = null; render(); return; }
+  if (act === 'proj-archive-confirm') {
+    const pp = proj(t.dataset.id);
+    if (!pp || pp.status !== 'active') return;
+    pp.status = 'archived';
+    const yr = parseInt(pp.deliveryDate.slice(0, 4), 10);
+    const pj = pp.name.split(/\s+/)[0] || pp.name;
+    let added = 0;
+    pp.skus.forEach(s => {
+      const hid = 'ha-' + s.id;
+      if (db.clientProducts.some(x => x.id === hid)) return;   // 去重，避免重复归档
+      db.clientProducts.push({
+        id: hid, year: yr, project: pj, artNo: s.artNo, name: s.name,
+        cat: s.cat, ph: s.ph,
+        desc: db.psfs[s.id] ? db.psfs[s.id].sections.productDesc.zh : s.name
+      });
+      added++;
+    });
+    ui.archiveConfirm = null; saveDB(); render();
+    toast('项目已归档：' + added + ' 款产品已收录进过往产品库', true); return;
+  }
   if (act === 'cqv-filter') { ui.cqvFilter = t.dataset.f; render(); return; }
   if (act === 'cqv-new') {
     ui.cqvDraft = { projectId: (db.projects.find(x => x.status === 'active') || db.projects[0]).id, sku: '', item: '', result: '整改后复评', note: '' };
